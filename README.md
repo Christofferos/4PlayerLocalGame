@@ -1,2 +1,1 @@
-# 4PlayerLocalGame
-This is an extension of the game Battletronics that is in repository serverClientGame
+![Image of playing board](readmeImages/img1.png) ![Image of playing board](readmeImages/img2.png) ![Image of playing board](readmeImages/img3.png)

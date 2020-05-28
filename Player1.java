@@ -11,16 +11,16 @@ public class Player1 extends Player {
 
     public void btnPress(KeyEvent e) {
         int key = e.getKeyCode();
-        if (key == KeyEvent.VK_P) {
+        if (key == KeyEvent.VK_BACK_SPACE) {
             shoot();
-        } else if (key == KeyEvent.VK_O) {
+        } else if (key == KeyEvent.VK_DELETE) {
             pickUpOrDrop = true;
         }
     }
 
     public void btnRelease(KeyEvent e) {
         int key = e.getKeyCode();
-        if (key == KeyEvent.VK_O) {
+        if (key == KeyEvent.VK_DELETE) {
             pickUpOrDrop = false;
         }
     }

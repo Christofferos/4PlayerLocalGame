@@ -8,7 +8,7 @@
 2. Then run the command: java Menu
 
 #### Controls
-* Player1: arrow keys, backslash, delete.
+* Player1: arrow keys, backspace, delete.
 * Player2: w, a, s, d, 1, 2.
 * Player3: u, h, j, k, ",", ".".
 * Player4: numkey8, numkey4, numkey5, numkey6, numkey_multiply, numkey_minus.

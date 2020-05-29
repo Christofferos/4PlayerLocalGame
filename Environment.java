@@ -87,7 +87,8 @@ public class Environment {
     public void initiateEnvironment(double randSpawnTypeD, WaterFlood waterFlood, FireRing fireRing,
             LightningStorm lightningStorm, CollisionDetection collisionDetection, Player1 player1, Player2 player2,
             Player3 player3, Player4 player4) {
-        if (randSpawnTypeD <= 0.33) {
+        //randSpawnTypeD = 0.66;
+        if (randSpawnTypeD <= 0.30) {
             /* ## Timer: LightningSpawn ## */
             lightning = true;
             int lightningFrequency = 1500;
@@ -116,7 +117,7 @@ public class Environment {
                 }
             });
             lightningCheck.start();
-        } else if (randSpawnTypeD >= 0.33 && randSpawnTypeD <= 0.70) {
+        } else if (randSpawnTypeD >= 0.30 && randSpawnTypeD <= 0.65) {
             /* ## Timer: Waterspawn ## */
             water = true;
             int waterIncrementTime = 3000;
@@ -163,7 +164,7 @@ public class Environment {
                 });
                 waterCheck4.start();
             }
-        } else if (randSpawnTypeD > 0.70) {
+        } else if (randSpawnTypeD > 0.65) {
             fire = true;
             /* ## Timer: Firespawn ## */
             // TESTING FIRE

@@ -39,12 +39,25 @@ public class CreateBattlefield implements Serializable {
         obstacles.add(new Obstacle(width - xOffset - 16, height - yOffset - 8, true, size));
         obstacles.add(new Obstacle(width - xOffset - 8, height - yOffset - 16, true, size));
 
+        obstacles.add(new Obstacle(width - xOffset - 16, height - yOffset - 48, true, size));
+
+        // Center
+        addRectangleArea((width - xOffset) / 2 - 8, (height - yOffset) / 2 - 8, (width - xOffset) / 2 + 8,
+                (height - yOffset) / 2 + 8, true);
+
+        addRectangleArea((width - xOffset) / 2 + 24, (height - yOffset) / 2 - 48, (width - xOffset) / 2 + 40,
+                (height - yOffset) / 2 - 40, true);
+
+        addRectangleArea((width - xOffset) / 2 - 32, (height - yOffset) / 2 + 48, (width - xOffset) / 2 - 16,
+                (height - yOffset) / 2 + 56, true);
+
         // Undre väggen
         for (int i = 32; i < width / 2 - xOffset + 16; i += 8) {
             obstacles.add(new Obstacle(i, height - 32 - yOffset, false, size));
             obstacles.add(new Obstacle(i + 8 * 12, height - 32 - yOffset, false, size));
         }
         obstacles.add(new Obstacle((width - xOffset) / 4, height - yOffset - 8, true, size));
+        obstacles.add(new Obstacle((width - xOffset) / 4, height - yOffset - 16, true, size));
 
         obstacles.add(new Obstacle(width / 2 - xOffset + 16 + 8 * 12 - 4, height - 40 - yOffset, false, size));
         obstacles.add(new Obstacle(width / 2 - xOffset + 16 + 8 * 12 - 4, height - 48 - yOffset, false, size));
@@ -57,6 +70,7 @@ public class CreateBattlefield implements Serializable {
             obstacles.add(new Obstacle(32, i + height / 2 - yOffset - 16, false, size));
         }
         obstacles.add(new Obstacle(8, 3 * (height - yOffset) / 4 - 32, true, size));
+        obstacles.add(new Obstacle(16, 3 * (height - yOffset) / 4 - 32, true, size));
 
         // Näst vänstra väggen
         obstacles.add(new Obstacle(72, 32, false, size));
@@ -70,8 +84,9 @@ public class CreateBattlefield implements Serializable {
         for (int i = 64; i < height / 2 - yOffset + 16; i += 8) {
             obstacles.add(new Obstacle(64, i, false, size));
         }
-        obstacles.add(new Obstacle(72, (height - yOffset) / 2 - 24, true, size));
-        obstacles.add(new Obstacle(80, (height - yOffset) / 2 - 24, true, size));
+        obstacles.add(new Obstacle(74, (height - yOffset) / 2 - 24, true, size));
+        obstacles.add(new Obstacle(82, (height - yOffset) / 2 - 24, true, size));
+        obstacles.add(new Obstacle(82, (height - yOffset) / 2 - 32, true, size));
 
         // Lodrätt vägg som sticker ut från övre kanten av spelplanen
         obstacles.add(new Obstacle(2 * (width - xOffset) / 3, 8, false, size));
@@ -91,8 +106,9 @@ public class CreateBattlefield implements Serializable {
         for (int i = 120; i < height / 2 - yOffset + 64; i += 8) {
             obstacles.add(new Obstacle(width - xOffset - 70, i, false, size));
         }
-        obstacles.add(new Obstacle(width - xOffset - 78, (height - yOffset) / 2 + 16, true, size));
-        obstacles.add(new Obstacle(width - xOffset - 86, (height - yOffset) / 2 + 16, true, size));
+        obstacles.add(new Obstacle(width - xOffset - 80, (height - yOffset) / 2 + 16, true, size));
+        obstacles.add(new Obstacle(width - xOffset - 88, (height - yOffset) / 2 + 16, true, size));
+        obstacles.add(new Obstacle(width - xOffset - 88, (height - yOffset) / 2 + 24, true, size));
 
         obstacles.add(new Obstacle(width - xOffset - 16, 48, true, size));
 
@@ -101,5 +117,13 @@ public class CreateBattlefield implements Serializable {
 
         obstacles.add(new Obstacle(width - xOffset - 62, height - yOffset - 64, true, size));
         obstacles.add(new Obstacle(width - xOffset - 58, 110, true, size));
+    }
+
+    public void addRectangleArea(int x1, int y1, int x2, int y2, boolean movable) {
+        for (int i = x1; i < x2; i += 8) {
+            for (int j = y1; j < y2; j += 8) {
+                obstacles.add(new Obstacle(i, j, movable, size));
+            }
+        }
     }
 }

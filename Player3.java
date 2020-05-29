@@ -12,9 +12,9 @@ public class Player3 extends Player {
 
     public void btnPress(KeyEvent e) {
         int key = e.getKeyCode();
-        if (key == KeyEvent.VK_MULTIPLY) {
+        if (key == KeyEvent.VK_DIVIDE) {
             shoot();
-        } else if (key == KeyEvent.VK_MINUS) {
+        } else if (key == KeyEvent.VK_MULTIPLY) {
             pickUpOrDrop = true;
         }
 
@@ -22,7 +22,7 @@ public class Player3 extends Player {
 
     public void btnRelease(KeyEvent e) {
         int key = e.getKeyCode();
-        if (key == KeyEvent.VK_MINUS) {
+        if (key == KeyEvent.VK_MULTIPLY) {
             pickUpOrDrop = false;
         }
     }

@@ -536,8 +536,8 @@ public class Battletronics extends JPanel implements ActionListener {
 
     /* ## Bullet Movement [Called from GameLoop] ## */
     private void updateBulltes() {
+        List<Bullet> bulletsP1 = player1.getBullets();
         if (!player1.dead) {
-            List<Bullet> bulletsP1 = player1.getBullets();
             for (int i = 0; i < bulletsP1.size(); i++) {
                 Bullet bulletP1 = bulletsP1.get(i);
                 if (bulletP1.isVisible()) {
@@ -546,9 +546,12 @@ public class Battletronics extends JPanel implements ActionListener {
                     bulletsP1.remove(i);
                 }
             }
+        } else {
+            bulletsP1.clear();
         }
+
+        List<Bullet> bulletsP2 = player2.getBullets();
         if (!player2.dead) {
-            List<Bullet> bulletsP2 = player2.getBullets();
             for (int i = 0; i < bulletsP2.size(); i++) {
                 Bullet bulletP2 = bulletsP2.get(i);
                 if (bulletP2.isVisible()) {
@@ -557,10 +560,13 @@ public class Battletronics extends JPanel implements ActionListener {
                     bulletsP2.remove(i);
                 }
             }
+        } else {
+            bulletsP2.clear();
         }
+
         if (nrOfPlayers >= 3) {
+            List<Bullet> bulletsP3 = player3.getBullets();
             if (!player3.dead) {
-                List<Bullet> bulletsP3 = player3.getBullets();
                 for (int i = 0; i < bulletsP3.size(); i++) {
                     Bullet bulletP3 = bulletsP3.get(i);
                     if (bulletP3.isVisible()) {
@@ -569,11 +575,13 @@ public class Battletronics extends JPanel implements ActionListener {
                         bulletsP3.remove(i);
                     }
                 }
+            } else {
+                bulletsP3.clear();
             }
         }
         if (nrOfPlayers == 4) {
+            List<Bullet> bulletsP4 = player4.getBullets();
             if (!player4.dead) {
-                List<Bullet> bulletsP4 = player4.getBullets();
                 for (int i = 0; i < bulletsP4.size(); i++) {
                     Bullet bulletP4 = bulletsP4.get(i);
                     if (bulletP4.isVisible()) {
@@ -582,6 +590,8 @@ public class Battletronics extends JPanel implements ActionListener {
                         bulletsP4.remove(i);
                     }
                 }
+            } else {
+                bulletsP4.clear();
             }
         }
     }

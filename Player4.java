@@ -12,9 +12,9 @@ public class Player4 extends Player {
 
     public void btnPress(KeyEvent e) {
         int key = e.getKeyCode();
-        if (key == KeyEvent.VK_COMMA) {
+        if (key == KeyEvent.VK_PERIOD) {
             shoot();
-        } else if (key == KeyEvent.VK_PERIOD) {
+        } else if (key == KeyEvent.VK_MINUS) {
             pickUpOrDrop = true;
         }
 
@@ -22,7 +22,7 @@ public class Player4 extends Player {
 
     public void btnRelease(KeyEvent e) {
         int key = e.getKeyCode();
-        if (key == KeyEvent.VK_PERIOD) {
+        if (key == KeyEvent.VK_MINUS) {
             pickUpOrDrop = false;
         }
     }

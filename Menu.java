@@ -6,6 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import java.io.*;
+import javax.sound.sampled.*;
+
 public class Menu {
     public int height = 315;
     public int width = 275;
@@ -18,6 +21,14 @@ public class Menu {
     }
 
     public Menu() {
+        try {
+            SimpleAudioPlayer audioPlayer = new SimpleAudioPlayer();
+            audioPlayer.play();
+        } catch (Exception ex) {
+            System.out.println("Soundtrack not found");
+            ex.printStackTrace();
+        }
+
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -29,6 +40,32 @@ public class Menu {
                 frame.setVisible(true);
             }
         });
+    }
+
+    public class SimpleAudioPlayer {
+        // to store current position 
+        Long currentFrame;
+        Clip clip;
+        // current status of clip 
+        String status;
+        AudioInputStream audioInputStream;
+        String filePath = "Images/soundtrackOfficial.wav";
+
+        // constructor to initialize streams and clip 
+        public SimpleAudioPlayer() throws UnsupportedAudioFileException, IOException, LineUnavailableException { // create AudioInputStream object 
+            audioInputStream = AudioSystem.getAudioInputStream(new File(filePath).getAbsoluteFile());
+            // create clip reference 
+            clip = AudioSystem.getClip();
+            // open audioInputStream to the clip 
+            clip.open(audioInputStream);
+            clip.loop(Clip.LOOP_CONTINUOUSLY);
+        }
+
+        public void play() {
+            //start the clip 
+            clip.start();
+            status = "play";
+        }
     }
 
     public class JPanelObj extends JPanel {

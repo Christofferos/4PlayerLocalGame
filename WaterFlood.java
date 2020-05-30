@@ -93,7 +93,7 @@ public class WaterFlood implements ActionListener {
                 }
             }
         }
-        if (waterCount == 7) {
+        if (waterCount == 10) {
             Random random = new Random();
             int maxI = 4;
             int minI = 1;

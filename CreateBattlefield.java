@@ -39,6 +39,13 @@ public class CreateBattlefield implements Serializable {
         obstacles.add(new Obstacle(width - xOffset - 16, height - yOffset - 8, true, size));
         obstacles.add(new Obstacle(width - xOffset - 8, height - yOffset - 16, true, size));
 
+        obstacles.add(new Obstacle(width - xOffset - 8, 8, true, size));
+        obstacles.add(new Obstacle(width - xOffset - 16, 8, true, size));
+        obstacles.add(new Obstacle(width - xOffset - 8, 16, true, size));
+        obstacles.add(new Obstacle(8, height - yOffset - 8, true, size));
+        obstacles.add(new Obstacle(16, height - yOffset - 8, true, size));
+        obstacles.add(new Obstacle(8, height - yOffset - 16, true, size));
+
         obstacles.add(new Obstacle(width - xOffset - 16, height - yOffset - 48, true, size));
 
         // Center
@@ -58,6 +65,12 @@ public class CreateBattlefield implements Serializable {
         }
         obstacles.add(new Obstacle((width - xOffset) / 4, height - yOffset - 8, true, size));
         obstacles.add(new Obstacle((width - xOffset) / 4, height - yOffset - 16, true, size));
+
+        obstacles.add(new Obstacle((width - xOffset) / 2 - 19, height - yOffset - 10, true, size));
+        obstacles.add(new Obstacle((width - xOffset) / 2 - 19, height - yOffset - 18, true, size));
+        obstacles.add(new Obstacle((width - xOffset) / 2 - 8, height - yOffset - 18, true, size));
+        obstacles.add(new Obstacle((width - xOffset) / 2 + 2, height - yOffset - 10, true, size));
+        obstacles.add(new Obstacle((width - xOffset) / 2 + 2, height - yOffset - 18, true, size));
 
         obstacles.add(new Obstacle(width / 2 - xOffset + 16 + 8 * 12 - 4, height - 40 - yOffset, false, size));
         obstacles.add(new Obstacle(width / 2 - xOffset + 16 + 8 * 12 - 4, height - 48 - yOffset, false, size));
@@ -93,6 +106,7 @@ public class CreateBattlefield implements Serializable {
         obstacles.add(new Obstacle(2 * (width - xOffset) / 3, 16, false, size));
         obstacles.add(new Obstacle(2 * (width - xOffset) / 3 + 8, 17, true, size));
         obstacles.add(new Obstacle(2 * (width - xOffset) / 3 + 16, 17, true, size));
+        addRectangleArea((width - xOffset) / 2 + 24, 9, (width - xOffset) / 2 + 40, 25, true);
 
         // Väggen närmast högra kanten
         for (int i = 48; i < height / 2 - yOffset; i += 8) {

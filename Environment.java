@@ -120,7 +120,7 @@ public class Environment {
         } else if (randSpawnTypeD >= 0.30 && randSpawnTypeD <= 0.65) {
             /* ## Timer: Waterspawn ## */
             water = true;
-            int waterIncrementTime = 3000;
+            int waterIncrementTime = 4000;
             Timer waterTimer = new Timer(waterIncrementTime, new ActionListener() {
 
                 @Override
@@ -168,7 +168,7 @@ public class Environment {
             fire = true;
             /* ## Timer: Firespawn ## */
             // TESTING FIRE
-            int flameIncrementTime = 3000;
+            int flameIncrementTime = 4000;
             Timer fireTimer = new Timer(flameIncrementTime, new ActionListener() {
                 public void actionPerformed(ActionEvent evt) {
                     fireRing.increaseFlames();

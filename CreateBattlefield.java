@@ -76,6 +76,9 @@ public class CreateBattlefield implements Serializable {
         obstacles.add(new Obstacle(width / 2 - xOffset + 16 + 8 * 12 - 4, height - 48 - yOffset, false, size));
 
         obstacles.add(new Obstacle(width / 2 - xOffset + 22, height - 32 - yOffset, true, size));
+        obstacles.add(new Obstacle(3 * (width - xOffset) / 4 + 22, 3 * (height - yOffset) / 4 + 10, true, size));
+        addRectangleArea(3 * (width - xOffset) / 4, 3 * (height - yOffset) / 4 + 45, 3 * (width - xOffset) / 4 + 8,
+                3 * (height - yOffset) / 4 + 61, true);
 
         // Allra vänstra väggen
         for (int i = 48; i < height / 2 - yOffset; i += 8) {
@@ -84,6 +87,15 @@ public class CreateBattlefield implements Serializable {
         }
         obstacles.add(new Obstacle(8, 3 * (height - yOffset) / 4 - 32, true, size));
         obstacles.add(new Obstacle(16, 3 * (height - yOffset) / 4 - 32, true, size));
+
+        addRectangleArea(40, 16, 56, 40, true);
+        addRectangleArea(8, 48, 24, 56, true);
+
+        obstacles.add(new Obstacle((width - xOffset) / 4 - 28, 3 * (height - yOffset) / 4 + 20, true, size));
+        addRectangleArea((width - xOffset) / 4 - 20, 3 * (height - yOffset) / 4 + 2, (width - xOffset) / 4 + 4,
+                3 * (height - yOffset) / 4 + 10, true);
+        addRectangleArea((width - xOffset) / 4 - 4, 3 * (height - yOffset) / 4 + 2, (width - xOffset) / 4 + 4,
+                3 * (height - yOffset) / 4 + 26, true);
 
         // Näst vänstra väggen
         obstacles.add(new Obstacle(72, 32, false, size));
@@ -107,6 +119,7 @@ public class CreateBattlefield implements Serializable {
         obstacles.add(new Obstacle(2 * (width - xOffset) / 3 + 8, 17, true, size));
         obstacles.add(new Obstacle(2 * (width - xOffset) / 3 + 16, 17, true, size));
         addRectangleArea((width - xOffset) / 2 + 24, 9, (width - xOffset) / 2 + 40, 25, true);
+        addRectangleArea((width - xOffset) / 2 + 80, 16, (width - xOffset) / 2 + 96, 40, true);
 
         // Väggen närmast högra kanten
         for (int i = 48; i < height / 2 - yOffset; i += 8) {
@@ -115,6 +128,9 @@ public class CreateBattlefield implements Serializable {
         }
 
         obstacles.add(new Obstacle(width - xOffset - 45, height / 2 - yOffset + 5, true, size));
+
+        addRectangleArea(width - xOffset - 68, 3 * (height - yOffset) / 4 + 12, width - xOffset - 56,
+                3 * (height - yOffset) / 4 + 24, true);
 
         // Väggen näst närmast högra kanten
         for (int i = 120; i < height / 2 - yOffset + 64; i += 8) {

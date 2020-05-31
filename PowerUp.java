@@ -14,6 +14,14 @@ public class PowerUp extends Sprite {
             loadSprite("Images/fireBoost3.png");
         } else if (type == 3) {
             loadSprite("Images/movementBoost2.png");
+        } else if (type == 4) {
+            loadSprite("Images/minigun.png");
+        } else if (type == 5) {
+            loadSprite("Images/sniper.png");
+        } else if (type == 6) {
+            loadSprite("Images/rocket.png");
+        } else if (type == 7) {
+            loadSprite("Images/mine.png");
         }
     }
 

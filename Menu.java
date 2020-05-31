@@ -254,6 +254,7 @@ public class Menu {
             int y = bounds.y + ((bounds.height - fm.getHeight()) / 2) + fm.getAscent();
             g2d.setColor(isSelected ? Color.WHITE : Color.LIGHT_GRAY);
 
+            g2d.drawString("BATTLETRONICS", 55, 50);
             g2d.drawString(text, x, y);
         }
 

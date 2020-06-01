@@ -18,4 +18,4 @@
 
 #### Preview images of the game
 
-![Image of playing board](readmeImages/img4.png) ![Image of playing board](readmeImages/img6.png) ![Image of playing board](readmeImages/img5.png) ![Image of playing board](readmeImages/img1.png) ![Image of playing board](readmeImages/img2.png) ![Image of playing board](readmeImages/img3.png)
+![Image of playing board](readmeImages/img7.png) ![Image of playing board](readmeImages/img6.png) ![Image of playing board](readmeImages/img5.png) ![Image of playing board](readmeImages/img1.png) ![Image of playing board](readmeImages/img2.png) ![Image of playing board](readmeImages/img3.png)

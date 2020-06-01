@@ -903,6 +903,33 @@ public class CollisionDetection implements Serializable {
                 }
             }
         }
+
+        // Collision with obstacles
+        Player playerObj = player1; // Default to player1.
+        if (player == 1)
+            playerObj = (Player1) player1;
+        else if (player == 2)
+            playerObj = (Player2) player2;
+        else if (player == 3)
+            playerObj = (Player3) player3;
+        else if (player == 4)
+            playerObj = (Player4) player4;
+
+        Rectangle o;
+        ArrayList<Rocket> rocket = playerObj.getRocket();
+
+        for (int i = 0; i < rocket.size(); i++) {
+            Rocket rocketCheck = rocket.get(i);
+            b = rocketCheck.getBoundary();
+            for (Obstacle obstacle : obstacles) {
+                o = obstacle.getBoundary();
+                if (o.intersects(b)) {
+                    playerObj.getRocket().remove(rocketCheck);
+                    explosion(rocketCheck.xpos, rocketCheck.ypos, playerObj);
+                    break;
+                }
+            }
+        }
     }
 
     /* Check for mine collision */

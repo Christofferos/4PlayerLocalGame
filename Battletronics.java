@@ -63,6 +63,10 @@ public class Battletronics extends JPanel implements ActionListener {
     private ActionMap am;
     private PlayerMovement playerMovement;
 
+    public TAdapter tAdapter;
+
+    public ArrayList<Boolean> stopSoundEffects;
+
     // private long countDownStartTime = -1;
     // private long countDownDuration = 120000;
     // public JLabel countDownLabel = new JLabel("...", JLabel.CENTER);
@@ -93,12 +97,12 @@ public class Battletronics extends JPanel implements ActionListener {
         /* ## Player Objects ## */
         // TESTING
         this.nrOfPlayers = nrOfPlayers;
-        player1 = new Player1(3, 18, 18); // 18 18 // 120 120
-        player2 = new Player2(3, 232, 226); // 232 226 // 140 140
+        player1 = new Player1(1, 3, 18, 18); // 18 18 // 120 120
+        player2 = new Player2(2, 3, 232, 226); // 232 226 // 140 140
         if (nrOfPlayers >= 3)
-            player3 = new Player3(3, 18, 226);
+            player3 = new Player3(3, 3, 18, 226);
         if (nrOfPlayers == 4)
-            player4 = new Player4(3, 232, 18);
+            player4 = new Player4(4, 3, 232, 18);
 
         /* ## Object Lists ## */
         obstacles = new ArrayList<Obstacle>();
@@ -107,6 +111,7 @@ public class Battletronics extends JPanel implements ActionListener {
         fireBlocks = new ArrayList<FireBlock>();
         waterBlocks = new ArrayList<WaterBlock>();
         lightningBlocks = new ArrayList<LightningBlock>();
+        stopSoundEffects = new ArrayList<Boolean>();
 
         /* ## Battlefield Object ## */
         createBattlefield = new CreateBattlefield(obstacles, width, height, xOffset, yOffset);
@@ -114,16 +119,17 @@ public class Battletronics extends JPanel implements ActionListener {
         createBattlefield.createBattlefield();
 
         /* ## Collision Object ## */
-        collisionDetection = new CollisionDetection(player1, player2, player3, player4, obstacles, healthPacks,
-                powerUps, fireBlocks, waterBlocks, lightningBlocks);
+        collisionDetection = new CollisionDetection(player1, player2, player3, player4, playerMovement, obstacles,
+                healthPacks, powerUps, fireBlocks, waterBlocks, lightningBlocks, stopSoundEffects);
 
         /* ## Player Actions ## */
-        addKeyListener(new TAdapter());
+        tAdapter = new TAdapter();
+        addKeyListener(tAdapter);
         playerInventory = new PlayerInventory(player1, player2, player3, player4, collisionDetection);
 
         /* ## Fire and Water Objects ## */
         fireRing = new FireRing(fireBlocks, width, height, xOffset, yOffset);
-        waterFlood = new WaterFlood(waterBlocks, width, height, xOffset, yOffset);
+        waterFlood = new WaterFlood(waterBlocks, width, height, xOffset, yOffset, stopSoundEffects);
         lightningStorm = new LightningStorm(lightningBlocks, width, height, xOffset, yOffset);
 
         /* ## Environment: decides terrain on playing field */
@@ -161,6 +167,7 @@ public class Battletronics extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         updateBulltes();
+        updateRockets();
         checkIfPlayerIsUnderWater();
         healthPackSpawn.checkHealthPackCount();
         powerUpSpawn.checkPowerUpCount();
@@ -214,6 +221,22 @@ public class Battletronics extends JPanel implements ActionListener {
             collisionDetection.hit(3);
         if (nrOfPlayers == 4)
             collisionDetection.hit(4);
+
+        // Check rocket collision
+        collisionDetection.rocketHit(1);
+        collisionDetection.rocketHit(2);
+        if (nrOfPlayers >= 3)
+            collisionDetection.rocketHit(3);
+        if (nrOfPlayers == 4)
+            collisionDetection.rocketHit(4);
+
+        // Check mine collision
+        collisionDetection.mineHit(1);
+        collisionDetection.mineHit(2);
+        if (nrOfPlayers >= 3)
+            collisionDetection.mineHit(3);
+        if (nrOfPlayers == 4)
+            collisionDetection.mineHit(4);
 
         // Check inventory actions
         if (!player1.dead)
@@ -294,6 +317,7 @@ public class Battletronics extends JPanel implements ActionListener {
         if (nrOfPlayers == 4)
             bulletsP4 = player4.getBullets();
 
+        // DRAW BULLETS
         for (Bullet bulletP1 : bulletsP1) {
             g2.drawImage(bulletP1.getImage(), bulletP1.getXpos() + 2, bulletP1.getYpos() + 2, this); // +2 to center.
         }
@@ -309,6 +333,59 @@ public class Battletronics extends JPanel implements ActionListener {
                 g2.drawImage(bulletP4.getImage(), bulletP4.getXpos() + 2, bulletP4.getYpos() + 2, this);
             }
 
+        // DRAW ROCKETS
+        for (Rocket rocketP1 : player1.getRocket()) {
+            g2.drawImage(rocketP1.getImage(), rocketP1.getXpos() + 2, rocketP1.getYpos() + 2, this); // +2 to center.
+        }
+        for (Rocket rocketP2 : player2.getRocket()) {
+            g2.drawImage(rocketP2.getImage(), rocketP2.getXpos() + 2, rocketP2.getYpos() + 2, this); // +2 to center.
+        }
+        if (nrOfPlayers >= 3)
+            for (Rocket rocketP3 : player3.getRocket()) {
+                g2.drawImage(rocketP3.getImage(), rocketP3.getXpos() + 2, rocketP3.getYpos() + 2, this); // +2 to center.
+            }
+        if (nrOfPlayers == 4)
+            for (Rocket rocketP4 : player4.getRocket()) {
+                g2.drawImage(rocketP4.getImage(), rocketP4.getXpos() + 2, rocketP4.getYpos() + 2, this); // +2 to center.
+            }
+
+        // DRAW MINES 
+        for (Mine mineP1 : player1.getMines()) {
+            if (mineP1.isVisible())
+                g2.drawImage(mineP1.getImage(), mineP1.getXpos() - 4, mineP1.getYpos() - 4, this);
+        }
+        for (Mine mineP2 : player2.getMines()) {
+            if (mineP2.isVisible())
+                g2.drawImage(mineP2.getImage(), mineP2.getXpos() - 4, mineP2.getYpos() - 4, this);
+        }
+        if (nrOfPlayers >= 3)
+            for (Mine mineP3 : player3.getMines()) {
+                if (mineP3.isVisible())
+                    g2.drawImage(mineP3.getImage(), mineP3.getXpos() - 4, mineP3.getYpos() - 4, this);
+            }
+        if (nrOfPlayers == 4)
+            for (Mine mineP4 : player4.getMines()) {
+                if (mineP4.isVisible())
+                    g2.drawImage(mineP4.getImage(), mineP4.getXpos() - 4, mineP4.getYpos() - 4, this);
+            }
+
+        // DRAW EXPLOSIONS
+        for (RocketExplosion explosionP1 : player1.getExplosion()) {
+            g2.drawImage(explosionP1.getImage(), explosionP1.getXpos() - 14, explosionP1.getYpos() - 16, this);
+        }
+        for (RocketExplosion explosionP2 : player2.getExplosion()) {
+            g2.drawImage(explosionP2.getImage(), explosionP2.getXpos() - 14, explosionP2.getYpos() - 16, this);
+        }
+        if (nrOfPlayers >= 3)
+            for (RocketExplosion explosionP3 : player3.getExplosion()) {
+                g2.drawImage(explosionP3.getImage(), explosionP3.getXpos() - 14, explosionP3.getYpos() - 16, this);
+            }
+        if (nrOfPlayers == 4)
+            for (RocketExplosion explosionP4 : player4.getExplosion()) {
+                g2.drawImage(explosionP4.getImage(), explosionP4.getXpos() - 14, explosionP4.getYpos() - 16, this);
+            }
+
+        // DRAW movable OBSTACLES
         for (Obstacle obstacle : obstacles) {
             if (obstacle.movable())
                 g.drawImage(obstacle.getImage(), obstacle.getXpos(), obstacle.getYpos(), this);
@@ -431,6 +508,8 @@ public class Battletronics extends JPanel implements ActionListener {
         g.drawString(message, 75, 130);
         g.drawString(message2, 73, 185);
         startRestartGameOption();
+        stopSoundEffects.add(true);
+        removeKeyListener(tAdapter);
         ongoingGame = false;
     }
 
@@ -494,15 +573,18 @@ public class Battletronics extends JPanel implements ActionListener {
     public void restartGame() {
         winner = 0;
         ongoingGame = true;
+        tAdapter = new TAdapter();
+        addKeyListener(tAdapter);
+        stopSoundEffects.clear();
         setBackground(Color.black);
         setFocusable(true);
         gameLoopTimer.start();
-        player1 = new Player1(3, 18, 18);
-        player2 = new Player2(3, 232, 226);
+        player1 = new Player1(1, 3, 18, 18);
+        player2 = new Player2(2, 3, 232, 226);
         if (nrOfPlayers >= 3)
-            player3 = new Player3(3, 18, 226);
+            player3 = new Player3(3, 3, 18, 226);
         if (nrOfPlayers == 4)
-            player4 = new Player4(3, 232, 18);
+            player4 = new Player4(4, 3, 232, 18);
         obstacles = new ArrayList<Obstacle>();
         healthPacks = new ArrayList<HealthPack>();
         powerUps = new ArrayList<PowerUp>();
@@ -512,11 +594,18 @@ public class Battletronics extends JPanel implements ActionListener {
         createBattlefield = new CreateBattlefield(obstacles, width, height, xOffset, yOffset);
         createBattlefield.createBorder();
         createBattlefield.createBattlefield();
-        collisionDetection = new CollisionDetection(player1, player2, player3, player4, obstacles, healthPacks,
-                powerUps, fireBlocks, waterBlocks, lightningBlocks);
+        collisionDetection = new CollisionDetection(player1, player2, player3, player4, playerMovement, obstacles,
+                healthPacks, powerUps, fireBlocks, waterBlocks, lightningBlocks, stopSoundEffects);
         playerInventory = new PlayerInventory(player1, player2, player3, player4, collisionDetection);
         fireRing = new FireRing(fireBlocks, width, height, xOffset, yOffset);
-        waterFlood = new WaterFlood(waterBlocks, width, height, xOffset, yOffset);
+
+        if (waterFlood.waitUnitlNextTsunami != null)
+            waterFlood.waitUnitlNextTsunami.stop();
+        if (waterFlood.tsunamiTimer != null)
+            waterFlood.tsunamiTimer.stop();
+        waterFlood.waterCount = 0;
+
+        waterFlood = new WaterFlood(waterBlocks, width, height, xOffset, yOffset, stopSoundEffects);
         lightningStorm = new LightningStorm(lightningBlocks, width, height, xOffset, yOffset);
         healthPackSpawn = new HealthPackSpawn(healthPacks, width, height, xOffset, yOffset, collisionDetection);
         powerUpSpawn = new PowerUpSpawn(powerUps, width, height, xOffset, yOffset, collisionDetection);
@@ -532,6 +621,10 @@ public class Battletronics extends JPanel implements ActionListener {
         else if (lightningRecently)
             recentEnvironment = 3;
 
+        environment.fire = false;
+        environment.water = false;
+        environment.lightning = false;
+
         environment = new Environment(player1, player2, player3, player4, waterFlood, fireRing, lightningStorm,
                 collisionDetection, recentEnvironment);
     }
@@ -543,7 +636,7 @@ public class Battletronics extends JPanel implements ActionListener {
             for (int i = 0; i < bulletsP1.size(); i++) {
                 Bullet bulletP1 = bulletsP1.get(i);
                 if (bulletP1.isVisible()) {
-                    bulletP1.movement(player1.getDirection());
+                    bulletP1.movement(player1.getDirection(), player1.getBulletSpeed());
                 } else {
                     bulletsP1.remove(i);
                 }
@@ -557,7 +650,7 @@ public class Battletronics extends JPanel implements ActionListener {
             for (int i = 0; i < bulletsP2.size(); i++) {
                 Bullet bulletP2 = bulletsP2.get(i);
                 if (bulletP2.isVisible()) {
-                    bulletP2.movement(player2.getDirection());
+                    bulletP2.movement(player2.getDirection(), player2.getBulletSpeed());
                 } else {
                     bulletsP2.remove(i);
                 }
@@ -572,7 +665,7 @@ public class Battletronics extends JPanel implements ActionListener {
                 for (int i = 0; i < bulletsP3.size(); i++) {
                     Bullet bulletP3 = bulletsP3.get(i);
                     if (bulletP3.isVisible()) {
-                        bulletP3.movement(player3.getDirection());
+                        bulletP3.movement(player3.getDirection(), player3.getBulletSpeed());
                     } else {
                         bulletsP3.remove(i);
                     }
@@ -587,13 +680,77 @@ public class Battletronics extends JPanel implements ActionListener {
                 for (int i = 0; i < bulletsP4.size(); i++) {
                     Bullet bulletP4 = bulletsP4.get(i);
                     if (bulletP4.isVisible()) {
-                        bulletP4.movement(player4.getDirection());
+                        bulletP4.movement(player4.getDirection(), player4.getBulletSpeed());
                     } else {
                         bulletsP4.remove(i);
                     }
                 }
             } else {
                 bulletsP4.clear();
+            }
+        }
+    }
+
+    /* ## RocketPowerUp Movement [Called from GameLoop] ## */
+    // UNDER CONSTRUCTION
+    private void updateRockets() {
+        ArrayList<Rocket> rocketP1 = player1.getRocket();
+        if (!player1.dead) {
+            for (int i = 0; i < rocketP1.size(); i++) {
+                Rocket rocket = rocketP1.get(i);
+                if (rocket.isVisible()) {
+                    rocket.movement(player1.getDirection(), 1);
+                } else {
+                    rocketP1.remove(i);
+                }
+            }
+        } else {
+            rocketP1.clear();
+        }
+
+        ArrayList<Rocket> rocketP2 = player2.getRocket();
+        if (!player2.dead) {
+            for (int i = 0; i < rocketP2.size(); i++) {
+                Rocket rocket = rocketP2.get(i);
+                if (rocket.isVisible()) {
+                    rocket.movement(player2.getDirection(), 1);
+                } else {
+                    rocketP2.remove(i);
+                }
+            }
+        } else {
+            rocketP2.clear();
+        }
+
+        if (nrOfPlayers >= 3) {
+            ArrayList<Rocket> rocketP3 = player3.getRocket();
+            if (!player3.dead) {
+                for (int i = 0; i < rocketP3.size(); i++) {
+                    Rocket rocket = rocketP3.get(i);
+                    if (rocket.isVisible()) {
+                        rocket.movement(player3.getDirection(), 1);
+                    } else {
+                        rocketP3.remove(i);
+                    }
+                }
+            } else {
+                rocketP3.clear();
+            }
+        }
+
+        if (nrOfPlayers == 4) {
+            ArrayList<Rocket> rocketP4 = player4.getRocket();
+            if (!player4.dead) {
+                for (int i = 0; i < rocketP4.size(); i++) {
+                    Rocket rocket = rocketP4.get(i);
+                    if (rocket.isVisible()) {
+                        rocket.movement(player4.getDirection(), 1);
+                    } else {
+                        rocketP4.remove(i);
+                    }
+                }
+            } else {
+                rocketP4.clear();
             }
         }
     }

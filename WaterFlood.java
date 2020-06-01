@@ -9,15 +9,15 @@ import java.awt.event.ActionListener;
 
 import java.awt.Rectangle;
 
-public class WaterFlood implements ActionListener {
+public class WaterFlood {
     private static final long serialVersionUID = 1L;
     ArrayList<WaterBlock> waterBlocks;
+    ArrayList<Boolean> stopSoundEffects;
     int width;
     int height;
     int xOffset;
     int yOffset;
     int waterCount = 1;
-    int increaseCount = 1;
     Timer tsunamiTimer;
     int directionTsunami;
     int tsunamiPosX = 0;
@@ -30,12 +30,14 @@ public class WaterFlood implements ActionListener {
     Timer waitUnitlNextTsunami;
     Timer holdWaterLevel;
 
-    public WaterFlood(ArrayList<WaterBlock> waterBlocks, int width, int height, int xOffset, int yOffset) {
+    public WaterFlood(ArrayList<WaterBlock> waterBlocks, int width, int height, int xOffset, int yOffset,
+            ArrayList<Boolean> stopSoundEffects) {
         this.waterBlocks = waterBlocks;
         this.width = width;
         this.height = height;
         this.xOffset = xOffset;
         this.yOffset = yOffset;
+        this.stopSoundEffects = stopSoundEffects;
     }
 
     public void waterRectangle(int x1, int y1, int x2, int y2) {
@@ -138,6 +140,17 @@ public class WaterFlood implements ActionListener {
                 yTsunamiDir = -8;
                 break;
         }
+
+        // This sound effect randomly is turned on during different environments. Bug somewhere cannot find it. Disable meanwhile.
+        /*
+        try {
+            SoundEffect soundEffect = new SoundEffect("Sound/tsunami.wav", stopSoundEffects);
+            soundEffect.play();
+        } catch (Exception ex) {
+            System.out.println("Soundtrack not found");
+            ex.printStackTrace();
+        }
+        */
     }
 
     public void moveTsunami() {
@@ -168,6 +181,7 @@ public class WaterFlood implements ActionListener {
                     xTsunamiDir = 0;
 
                     holdWaterLevel = new Timer(5000, new ActionListener() {
+
                         @Override
                         public void actionPerformed(ActionEvent e) {
                             xTsunamiDir = 8;
@@ -200,6 +214,7 @@ public class WaterFlood implements ActionListener {
                 if (Math.abs(yNoDieZone - tsunamiPosY) < 20) {
                     yTsunamiDir = 0;
                     holdWaterLevel = new Timer(5000, new ActionListener() {
+
                         @Override
                         public void actionPerformed(ActionEvent e) {
                             yTsunamiDir = 8;
@@ -214,6 +229,7 @@ public class WaterFlood implements ActionListener {
 
         int xCenter = (width - xOffset) / 2;
         int yCenter = (height - yOffset) / 2;
+
         waterRectangle(xCenter - 32, yCenter - 32, xCenter + 32, yCenter + 32);
         waterRectangle(8, yCenter - 8, xCenter * 2 - 8, yCenter + 8);
         waterRectangle(xCenter - 8, 8, xCenter + 8, yCenter * 2 - 8);
@@ -246,13 +262,13 @@ public class WaterFlood implements ActionListener {
     }
 
     public void startTimer() {
-        tsunamiTimer = new Timer(250, (ActionListener) this);
+        tsunamiTimer = new Timer(250, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                moveTsunami();
+            }
+        });
         tsunamiTimer.start();
-    }
-
-    @Override
-    public void actionPerformed(java.awt.event.ActionEvent e) {
-        moveTsunami();
     }
 
 }

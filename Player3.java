@@ -4,8 +4,8 @@ import java.awt.event.*;
 public class Player3 extends Player {
     private static final long serialVersionUID = 1L;
 
-    public Player3(int lives, int xpos, int ypos) {
-        super(lives, xpos, ypos);
+    public Player3(int id, int lives, int xpos, int ypos) {
+        super(id, lives, xpos, ypos);
 
         loadSprite("Images/player3.png");
     }

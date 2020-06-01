@@ -1,7 +1,10 @@
 import java.awt.Rectangle;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+import javax.swing.*;
+import java.awt.event.*;
 
 public class CollisionDetection implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -9,6 +12,7 @@ public class CollisionDetection implements Serializable {
     Player2 player2;
     Player3 player3;
     Player4 player4;
+    PlayerMovement playerMovement;
     ArrayList<Obstacle> obstacles;
     ArrayList<HealthPack> healthPacks;
     ArrayList<PowerUp> powerUps;
@@ -16,20 +20,47 @@ public class CollisionDetection implements Serializable {
     ArrayList<WaterBlock> waterBlocks;
     ArrayList<LightningBlock> lightningBlocks;
 
+    ArrayList<Boolean> stopSoundEffects;
+
+    boolean explosionDmgTaken1 = false;
+    boolean explosionDmgTaken2 = false;
+    boolean explosionDmgTaken3 = false;
+    boolean explosionDmgTaken4 = false;
+
     public CollisionDetection(Player1 player1, Player2 player2, Player3 player3, Player4 player4,
-            ArrayList<Obstacle> obstacles, ArrayList<HealthPack> healthPacks, ArrayList<PowerUp> powerUps,
-            ArrayList<FireBlock> fireBlocks, ArrayList<WaterBlock> waterBlocks,
-            ArrayList<LightningBlock> lightningBlocks) {
+            PlayerMovement playerMovement, ArrayList<Obstacle> obstacles, ArrayList<HealthPack> healthPacks,
+            ArrayList<PowerUp> powerUps, ArrayList<FireBlock> fireBlocks, ArrayList<WaterBlock> waterBlocks,
+            ArrayList<LightningBlock> lightningBlocks, ArrayList<Boolean> stopSoundEffects) {
         this.player1 = player1;
         this.player2 = player2;
         this.player3 = player3;
         this.player4 = player4;
+        this.playerMovement = playerMovement;
         this.obstacles = obstacles;
         this.healthPacks = healthPacks;
         this.fireBlocks = fireBlocks;
         this.waterBlocks = waterBlocks;
         this.lightningBlocks = lightningBlocks;
         this.powerUps = powerUps;
+        this.stopSoundEffects = stopSoundEffects;
+
+        /* ## Timer: Explosion Damage To Players ## */
+        int explosionFreq = 50;
+        Timer explosionCheck = new Timer(explosionFreq, new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                if (!player1.dead)
+                    standingInExplosion(1);
+                if (!player2.dead)
+                    standingInExplosion(2);
+                if (player3 != null)
+                    if (!player3.dead)
+                        standingInExplosion(3);
+                if (player4 != null)
+                    if (!player4.dead)
+                        standingInExplosion(4);
+            }
+        });
+        explosionCheck.start();
     }
 
     // Collision works only if object is of equal or greater size than the player.
@@ -219,6 +250,52 @@ public class CollisionDetection implements Serializable {
                 }
             } else if (player == 4) {
                 if (object.intersects(player4.getBoundary())) {
+                    player4.decrementLives();
+                    break;
+                }
+            }
+        }
+    }
+
+    public void standingInExplosion(int player) {
+        Rectangle object;
+        Player playerObj = player1; // Default to player1.
+        if (player == 1)
+            playerObj = (Player1) player1;
+        else if (player == 2)
+            playerObj = (Player2) player2;
+        else if (player == 3)
+            playerObj = (Player3) player3;
+        else if (player == 4)
+            playerObj = (Player4) player4;
+
+        for (int i = 0; i < playerObj.getExplosion().size(); i++) {
+            // NOT WORKING CORRECTLY
+            object = playerObj.getExplosion().get(i).getBoundary();
+            if (object.intersects(player1.getBoundary()) && !explosionDmgTaken1) {
+                explosionDmgTaken1 = true;
+                player1.decrementLives();
+                player1.decrementLives();
+                break;
+            }
+            if (object.intersects(player2.getBoundary()) && !explosionDmgTaken2) {
+                explosionDmgTaken2 = true;
+                player2.decrementLives();
+                player2.decrementLives();
+                break;
+            }
+            if (player3 != null) {
+                if (object.intersects(player3.getBoundary()) && !explosionDmgTaken3) {
+                    explosionDmgTaken3 = true;
+                    player3.decrementLives();
+                    player3.decrementLives();
+                    break;
+                }
+            }
+            if (player4 != null) {
+                if (object.intersects(player4.getBoundary()) && !explosionDmgTaken4) {
+                    explosionDmgTaken4 = true;
+                    player4.decrementLives();
                     player4.decrementLives();
                     break;
                 }
@@ -486,12 +563,21 @@ public class CollisionDetection implements Serializable {
             return false;
         Random rand = new Random();
         double doubleRand = rand.nextDouble();
-        if (doubleRand < 0.33)
-            powerUps.add(new PowerUp(x, y, 1));
-        if (doubleRand >= 0.33 && doubleRand < 0.66)
-            powerUps.add(new PowerUp(x, y, 2));
-        if (doubleRand >= 0.66 && doubleRand <= 1)
-            powerUps.add(new PowerUp(x, y, 3));
+        // TESTING powerup
+        if (doubleRand < 0.20)
+            powerUps.add(new PowerUp(x, y, 6));
+        if (doubleRand >= 0.20 && doubleRand < 0.40)
+            powerUps.add(new PowerUp(x, y, 6));
+        if (doubleRand >= 0.40 && doubleRand < 0.60)
+            powerUps.add(new PowerUp(x, y, 6));
+        if (doubleRand >= 0.60 && doubleRand < 0.70)
+            powerUps.add(new PowerUp(x, y, 6));
+        if (doubleRand >= 0.70 && doubleRand < 0.80)
+            powerUps.add(new PowerUp(x, y, 6));
+        if (doubleRand >= 0.80 && doubleRand < 0.90)
+            powerUps.add(new PowerUp(x, y, 6));
+        if (doubleRand >= 0.90 && doubleRand <= 1)
+            powerUps.add(new PowerUp(x, y, 6));
         return true;
     }
 
@@ -529,6 +615,14 @@ public class CollisionDetection implements Serializable {
                     if (playerObj.inventory != playerObj.inventoryMaxCap - 1) {
                         playerObj.inventory++;
                     }
+                } else if (powerUps.get(i).getType() == 4) {
+                    new PowerUpMachineGun(playerObj, stopSoundEffects);
+                } else if (powerUps.get(i).getType() == 5) {
+                    new PowerUpSniper(playerObj);
+                } else if (powerUps.get(i).getType() == 6) {
+                    new PowerUpRocket(playerObj, playerMovement, stopSoundEffects);
+                } else if (powerUps.get(i).getType() == 7) {
+                    new PowerUpMine(playerObj, playerMovement);
                 }
                 powerUps.remove(i);
             }
@@ -660,5 +754,277 @@ public class CollisionDetection implements Serializable {
                 }
             }
         }
+    }
+
+    public void rocketHit(int player) {
+        Rectangle b;
+        Rectangle p1 = new Rectangle(0, 0, 0, 0);
+        Rectangle p2 = new Rectangle(0, 0, 0, 0);
+        Rectangle p3 = new Rectangle(0, 0, 0, 0);
+        Rectangle p4 = new Rectangle(0, 0, 0, 0);
+
+        // Collision with player objects
+        if (player == 1) {
+            p2 = player2.getBoundary();
+            p3 = (player3 != null) ? player3.getBoundary() : new Rectangle(0, 0, 0, 0);
+            p4 = (player4 != null) ? player4.getBoundary() : new Rectangle(0, 0, 0, 0);
+            if (!player1.getRocket().isEmpty()) {
+                b = player1.getRocket().get(0).getBoundary();
+                if (p2.intersects(b) && !player2.dead) {
+                    explosion(b.x, b.y, player1);
+                    player1.getRocket().clear();
+                } else if (p3.intersects(b)) {
+                    if (!player3.dead) {
+                        explosion(b.x, b.y, player1);
+                        player1.getRocket().clear();
+                    }
+                } else if (p4.intersects(b)) {
+                    if (!player4.dead) {
+                        explosion(b.x, b.y, player1);
+                        player1.getRocket().clear();
+                    }
+                }
+
+                // Rocket can collide with other players' bullets.
+                List<Bullet> bullets = player2.getBullets();
+                if (player3 != null)
+                    bullets.addAll(player3.getBullets());
+                if (player4 != null)
+                    bullets.addAll(player4.getBullets());
+                for (Bullet bullet : bullets) {
+                    if (bullet.getBoundary().intersects(b)) {
+                        if (!player1.getRocket().isEmpty()) {
+                            explosion(b.x, b.y, player1);
+                            player1.getRocket().clear();
+                        }
+                    }
+                }
+            }
+        } else if (player == 2) {
+            p1 = player1.getBoundary();
+            p3 = (player3 != null) ? player3.getBoundary() : new Rectangle(0, 0, 0, 0);
+            p4 = (player4 != null) ? player4.getBoundary() : new Rectangle(0, 0, 0, 0);
+            if (!player2.getRocket().isEmpty()) {
+                b = player2.getRocket().get(0).getBoundary();
+                if (p1.intersects(b) && !player1.dead) {
+                    explosion(b.x, b.y, player2);
+                    player2.getRocket().clear();
+                } else if (p3.intersects(b)) {
+                    if (!player3.dead) {
+                        explosion(b.x, b.y, player2);
+                        player2.getRocket().clear();
+                    }
+                } else if (p4.intersects(b)) {
+                    if (!player4.dead) {
+                        explosion(b.x, b.y, player2);
+                        player2.getRocket().clear();
+                    }
+                }
+
+                // Rocket can collide with other players' bullets.
+                List<Bullet> bullets = player1.getBullets();
+                if (player3 != null)
+                    bullets.addAll(player3.getBullets());
+                if (player4 != null)
+                    bullets.addAll(player4.getBullets());
+                for (Bullet bullet : bullets) {
+                    if (bullet.getBoundary().intersects(b)) {
+                        if (!player2.getRocket().isEmpty()) {
+                            explosion(b.x, b.y, player2);
+                            player2.getRocket().clear();
+                        }
+                    }
+                }
+            }
+        } else if (player == 3) {
+            p1 = player1.getBoundary();
+            p2 = player2.getBoundary();
+            p4 = (player4 != null) ? player4.getBoundary() : new Rectangle(0, 0, 0, 0);
+            if (!player3.getRocket().isEmpty()) {
+                b = player3.getRocket().get(0).getBoundary();
+                if (p1.intersects(b) && !player1.dead) {
+                    explosion(b.x, b.y, player3);
+                    player3.getRocket().clear();
+                } else if (p2.intersects(b) && !player2.dead) {
+                    explosion(b.x, b.y, player3);
+                    player3.getRocket().clear();
+                } else if (p4.intersects(b)) {
+                    if (!player4.dead) {
+                        explosion(b.x, b.y, player3);
+                        player3.getRocket().clear();
+                    }
+                }
+
+                // Rocket can collide with other players' bullets.
+                List<Bullet> bullets = player1.getBullets();
+                bullets.addAll(player2.getBullets());
+                if (player4 != null)
+                    bullets.addAll(player4.getBullets());
+                for (Bullet bullet : bullets) {
+                    if (bullet.getBoundary().intersects(b)) {
+                        if (!player3.getRocket().isEmpty()) {
+                            explosion(b.x, b.y, player3);
+                            player3.getRocket().clear();
+                        }
+                    }
+                }
+            }
+        } else if (player == 4) {
+            p1 = player1.getBoundary();
+            p2 = player2.getBoundary();
+            p3 = (player3 != null) ? player3.getBoundary() : new Rectangle(0, 0, 0, 0);
+            if (!player4.getRocket().isEmpty()) {
+                b = player4.getRocket().get(0).getBoundary();
+                if (p1.intersects(b) && !player1.dead) {
+                    explosion(b.x, b.y, player4);
+                    player4.getRocket().clear();
+                } else if (p2.intersects(b) && !player2.dead) {
+                    explosion(b.x, b.y, player4);
+                    player4.getRocket().clear();
+                } else if (p3.intersects(b)) {
+                    if (!player3.dead) {
+                        explosion(b.x, b.y, player4);
+                        player4.getRocket().clear();
+                    }
+                }
+
+                // Rocket can collide with other players' bullets.
+                List<Bullet> bullets = player1.getBullets();
+                bullets.addAll(player2.getBullets());
+                if (player3 != null)
+                    bullets.addAll(player3.getBullets());
+                for (Bullet bullet : bullets) {
+                    if (bullet.getBoundary().intersects(b)) {
+                        if (!player4.getRocket().isEmpty()) {
+                            explosion(b.x, b.y, player4);
+                            player4.getRocket().clear();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /* Check for mine collision */
+    public void mineHit(int player) {
+        Rectangle b;
+        Rectangle p1 = new Rectangle(0, 0, 0, 0);
+        Rectangle p2 = new Rectangle(0, 0, 0, 0);
+        Rectangle p3 = new Rectangle(0, 0, 0, 0);
+        Rectangle p4 = new Rectangle(0, 0, 0, 0);
+
+        // Collision with player objects
+        if (player == 1) {
+            p2 = player2.getBoundary();
+            p3 = (player3 != null) ? player3.getBoundary() : new Rectangle(0, 0, 0, 0);
+            p4 = (player4 != null) ? player4.getBoundary() : new Rectangle(0, 0, 0, 0);
+            if (!player1.getMines().isEmpty()) {
+                b = player1.getMines().get(0).getBoundary();
+                if (p2.intersects(b) && !player2.dead) {
+                    explosion(b.x, b.y, player1);
+                    player1.getMines().clear();
+                } else if (p3.intersects(b)) {
+                    if (!player3.dead) {
+                        explosion(b.x, b.y, player1);
+                        player1.getMines().clear();
+                    }
+                } else if (p4.intersects(b)) {
+                    if (!player4.dead) {
+                        explosion(b.x, b.y, player1);
+                        player1.getMines().clear();
+                    }
+                }
+            }
+        } else if (player == 2) {
+            p1 = player1.getBoundary();
+            p3 = (player3 != null) ? player3.getBoundary() : new Rectangle(0, 0, 0, 0);
+            p4 = (player4 != null) ? player4.getBoundary() : new Rectangle(0, 0, 0, 0);
+            if (!player2.getMines().isEmpty()) {
+                b = player2.getMines().get(0).getBoundary();
+                if (p1.intersects(b) && !player1.dead) {
+                    explosion(b.x, b.y, player2);
+                    player2.getMines().clear();
+                } else if (p3.intersects(b)) {
+                    if (!player3.dead) {
+                        explosion(b.x, b.y, player2);
+                        player2.getMines().clear();
+                    }
+                } else if (p4.intersects(b)) {
+                    if (!player4.dead) {
+                        explosion(b.x, b.y, player2);
+                        player2.getMines().clear();
+                    }
+                }
+            }
+        } else if (player == 3) {
+            p1 = player1.getBoundary();
+            p2 = player2.getBoundary();
+            p4 = (player4 != null) ? player4.getBoundary() : new Rectangle(0, 0, 0, 0);
+            if (!player3.getMines().isEmpty()) {
+                b = player3.getMines().get(0).getBoundary();
+                if (p1.intersects(b) && !player1.dead) {
+                    explosion(b.x, b.y, player3);
+                    player3.getMines().clear();
+                } else if (p2.intersects(b) && !player2.dead) {
+                    explosion(b.x, b.y, player3);
+                    player3.getMines().clear();
+                } else if (p4.intersects(b)) {
+                    if (!player4.dead) {
+                        explosion(b.x, b.y, player3);
+                        player3.getMines().clear();
+                    }
+                }
+            }
+        } else if (player == 4) {
+            p1 = player1.getBoundary();
+            p2 = player2.getBoundary();
+            p3 = (player3 != null) ? player3.getBoundary() : new Rectangle(0, 0, 0, 0);
+            if (!player4.getMines().isEmpty()) {
+                b = player4.getMines().get(0).getBoundary();
+                if (p1.intersects(b) && !player1.dead) {
+                    explosion(b.x, b.y, player4);
+                    player4.getMines().clear();
+                } else if (p2.intersects(b) && !player2.dead) {
+                    explosion(b.x, b.y, player4);
+                    player4.getMines().clear();
+                } else if (p3.intersects(b)) {
+                    if (!player3.dead) {
+                        explosion(b.x, b.y, player4);
+                        player4.getMines().clear();
+                    }
+                }
+            }
+        }
+    }
+
+    public void explosion(int x, int y, Player player) {
+        // Sound effect
+        try {
+            SoundEffect soundEffect = new SoundEffect("Sound/explosion.wav");
+            soundEffect.play();
+        } catch (Exception ex) {
+            System.out.println("Soundtrack not found");
+            ex.printStackTrace();
+        }
+
+        player.rocketExplosion.add(new RocketExplosion(x, y));
+
+        Timer explosionTime = new Timer(1, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                player.rocketExplosion.clear();
+                if (player.id == 1)
+                    explosionDmgTaken1 = false;
+                if (player.id == 2)
+                    explosionDmgTaken2 = false;
+                if (player.id == 3)
+                    explosionDmgTaken3 = false;
+                if (player.id == 4)
+                    explosionDmgTaken4 = false;
+                ((Timer) e.getSource()).stop();
+            }
+        });
+        explosionTime.setInitialDelay(350);
+        explosionTime.start();
     }
 }

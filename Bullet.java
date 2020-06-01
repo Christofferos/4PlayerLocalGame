@@ -3,7 +3,6 @@ import java.awt.*;
 
 public class Bullet extends Sprite {
     private static final long serialVersionUID = 1L;
-    private final int bulletSpeed = 3;
     private Player.Direction dirFinal;
 
     public Bullet(int xPos, int yPos) {
@@ -18,7 +17,7 @@ public class Bullet extends Sprite {
         height = img.getHeight(null);
     }
 
-    public void movement(Player.Direction dir) {
+    public void movement(Player.Direction dir, int bulletSpeed) {
         if (dirFinal == null)
             dirFinal = dir;
         switch (dirFinal) {

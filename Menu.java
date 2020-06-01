@@ -49,7 +49,7 @@ public class Menu {
         // current status of clip 
         String status;
         AudioInputStream audioInputStream;
-        String filePath = "Images/soundtrackOfficial.wav";
+        String filePath = "Sound/soundtrackOfficial.wav";
 
         // constructor to initialize streams and clip 
         public SimpleAudioPlayer() throws UnsupportedAudioFileException, IOException, LineUnavailableException { // create AudioInputStream object 

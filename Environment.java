@@ -21,41 +21,15 @@ public class Environment {
         if (environmentLastMatch == -1) {
             Random randSpawnType = new Random();
             double randSpawnTypeD = randSpawnType.nextDouble();
-            // TESTING ENVIRONMENT
+
+            // TESTING ENVIRONMENT >< 
+            // randSpawnTypeD = 0.31;
             initiateEnvironment(randSpawnTypeD, waterFlood, fireRing, lightningStorm, collisionDetection, player1,
                     player2, player3, player4);
         } else {
             newEnvironment(environmentLastMatch, waterFlood, fireRing, lightningStorm, collisionDetection, player1,
                     player2, player3, player4);
         }
-    }
-
-    public boolean isWaterEnvironment() {
-        if (water)
-            return water;
-        return water;
-    }
-
-    public boolean isFireEnvironment() {
-        if (fire)
-            return fire;
-        return fire;
-    }
-
-    public void restartWaterClock1() {
-        waterCheck1.restart();
-    }
-
-    public void restartWaterClock2() {
-        waterCheck2.restart();
-    }
-
-    public void restartWaterClock3() {
-        waterCheck3.restart();
-    }
-
-    public void restartWaterClock4() {
-        waterCheck4.restart();
     }
 
     public void newEnvironment(int environmentLastMatch, WaterFlood waterFlood, FireRing fireRing,
@@ -117,12 +91,11 @@ public class Environment {
                 }
             });
             lightningCheck.start();
-        } else if (randSpawnTypeD >= 0.30 && randSpawnTypeD <= 0.65) {
+        } else if (randSpawnTypeD > 0.30 && randSpawnTypeD <= 0.65) {
             /* ## Timer: Waterspawn ## */
             water = true;
             int waterIncrementTime = 4000;
             Timer waterTimer = new Timer(waterIncrementTime, new ActionListener() {
-
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     waterFlood.increaseWater();
@@ -194,6 +167,34 @@ public class Environment {
             });
             flameCheck.start();
         }
+    }
+
+    public boolean isWaterEnvironment() {
+        if (water)
+            return water;
+        return water;
+    }
+
+    public boolean isFireEnvironment() {
+        if (fire)
+            return fire;
+        return fire;
+    }
+
+    public void restartWaterClock1() {
+        waterCheck1.restart();
+    }
+
+    public void restartWaterClock2() {
+        waterCheck2.restart();
+    }
+
+    public void restartWaterClock3() {
+        waterCheck3.restart();
+    }
+
+    public void restartWaterClock4() {
+        waterCheck4.restart();
     }
 
 }

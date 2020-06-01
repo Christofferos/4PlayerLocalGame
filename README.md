@@ -24,7 +24,7 @@
 
 - Menu / MenuInstructions / SoundEffects
 - App / Battletronics
-- SetKeyBindings / PlayerMovement / PlayerInventory / CreateBattlefield
+- SetKeyBindings / PlayerMovement / PlayerInventory / CreateBattlefield / Players
 - CollisionDetection / HealthPackSpawn / PowerUpSpawn / Environment
 - FireRing / LightningStorm / WaterFlood
 - Sprite is parent to -> All visable objects

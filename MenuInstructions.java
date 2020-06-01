@@ -6,33 +6,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import java.io.*;
-import javax.sound.sampled.*;
-
-public class Menu {
+public class MenuInstructions {
     public int height = 315;
     public int width = 275;
     public int windowHeight = 335;
     public int windowWidth = 275;
     JFrame frame;
 
-    public static void main(String[] args) {
-        new Menu();
-    }
-
-    public Menu() {
-        try {
-            SimpleAudioPlayer audioPlayer = new SimpleAudioPlayer();
-            audioPlayer.play();
-        } catch (Exception ex) {
-            System.out.println("Soundtrack not found");
-            ex.printStackTrace();
-        }
-
+    public MenuInstructions() {
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                frame = new JFrame("Menu");
+                frame = new JFrame("Instructions");
                 frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 frame.add(new JPanelObj());
                 frame.pack();
@@ -40,46 +25,6 @@ public class Menu {
                 frame.setVisible(true);
             }
         });
-    }
-
-    public Menu(boolean playMusic) {
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                frame = new JFrame("Menu");
-                frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                frame.add(new JPanelObj());
-                frame.pack();
-                frame.setLocationRelativeTo(null);
-                frame.setVisible(true);
-            }
-        });
-    }
-
-    public class SimpleAudioPlayer {
-        // to store current position 
-        Long currentFrame;
-        Clip clip;
-        // current status of clip 
-        String status;
-        AudioInputStream audioInputStream;
-        String filePath = "Sound/soundtrackOfficial.wav";
-
-        // constructor to initialize streams and clip 
-        public SimpleAudioPlayer() throws UnsupportedAudioFileException, IOException, LineUnavailableException { // create AudioInputStream object 
-            audioInputStream = AudioSystem.getAudioInputStream(new File(filePath).getAbsoluteFile());
-            // create clip reference 
-            clip = AudioSystem.getClip();
-            // open audioInputStream to the clip 
-            clip.open(audioInputStream);
-            clip.loop(Clip.LOOP_CONTINUOUSLY);
-        }
-
-        public void play() {
-            //start the clip 
-            clip.start();
-            status = "play";
-        }
     }
 
     public class JPanelObj extends JPanel {
@@ -87,7 +32,6 @@ public class Menu {
         private List<String> menuItems;
         private String selectMenuItem;
         private String focusedItem;
-
         private MenuItemPainter painter;
         private Map<String, Rectangle> menuBounds;
 
@@ -96,10 +40,7 @@ public class Menu {
 
             painter = new SimpleMenuItemPainter();
             menuItems = new ArrayList<>(25);
-            menuItems.add("Instructions");
-            menuItems.add("2 Players");
-            menuItems.add("3 Players");
-            menuItems.add("4 Players");
+            menuItems.add("Go Back");
             selectMenuItem = menuItems.get(0);
 
             MouseAdapter ma = new MouseAdapter() {
@@ -141,12 +82,7 @@ public class Menu {
             InputMap im = getInputMap(WHEN_IN_FOCUSED_WINDOW);
             ActionMap am = getActionMap();
 
-            im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "arrowDown");
-            im.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), "arrowUp");
             im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "enterDown");
-
-            am.put("arrowDown", new MenuAction(1, ""));
-            am.put("arrowUp", new MenuAction(-1, ""));
             am.put("enterDown", new MenuAction(0, "startGame"));
 
         }
@@ -184,7 +120,7 @@ public class Menu {
                 int y = (getHeight() - totalHeight) / 2;
 
                 for (String text : menuItems) {
-                    menuBounds.put(text, new Rectangle(x, y + 10, width + 10, height + 10));
+                    menuBounds.put(text, new Rectangle(x, y + 110, width + 10, height + 10));
                     y += height + 10 + 5;
                 }
 
@@ -194,6 +130,7 @@ public class Menu {
                 boolean isSelected = text.equals(selectMenuItem);
                 boolean isFocused = text.equals(focusedItem);
                 painter.paint(g2d, text, bounds, isSelected, isFocused);
+
             }
             g2d.dispose();
         }
@@ -212,31 +149,11 @@ public class Menu {
             public void actionPerformed(ActionEvent e) {
                 int index = menuItems.indexOf(selectMenuItem);
 
-                if (startGameMsg.equals("startGame") && (index == 1 || index == 2 || index == 3)) {
-                    int numberOfPlayers = index + 1;
-                    frame.dispose();
-                    EventQueue.invokeLater(() -> {
-                        App battle = new App(numberOfPlayers);
-                        battle.setVisible(true);
-                    });
-                }
-
                 if (startGameMsg.equals("startGame") && index == 0) {
                     frame.dispose();
-                    new MenuInstructions();
+                    new Menu(false);
                 }
-
-                if (index < 0) {
-                    selectMenuItem = menuItems.get(0);
-                }
-                index += delta;
-                if (index < 0) {
-                    selectMenuItem = menuItems.get(menuItems.size() - 1);
-                } else if (index >= menuItems.size()) {
-                    selectMenuItem = menuItems.get(0);
-                } else {
-                    selectMenuItem = menuItems.get(index);
-                }
+                selectMenuItem = menuItems.get(0);
                 repaint();
             }
 
@@ -245,7 +162,6 @@ public class Menu {
     }
 
     public interface MenuItemPainter {
-
         public void paint(Graphics2D g2d, String text, Rectangle bounds, boolean isSelected, boolean isFocused);
 
         public Dimension getPreferredSize(Graphics2D g2d, String text);
@@ -274,11 +190,65 @@ public class Menu {
             int y = bounds.y + ((bounds.height - fm.getHeight()) / 2) + fm.getAscent();
             g2d.setColor(isSelected ? Color.WHITE : Color.LIGHT_GRAY);
 
-            g2d.drawString(text, x, y);
-
             f = new Font("Nunito", Font.BOLD, 22);
             g2d.setFont(f);
             g2d.drawString("BATTLETRONICS", 45, 50);
+            g2d.drawString(text, x, y);
+
+            f = new Font("Nunito", Font.PLAIN, 14);
+            g2d.setFont(f);
+
+            Image p1 = new ImageIcon("Images/player1.png").getImage();
+            g2d.drawImage(p1, 10, 70, null);
+            g2d.drawString("P1 Controls: Arrow Keys, Del, End.", 25, 80);
+
+            Image p2 = new ImageIcon("Images/player2.png").getImage();
+            g2d.drawImage(p2, 10, 90, null);
+            g2d.drawString("P2 Controls: W, A, S, D, 1, Q.", 25, 100);
+
+            Image p3 = new ImageIcon("Images/player3.png").getImage();
+            g2d.drawImage(p3, 10, 110, null);
+            g2d.drawString("P3 Controls: U, H, J, K, '.', '-'.", 25, 120);
+
+            Image p4 = new ImageIcon("Images/player4.png").getImage();
+            g2d.drawImage(p4, 10, 130, null);
+            g2d.drawString("P4 Controls: NumKeys, Div, Mult.", 25, 140);
+
+            f = new Font("Nunito", Font.PLAIN, 12);
+            g2d.setFont(f);
+            Image i1 = new ImageIcon("Images/health.png").getImage();
+            g2d.drawImage(i1, 15, 160, null);
+            g2d.drawString(": health", 25, 168);
+
+            Image i2 = new ImageIcon("Images/mine.png").getImage();
+            g2d.drawImage(i2, 90, 160, null);
+            g2d.drawString(": mine", 105, 168);
+
+            Image i3 = new ImageIcon("Images/minigun.png").getImage();
+            g2d.drawImage(i3, 155, 160, null);
+            g2d.drawString(": machineGun", 180, 168);
+
+            // Ny rad
+            Image i4 = new ImageIcon("Images/strengthBoost.png").getImage();
+            g2d.drawImage(i4, 13, 177, null);
+            g2d.drawString(": maxHP", 25, 188);
+
+            Image i5 = new ImageIcon("Images/fireBoost3.png").getImage();
+            g2d.drawImage(i5, 93, 180, null);
+            g2d.drawString(": firerate", 105, 188);
+
+            Image i6 = new ImageIcon("Images/movementBoost2.png").getImage();
+            g2d.drawImage(i6, 160, 180, null);
+            g2d.drawString(": pickUpBoost", 175, 188);
+
+            // Ny rad
+            Image i7 = new ImageIcon("Images/rocket.png").getImage();
+            g2d.drawImage(i7, 15, 200, null);
+            g2d.drawString(": rocket", 25, 208);
+
+            Image i8 = new ImageIcon("Images/sniper.png").getImage();
+            g2d.drawImage(i8, 90, 200, null);
+            g2d.drawString(": sniper", 110, 208);
 
         }
 

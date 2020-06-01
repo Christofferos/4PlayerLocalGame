@@ -19,3 +19,13 @@
 #### Preview images of the game
 
 ![Image of playing board](readmeImages/img7.png) ![Image of playing board](readmeImages/img6.png) ![Image of playing board](readmeImages/img5.png) ![Image of playing board](readmeImages/img1.png) ![Image of playing board](readmeImages/img2.png) ![Image of playing board](readmeImages/img3.png)
+
+#### Class Hierarchy
+
+- Menu / MenuInstructions / SoundEffects
+- App / Battletronics
+- SetKeyBindings / PlayerMovement / PlayerInventory / CreateBattlefield
+- CollisionDetection / HealthPackSpawn / PowerUpSpawn / Environment
+- FireRing / LightningStorm / WaterFlood
+- Sprite is parent to -> All visable objects
+- Blocks / HealthPacks / Powerups

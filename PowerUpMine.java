@@ -22,7 +22,7 @@ public class PowerUpMine {
                     player.dirKeyPress(playerMovement.movement4.xStep, playerMovement.movement4.yStep);
 
                 // Mine dropped!
-                if (player.reload && once && player.getMines().isEmpty()) {
+                if (player.reload && once) {
                     try {
                         soundEffect = new SoundEffect("Sound/mine.wav");
                         soundEffect.play();
@@ -56,7 +56,6 @@ public class PowerUpMine {
             }
         });
         mine.start();
-
     }
 
     public void startDeactivateTimer(Player player) {
@@ -64,8 +63,10 @@ public class PowerUpMine {
             @Override
             public void actionPerformed(ActionEvent e) {
                 soundEffect.stop();
-                if (!player.mines.isEmpty())
-                    player.mines.clear();
+                if (!player.mines.isEmpty()) {
+                    player.mines.get(0).visible = true;
+                    deactivate(player);
+                }
                 mine.stop();
                 ((Timer) e.getSource()).stop();
             }
@@ -75,11 +76,25 @@ public class PowerUpMine {
         deactivate.start();
     }
 
+    public void deactivate(Player player) {
+        Timer displayMineRemoval = new Timer(1, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                player.mines.remove(0);
+                ((Timer) e.getSource()).stop();
+            }
+        });
+        displayMineRemoval.setInitialDelay(2000);
+        displayMineRemoval.setRepeats(false);
+        displayMineRemoval.start();
+    }
+
     public void makeMineInvisible(Player player) {
         Timer invisible = new Timer(1, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                player.mines.get(0).makeInvisible();
+                if (!player.mines.isEmpty())
+                    player.mines.get(player.mines.size() - 1).makeInvisible();
                 ((Timer) e.getSource()).stop();
             }
         });
@@ -87,4 +102,5 @@ public class PowerUpMine {
         invisible.setRepeats(false);
         invisible.start();
     }
+
 }

@@ -22,8 +22,7 @@ public class Environment {
             Random randSpawnType = new Random();
             double randSpawnTypeD = randSpawnType.nextDouble();
 
-            // TESTING ENVIRONMENT >< 
-            // randSpawnTypeD = 0.31;
+            // TESTING ENVIRONMENT >< randSpawnTypeD = 0.66;
             initiateEnvironment(randSpawnTypeD, waterFlood, fireRing, lightningStorm, collisionDetection, player1,
                     player2, player3, player4);
         } else {

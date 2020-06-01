@@ -120,7 +120,7 @@ public class CreateBattlefield implements Serializable {
         obstacles.add(new Obstacle(2 * (width - xOffset) / 3 + 8, 17, true, size));
         obstacles.add(new Obstacle(2 * (width - xOffset) / 3 + 16, 17, true, size));
         addRectangleArea((width - xOffset) / 2 + 16, 17, (width - xOffset) / 2 + 40, 25, true);
-        addRectangleArea((width - xOffset) / 2 + 80, 24, (width - xOffset) / 2 + 96, 40, true);
+        addRectangleArea((width - xOffset) / 2 + 80, 23, (width - xOffset) / 2 + 95, 40, true);
         obstacles.add(new Obstacle((width - xOffset) / 2 + 71, 24, true, size));
         obstacles.add(new Obstacle((width - xOffset) / 2 + 71, 16, true, size));
 

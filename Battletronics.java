@@ -352,21 +352,21 @@ public class Battletronics extends JPanel implements ActionListener {
         // DRAW MINES 
         for (Mine mineP1 : player1.getMines()) {
             if (mineP1.isVisible())
-                g2.drawImage(mineP1.getImage(), mineP1.getXpos() - 4, mineP1.getYpos() - 4, this);
+                g2.drawImage(mineP1.getImage(), mineP1.getXpos(), mineP1.getYpos(), this);
         }
         for (Mine mineP2 : player2.getMines()) {
             if (mineP2.isVisible())
-                g2.drawImage(mineP2.getImage(), mineP2.getXpos() - 4, mineP2.getYpos() - 4, this);
+                g2.drawImage(mineP2.getImage(), mineP2.getXpos(), mineP2.getYpos(), this);
         }
         if (nrOfPlayers >= 3)
             for (Mine mineP3 : player3.getMines()) {
                 if (mineP3.isVisible())
-                    g2.drawImage(mineP3.getImage(), mineP3.getXpos() - 4, mineP3.getYpos() - 4, this);
+                    g2.drawImage(mineP3.getImage(), mineP3.getXpos(), mineP3.getYpos(), this);
             }
         if (nrOfPlayers == 4)
             for (Mine mineP4 : player4.getMines()) {
                 if (mineP4.isVisible())
-                    g2.drawImage(mineP4.getImage(), mineP4.getXpos() - 4, mineP4.getYpos() - 4, this);
+                    g2.drawImage(mineP4.getImage(), mineP4.getXpos(), mineP4.getYpos(), this);
             }
 
         // DRAW EXPLOSIONS

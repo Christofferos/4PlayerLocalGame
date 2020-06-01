@@ -73,13 +73,10 @@ public class FireRing implements ActionListener {
             int min = 1;
             int randomNum = rand.nextInt((max - min) + 1) + min;
             availablePositions(randomNum);
+            removeFireRectangle(xCenterOfNoDieZone - 45, xCenterOfNoDieZone + 45, yCenterOfNoDieZone - 45,
+                    yCenterOfNoDieZone + 45);
             startTimer();
             // moveFlames(1);
-        }
-        if (flameCount == 17) {
-
-            // moveTimer.stop();
-            // moveFlames(2);
         }
     }
 

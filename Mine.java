@@ -6,7 +6,7 @@ public class Mine extends Sprite {
 
     public Mine(int xPos, int yPos) {
         super(xPos, yPos);
-        loadSprite("Images/mine.png");
+        loadSprite("Images/mineWithoutWhite.png");
     }
 
     public void loadSprite(String imgName) {
@@ -23,6 +23,6 @@ public class Mine extends Sprite {
     // Align activation radius with the sprite.
     @Override
     public Rectangle getBoundary() {
-        return new Rectangle(xpos - width / 2, ypos - height / 2, 2 * width, 2 * height);
+        return new Rectangle(xpos, ypos, width, height);
     }
 }

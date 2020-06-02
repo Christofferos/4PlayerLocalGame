@@ -37,14 +37,14 @@ public class PowerUpSpawn {
     public void spawnPowerUp(CollisionDetection collisionDetection) {
         boolean spawned = false;
         while (!spawned) {
-            double max = 1;
-            double min = 0.65;
+            double max = 0.98;
+            double min = 0.56;
             Random rand = new Random();
             double doubleRand = 135 * Math.sqrt(rand.nextDouble() * (max - min) + min);
             double theta = rand.nextDouble() * 2 * Math.PI;
             int xPlacement = (int) ((width - xOffset) / 2 + doubleRand * Math.cos(theta));
             int yPlacement = (int) ((height - yOffset) / 2 + doubleRand * Math.sin(theta));
-            spawned = collisionDetection.powerUpSpawn(xPlacement - 5, yPlacement - 4);
+            spawned = collisionDetection.powerUpSpawn(xPlacement - 6, yPlacement - 4);
         }
     }
 

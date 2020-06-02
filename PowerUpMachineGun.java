@@ -30,6 +30,7 @@ public class PowerUpMachineGun {
             @Override
             public void actionPerformed(ActionEvent e) {
                 machineGunFireRate.stop();
+                soundEffect.stop();
                 ((Timer) e.getSource()).stop();
             }
         });

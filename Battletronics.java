@@ -1,4 +1,7 @@
 import javax.swing.*;
+
+import java.awt.geom.*;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -61,6 +64,12 @@ public class Battletronics extends JPanel implements ActionListener {
     boolean underWaterP2;
     boolean underWaterP3;
     boolean underWaterP4;
+
+    /* Machine gun indicator */
+    double progressBar1 = 360;
+    double progressBar2 = 360;
+    double progressBar3 = 360;
+    double progressBar4 = 360;
 
     /* # Player Movement # */
     private InputMap im;
@@ -406,6 +415,47 @@ public class Battletronics extends JPanel implements ActionListener {
                             + (double) Math.round((1.0 / ((double) player2.reloadFreq / 1000)) * 100d) / 100d,
                     165, 295);
         }
+
+        // DRAW MACHINE GUN PROGRESS BAR
+        if (player1.holdingMachineGun) {
+            machineGunProgressBar(g2, player1, progressBar1);
+            progressBar1 -= 0.54;
+            if (progressBar1 <= 0)
+                progressBar1 = 360;
+        }
+        if (player2.holdingMachineGun) {
+            machineGunProgressBar(g2, player2, progressBar2);
+            progressBar2 -= 0.54;
+            if (progressBar2 <= 0)
+                progressBar2 = 360;
+        }
+        if (player3 != null)
+            if (player3.holdingMachineGun) {
+                machineGunProgressBar(g2, player3, progressBar3);
+                progressBar3 -= 0.54;
+                if (progressBar3 <= 0)
+                    progressBar3 = 360;
+            }
+        if (player4 != null) {
+            if (player4.holdingMachineGun) {
+                machineGunProgressBar(g2, player4, progressBar4);
+                progressBar4 -= 0.54;
+            }
+            if (progressBar4 <= 0)
+                progressBar4 = 360;
+        }
+    }
+
+    public void machineGunProgressBar(Graphics2D g2, Player player, double progress) {
+        g2.setColor(Color.WHITE);
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.translate(player.getXpos() + 17, player.getYpos() - 5);
+        Arc2D.Float arc = new Arc2D.Float(Arc2D.PIE);
+        arc.setFrameFromCenter(new Point(0, 0), new Point(3, 3));
+        arc.setAngleStart(90);
+        arc.setAngleExtent(-progress);
+        g2.draw(arc);
+        g2.fill(arc);
     }
 
     /* ## GameOver: Prepare Window to be repainted [Called from GameLoop] ## */
@@ -535,6 +585,11 @@ public class Battletronics extends JPanel implements ActionListener {
         setFocusable(true);
         stopSoundEffects.clear();
         gameLoopTimer.start();
+
+        progressBar1 = 360;
+        progressBar2 = 360;
+        progressBar3 = 360;
+        progressBar4 = 360;
 
         player1 = new Player1(1, 3, 18, 18);
         player2 = new Player2(2, 3, 232, 226);

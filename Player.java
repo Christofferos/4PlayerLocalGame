@@ -30,7 +30,7 @@ public class Player extends Sprite {
     }
 
     enum BulletSound {
-        RIFLE, SNIPER
+        RIFLE, SNIPER, MACHINEGUN
     }
 
     public boolean dead;
@@ -52,6 +52,8 @@ public class Player extends Sprite {
     public ArrayList<Rocket> rocket;
     public ArrayList<RocketExplosion> rocketExplosion;
     public ArrayList<Mine> mines;
+
+    public boolean holdingMachineGun;
 
     public boolean disablePlayerMovement = false;
     public boolean disablePlayerShooting = false;
@@ -157,12 +159,14 @@ public class Player extends Sprite {
             else if (bulletSound == BulletSound.SNIPER)
                 filePath = "Sound/sniper.wav";
 
-            try {
-                SoundEffect soundEffect = new SoundEffect(filePath);
-                soundEffect.play();
-            } catch (Exception ex) {
-                System.out.println("Soundtrack not found");
-                ex.printStackTrace();
+            if (bulletSound != BulletSound.MACHINEGUN) {
+                try {
+                    SoundEffect soundEffect = new SoundEffect(filePath);
+                    soundEffect.play();
+                } catch (Exception ex) {
+                    System.out.println("Soundtrack not found");
+                    ex.printStackTrace();
+                }
             }
         }
     }

@@ -497,19 +497,19 @@ public class CollisionDetection implements Serializable {
 
         // TESTING: powerup percentage ratios
         if (doubleRand < 0.15)
-            powerUps.add(new PowerUp(x, y, 1));
+            powerUps.add(new PowerUp(x, y, 4));
         if (doubleRand >= 0.15 && doubleRand < 0.35)
-            powerUps.add(new PowerUp(x, y, 2));
+            powerUps.add(new PowerUp(x, y, 4));
         if (doubleRand >= 0.35 && doubleRand < 0.60)
-            powerUps.add(new PowerUp(x, y, 3));
+            powerUps.add(new PowerUp(x, y, 4));
         if (doubleRand >= 0.60 && doubleRand < 0.70)
             powerUps.add(new PowerUp(x, y, 4));
         if (doubleRand >= 0.70 && doubleRand < 0.80)
-            powerUps.add(new PowerUp(x, y, 5));
+            powerUps.add(new PowerUp(x, y, 4));
         if (doubleRand >= 0.80 && doubleRand < 0.90)
-            powerUps.add(new PowerUp(x, y, 6));
+            powerUps.add(new PowerUp(x, y, 4));
         if (doubleRand >= 0.90 && doubleRand <= 1)
-            powerUps.add(new PowerUp(x, y, 7));
+            powerUps.add(new PowerUp(x, y, 4));
         return true;
     }
 

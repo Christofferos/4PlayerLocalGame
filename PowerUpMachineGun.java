@@ -1,11 +1,16 @@
 import javax.swing.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import javax.swing.*;
+import java.awt.geom.Arc2D;
+import java.awt.*;
 
 public class PowerUpMachineGun {
     SoundEffect soundEffect;
 
     public PowerUpMachineGun(Player player, ArrayList<Boolean> stopSoundEffects) {
+        player.holdingMachineGun = true;
+        player.bulletSound = Player.BulletSound.MACHINEGUN;
         // Sound effect
         try {
             soundEffect = new SoundEffect("Sound/machineGun.wav", stopSoundEffects);
@@ -29,6 +34,8 @@ public class PowerUpMachineGun {
         Timer deactivate = new Timer(1, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                player.holdingMachineGun = false;
+                player.bulletSound = Player.BulletSound.RIFLE;
                 machineGunFireRate.stop();
                 soundEffect.stop();
                 ((Timer) e.getSource()).stop();

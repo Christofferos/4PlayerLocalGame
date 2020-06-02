@@ -121,7 +121,7 @@ public class Battletronics extends JPanel implements ActionListener {
         playerInventory = new PlayerInventory(player1, player2, player3, player4, collisionDetection);
 
         /* ## Environment System Objects ## */
-        fireRing = new FireRing(fireBlocks, width, height, xOffset, yOffset);
+        fireRing = new FireRing(fireBlocks, width, height, xOffset, yOffset, stopSoundEffects);
         waterFlood = new WaterFlood(waterBlocks, width, height, xOffset, yOffset, stopSoundEffects);
         lightningStorm = new LightningStorm(lightningBlocks, width, height, xOffset, yOffset);
 
@@ -298,7 +298,7 @@ public class Battletronics extends JPanel implements ActionListener {
         // DRAW MINES 
         for (Mine mine : allMines) {
             if (mine.isVisible())
-                g2.drawImage(mine.getImage(), mine.getXpos(), mine.getYpos(), this);
+                g2.drawImage(mine.getImage(), mine.getXpos() - 4, mine.getYpos() - 4, this);
         }
 
         // DRAW EXPLOSIONS
@@ -344,29 +344,54 @@ public class Battletronics extends JPanel implements ActionListener {
         }
 
         // DRAW PLAYERS
-        if (!player1.dead)
+        if (!player1.dead) {
             g2.drawImage(player1.getImage(), player1.getXpos(), player1.getYpos(), this);
-        if (!player2.dead)
+            g.setFont(new Font("Nunito", Font.PLAIN, 7));
+            g.setColor(Color.WHITE);
+            g.drawString(player1.inventory + " / " + player1.inventoryMaxCap, player1.getXpos() - 3,
+                    player1.getYpos() - 2);
+        }
+
+        if (!player2.dead) {
             g2.drawImage(player2.getImage(), player2.getXpos(), player2.getYpos(), this);
+            g.setFont(new Font("Nunito", Font.PLAIN, 7));
+            g.setColor(Color.WHITE);
+            g.drawString(player2.inventory + " / " + player2.inventoryMaxCap, player2.getXpos() - 3,
+                    player2.getYpos() - 2);
+        }
+
         if (player3 != null)
-            if (!player3.dead)
+            if (!player3.dead) {
                 g2.drawImage(player3.getImage(), player3.getXpos(), player3.getYpos(), this);
+                g.setFont(new Font("Nunito", Font.PLAIN, 7));
+                g.setColor(Color.WHITE);
+                g.drawString(player3.inventory + " / " + player3.inventoryMaxCap, player3.getXpos() - 3,
+                        player3.getYpos() - 2);
+            }
         if (player4 != null)
-            if (!player4.dead)
+            if (!player4.dead) {
                 g2.drawImage(player4.getImage(), player4.getXpos(), player4.getYpos(), this);
+                g.setFont(new Font("Nunito", Font.PLAIN, 7));
+                g.setColor(Color.WHITE);
+                g.drawString(player4.inventory + " / " + player4.inventoryMaxCap, player4.getXpos() - 3,
+                        player4.getYpos() - 2);
+            }
 
         // WRITE PLAYER STATS
-        g.setFont(new Font("Nunito", Font.BOLD, 12)); // Optional
+        g.setFont(new Font("Nunito", Font.BOLD, 13)); // Optional
         g.setColor(Color.RED); // Optional
-        g.drawString("Red lives: " + player1.getLives() + " / " + player1.maxLives, 5, 265);
+        g.drawString("HP: " + player1.getLives() + " / " + player1.maxLives, (width - xOffset) / 4 - 3, 268);
+
         g.setColor(Color.GREEN); // Optional
-        g.drawString("Green lives: " + player2.getLives() + " / " + player2.maxLives, 165, 265);
+        g.drawString("HP: " + player2.getLives() + " / " + player2.maxLives, (width - xOffset) / 2 + 10, 268);
+
         g.setColor(Color.MAGENTA); // Optional
         if (nrOfPlayers >= 3)
-            g.drawString("Purple lives: " + player3.getLives() + " / " + player3.maxLives, 5, 280);
+            g.drawString("HP: " + player3.getLives() + " / " + player3.maxLives, (width - xOffset) / 4 - 3, 288);
+
         g.setColor(Color.ORANGE); // Optional
         if (nrOfPlayers == 4)
-            g.drawString("Orange lives: " + player4.getLives() + " / " + player4.maxLives, 160, 280);
+            g.drawString("HP: " + player4.getLives() + " / " + player4.maxLives, (width - xOffset) / 2 + 10, 288);
 
         if (nrOfPlayers == 2) {
             g.setColor(Color.RED); // Optional
@@ -518,6 +543,14 @@ public class Battletronics extends JPanel implements ActionListener {
         if (nrOfPlayers == 4)
             player4 = new Player4(4, 3, 232, 18);
 
+        // Stop timers from earlier rounds.
+        if (environment.fireTimer != null)
+            environment.fireTimer.stop();
+        if (environment.waterTimer != null)
+            environment.waterTimer.stop();
+        if (environment.lightningTimer != null)
+            environment.lightningTimer.stop();
+
         obstacles = new ArrayList<Obstacle>();
         healthPacks = new ArrayList<HealthPack>();
         powerUps = new ArrayList<PowerUp>();
@@ -531,7 +564,7 @@ public class Battletronics extends JPanel implements ActionListener {
         collisionDetection = new CollisionDetection(player1, player2, player3, player4, playerMovement, obstacles,
                 healthPacks, powerUps, fireBlocks, waterBlocks, lightningBlocks, stopSoundEffects);
         playerInventory = new PlayerInventory(player1, player2, player3, player4, collisionDetection);
-        fireRing = new FireRing(fireBlocks, width, height, xOffset, yOffset);
+        fireRing = new FireRing(fireBlocks, width, height, xOffset, yOffset, stopSoundEffects);
 
         if (waterFlood.waitUnitlNextTsunami != null)
             waterFlood.waitUnitlNextTsunami.stop();

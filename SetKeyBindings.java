@@ -3,7 +3,7 @@ import java.awt.event.*;
 
 public class SetKeyBindings {
     public SetKeyBindings(InputMap im, ActionMap am, PlayerMovement playerMovement) {
-        /* Player 2 */
+        /* Player 1 */
         im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0, false), "down-pressed");
         im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0, true), "down-released");
         im.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0, false), "up-pressed");

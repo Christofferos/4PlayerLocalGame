@@ -30,6 +30,16 @@ public class LightningStorm {
         xCenter = (width - xOffset) / 2;
         yCenter = (height - yOffset) / 2;
         lightningCount = 1;
+
+        /* Too much noise when playing constantly.
+        try {
+            SoundEffect soundEffect = new SoundEffect("Sound/thunder1.wav");
+            soundEffect.play();
+        } catch (Exception ex) {
+            System.out.println("Soundtrack not found");
+            ex.printStackTrace();
+        }
+        */
     }
 
     /* ## lightningRectangle: Practical when spawning lightning rectangles ## */
@@ -132,6 +142,7 @@ public class LightningStorm {
 
                 // Tree with initial direction >>> UP
                 Timer spreadOutLightning = new Timer(10, new ActionListener() {
+
                     LightningDir currentDir = LightningDir.UP;
                     int treeNodeUpX = xPlacement;
                     int treeNodeUpY = yPlacement + 8;

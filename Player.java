@@ -179,6 +179,17 @@ public class Player extends Sprite {
         reloadTimer.start();
     }
 
+    public void playSoundEffect() {
+        if (lives >= 1)
+            try {
+                SoundEffect soundEffect = new SoundEffect("Sound/decrementHP.wav");
+                soundEffect.play();
+            } catch (Exception ex) {
+                System.out.println("Soundtrack not found");
+                ex.printStackTrace();
+            }
+    }
+
     public int getBulletSpeed() {
         return bulletSpeed;
     }

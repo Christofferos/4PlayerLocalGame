@@ -141,8 +141,6 @@ public class WaterFlood {
                 break;
         }
 
-        // This sound effect randomly is turned on during different environments. Bug somewhere cannot find it. Disable meanwhile.
-        /*
         try {
             SoundEffect soundEffect = new SoundEffect("Sound/tsunami.wav", stopSoundEffects);
             soundEffect.play();
@@ -150,7 +148,7 @@ public class WaterFlood {
             System.out.println("Soundtrack not found");
             ex.printStackTrace();
         }
-        */
+
     }
 
     public void moveTsunami() {

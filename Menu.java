@@ -21,6 +21,7 @@ public class Menu {
     }
 
     public Menu() {
+
         try {
             SimpleAudioPlayer audioPlayer = new SimpleAudioPlayer();
             audioPlayer.play();

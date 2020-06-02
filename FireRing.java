@@ -8,6 +8,7 @@ public class FireRing implements ActionListener {
     private static final long serialVersionUID = 1L;
 
     ArrayList<FireBlock> fireBlocks;
+    ArrayList<Boolean> stopSoundEffects;
     int width;
     int height;
     int xOffset;
@@ -30,7 +31,9 @@ public class FireRing implements ActionListener {
     int r = noDieZoneRadius;
     int iteration = 0;
 
-    public FireRing(ArrayList<FireBlock> fireBlocks, int width, int height, int xOffset, int yOffset) {
+    public FireRing(ArrayList<FireBlock> fireBlocks, int width, int height, int xOffset, int yOffset,
+            ArrayList<Boolean> stopSoundEffects) {
+        this.stopSoundEffects = stopSoundEffects;
         this.fireBlocks = fireBlocks;
         this.width = width;
         this.height = height;
@@ -61,7 +64,16 @@ public class FireRing implements ActionListener {
     /* ## IncreaseFlames: [Flames moves towards middle] ## */
     public void increaseFlames() {
         flameCount++;
+
         if (flameCount <= 7) {
+            try {
+                SoundEffect soundEffect = new SoundEffect("Sound/fireRing.wav", stopSoundEffects);
+                soundEffect.play();
+            } catch (Exception ex) {
+                System.out.println("Soundtrack not found");
+                ex.printStackTrace();
+            }
+
             for (int i = (flameCount - 1) * 8; i < width - xOffset; i += 8) {
                 fireBlocks.add(new FireBlock(i, (flameCount - 1) * 8));
                 fireBlocks.add(new FireBlock(i, height - yOffset - (flameCount - 1) * 8));

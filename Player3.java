@@ -28,6 +28,7 @@ public class Player3 extends Player {
     }
 
     public void decrementLives() {
+        playSoundEffect();
         lives--;
         loadSprite("Images/playerAttacked.png");
         Timer backToNormalColor = new Timer(100, new ActionListener() {

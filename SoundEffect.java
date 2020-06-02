@@ -23,7 +23,7 @@ public class SoundEffect {
 
         Timer stopSoundEffectTimer = new Timer(20, new ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent e) {
-                if (stopSoundEffects.contains(true)) {
+                if (stopSoundEffects.contains(true) && status != "stopped") {
                     clip.stop();
                     status = "stopped";
                     ((Timer) e.getSource()).stop();

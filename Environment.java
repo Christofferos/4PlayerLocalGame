@@ -8,6 +8,10 @@ public class Environment {
     boolean fire;
     boolean lightning;
 
+    Timer fireTimer;
+    Timer waterTimer;
+    Timer lightningTimer;
+
     private Timer waterCheck1;
     private Timer waterCheck2;
     private Timer waterCheck3;
@@ -68,7 +72,7 @@ public class Environment {
             /* ## Timer: LightningSpawn ## */
             lightning = true;
             int lightningFrequency = 1500;
-            Timer lightningTimer = new Timer(lightningFrequency, new ActionListener() {
+            lightningTimer = new Timer(lightningFrequency, new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     lightningStorm.startStorm();
@@ -97,7 +101,8 @@ public class Environment {
             /* ## Timer: Waterspawn ## */
             water = true;
             int waterIncrementTime = 4000;
-            Timer waterTimer = new Timer(waterIncrementTime, new ActionListener() {
+            waterTimer = new Timer(waterIncrementTime, new ActionListener() {
+
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     waterFlood.increaseWater();
@@ -144,7 +149,7 @@ public class Environment {
             /* ## Timer: Firespawn ## */
             // TESTING FIRE: []
             int flameIncrementTime = 4000;
-            Timer fireTimer = new Timer(flameIncrementTime, new ActionListener() {
+            fireTimer = new Timer(flameIncrementTime, new ActionListener() {
                 public void actionPerformed(ActionEvent evt) {
                     fireRing.increaseFlames();
                 }

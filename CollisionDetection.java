@@ -497,17 +497,17 @@ public class CollisionDetection implements Serializable {
 
         // TESTING: powerup percentage ratios
         if (doubleRand < 0.15)
-            powerUps.add(new PowerUp(x, y, 1));
+            powerUps.add(new PowerUp(x, y, 7));
         if (doubleRand >= 0.15 && doubleRand < 0.35)
-            powerUps.add(new PowerUp(x, y, 2));
+            powerUps.add(new PowerUp(x, y, 7));
         if (doubleRand >= 0.35 && doubleRand < 0.60)
-            powerUps.add(new PowerUp(x, y, 3));
+            powerUps.add(new PowerUp(x, y, 7));
         if (doubleRand >= 0.60 && doubleRand < 0.70)
-            powerUps.add(new PowerUp(x, y, 4));
+            powerUps.add(new PowerUp(x, y, 7));
         if (doubleRand >= 0.70 && doubleRand < 0.80)
-            powerUps.add(new PowerUp(x, y, 5));
+            powerUps.add(new PowerUp(x, y, 7));
         if (doubleRand >= 0.80 && doubleRand < 0.90)
-            powerUps.add(new PowerUp(x, y, 6));
+            powerUps.add(new PowerUp(x, y, 7));
         if (doubleRand >= 0.90 && doubleRand <= 1)
             powerUps.add(new PowerUp(x, y, 7));
         return true;
@@ -835,16 +835,16 @@ public class CollisionDetection implements Serializable {
                     for (int i = 0; i < player1.getMines().size(); i++) {
                         b = player1.getMines().get(i).getBoundary();
                         if (p2.intersects(b) && !player2.dead) {
-                            explosion(b.x, b.y, player1);
+                            explosion(b.x, b.y + 2, player1);
                             player1.getMines().remove(i);
                         } else if (p3.intersects(b)) {
                             if (!player3.dead) {
-                                explosion(b.x, b.y, player1);
+                                explosion(b.x, b.y + 2, player1);
                                 player1.getMines().remove(i);
                             }
                         } else if (p4.intersects(b)) {
                             if (!player4.dead) {
-                                explosion(b.x, b.y, player1);
+                                explosion(b.x, b.y + 2, player1);
                                 player1.getMines().remove(i);
                             }
                         }
@@ -856,16 +856,16 @@ public class CollisionDetection implements Serializable {
                     for (int i = 0; i < player2.getMines().size(); i++) {
                         b = player2.getMines().get(i).getBoundary();
                         if (p1.intersects(b) && !player1.dead) {
-                            explosion(b.x, b.y, player2);
+                            explosion(b.x + 2, b.y + 2, player2);
                             player2.getMines().remove(i);
                         } else if (p3.intersects(b)) {
                             if (!player3.dead) {
-                                explosion(b.x, b.y, player2);
+                                explosion(b.x + 2, b.y + 2, player2);
                                 player2.getMines().remove(i);
                             }
                         } else if (p4.intersects(b)) {
                             if (!player4.dead) {
-                                explosion(b.x, b.y, player2);
+                                explosion(b.x + 2, b.y + 2, player2);
                                 player2.getMines().remove(i);
                             }
                         }
@@ -877,14 +877,14 @@ public class CollisionDetection implements Serializable {
                     for (int i = 0; i < player3.getMines().size(); i++) {
                         b = player3.getMines().get(i).getBoundary();
                         if (p1.intersects(b) && !player1.dead) {
-                            explosion(b.x, b.y, player3);
+                            explosion(b.x + 2, b.y + 2, player3);
                             player3.getMines().remove(i);
                         } else if (p2.intersects(b) && !player2.dead) {
-                            explosion(b.x, b.y, player3);
+                            explosion(b.x + 2, b.y + 2, player3);
                             player3.getMines().remove(i);
                         } else if (p4.intersects(b)) {
                             if (!player4.dead) {
-                                explosion(b.x, b.y, player3);
+                                explosion(b.x + 2, b.y + 2, player3);
                                 player3.getMines().remove(i);
                             }
                         }
@@ -896,14 +896,14 @@ public class CollisionDetection implements Serializable {
                     for (int i = 0; i < player4.getMines().size(); i++) {
                         b = player4.getMines().get(0).getBoundary();
                         if (p1.intersects(b) && !player1.dead) {
-                            explosion(b.x, b.y, player4);
+                            explosion(b.x + 2, b.y + 2, player4);
                             player4.getMines().remove(i);
                         } else if (p2.intersects(b) && !player2.dead) {
-                            explosion(b.x, b.y, player4);
+                            explosion(b.x + 2, b.y + 2, player4);
                             player4.getMines().remove(i);
                         } else if (p3.intersects(b)) {
                             if (!player3.dead) {
-                                explosion(b.x, b.y, player4);
+                                explosion(b.x + 2, b.y + 2, player4);
                                 player4.getMines().remove(i);
                             }
                         }

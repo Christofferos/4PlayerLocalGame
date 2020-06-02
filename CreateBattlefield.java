@@ -74,7 +74,7 @@ public class CreateBattlefield implements Serializable {
             obstacles.add(new Obstacle(i, height - 32 - yOffset, false, size));
             obstacles.add(new Obstacle(i + 8 * 12, height - 32 - yOffset, false, size));
         }
-        obstacles.add(new Obstacle((width - xOffset) / 4, height - yOffset - 8, true, size));
+        // obstacles.add(new Obstacle((width - xOffset) / 4, height - yOffset - 8, true, size));
         obstacles.add(new Obstacle((width - xOffset) / 4, height - yOffset - 16, true, size));
 
         obstacles.add(new Obstacle((width - xOffset) / 2 - 19, height - yOffset - 16, true, size));
@@ -89,8 +89,7 @@ public class CreateBattlefield implements Serializable {
         obstacles.add(new Obstacle(width / 2 - xOffset + 22, height - 32 - yOffset, true, size));
         obstacles.add(new Obstacle(3 * (width - xOffset) / 4 + 22, 3 * (height - yOffset) / 4 + 10, true, size));
 
-        addRectangleArea(3 * (width - xOffset) / 4, 3 * (height - yOffset) / 4 + 45, 3 * (width - xOffset) / 4 + 8,
-                3 * (height - yOffset) / 4 + 61, true);
+        obstacles.add(new Obstacle(3 * (width - xOffset) / 4, height - yOffset - 16, true, size));
 
         // LEFTMOST WALL
         for (int i = 48; i < height / 2 - yOffset; i += 8) {

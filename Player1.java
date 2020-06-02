@@ -7,6 +7,27 @@ public class Player1 extends Player {
     public Player1(int id, int lives, int xpos, int ypos) {
         super(id, lives, xpos, ypos);
         loadSprite("Images/player1.png");
+
+        /*
+        Timer updateImg = new Timer(100, new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                switch (direction) {
+                    case UP:
+                        loadSprite("Images/player1Up.png");
+                        break;
+                    case LEFT:
+                        loadSprite("Images/player1Left.png");
+                        break;
+                    case RIGHT:
+                        loadSprite("Images/player1Right.png");
+                        break;
+                    case DOWN:
+                        loadSprite("Images/player1Down.png");
+                        break;
+                }
+            }
+        });
+        updateImg.start();*/
     }
 
     public void btnPress(KeyEvent e) {

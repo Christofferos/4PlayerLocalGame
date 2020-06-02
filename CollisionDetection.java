@@ -27,6 +27,8 @@ public class CollisionDetection implements Serializable {
     boolean explosionDmgTaken3 = false;
     boolean explosionDmgTaken4 = false;
 
+    int assist = 0; // Used for special edge cases. 
+
     public CollisionDetection(Player1 player1, Player2 player2, Player3 player3, Player4 player4,
             PlayerMovement playerMovement, ArrayList<Obstacle> obstacles, ArrayList<HealthPack> healthPacks,
             ArrayList<PowerUp> powerUps, ArrayList<FireBlock> fireBlocks, ArrayList<WaterBlock> waterBlocks,
@@ -79,12 +81,12 @@ public class CollisionDetection implements Serializable {
         if (playerObj.getDirection() == Player.Direction.UP) {
             x1 = playerObj.getXpos();
             y1 = playerObj.getYpos() - 1;
-            x2 = playerObj.getXpos() + playerObj.getWidth();
+            x2 = playerObj.getXpos() + playerObj.getWidth() - 1; // -1 When using movementAssistance
             y2 = playerObj.getYpos() - 1;
         } else if (playerObj.getDirection() == Player.Direction.DOWN) {
             x1 = playerObj.getXpos();
             y1 = playerObj.getYpos() + 1 + playerObj.getHeight();
-            x2 = playerObj.getXpos() + playerObj.getWidth();
+            x2 = playerObj.getXpos() + playerObj.getWidth() - 1; // -1 When using movementAssistance
             y2 = playerObj.getYpos() + 1 + playerObj.getHeight();
         } else if (playerObj.getDirection() == Player.Direction.LEFT) {
             x1 = playerObj.getXpos() - 1;
@@ -98,15 +100,23 @@ public class CollisionDetection implements Serializable {
             y2 = playerObj.getYpos() + playerObj.getHeight();
         }
 
+        // If player tries to walk into obstacles - stop them.
         for (int i = 0; i < obstacles.size(); i++) {
             Rectangle obstacleArea = obstacles.get(i).getBoundary();
+            // Consider implementing MovementAssistance - UNDER KONSTRUKTION
+            // <<<<<<<<<<<
             if (obstacleArea.contains(x1, y1) || obstacleArea.contains(x2, y2)) {
+                // Condition for movable objects
                 if (mustBeMovable) {
                     if (obstacles.get(i).movable()) {
                         obstacles.remove(i);
                         return true;
                     }
-                } else {
+                }
+                // Condition for solid objects
+                else {
+                    movementAssistance(playerObj, playerObj.getBoundary(), obstacleArea, playerObj.xpos,
+                            playerObj.ypos);
                     return true;
                 }
             }
@@ -174,6 +184,83 @@ public class CollisionDetection implements Serializable {
             }
         }
         return false;
+    }
+
+    // UNDER CONSTRUCTION - mov assist
+    public void movementAssistance(Player playerObj, Rectangle playerArea, Rectangle obstacleArea, int x, int y) {
+        CoordinateXY xy = null;
+        int playerSize = 8;
+        // Aid when player is 2 pixels off
+        int pixelOffset = 4;
+
+        switch (playerObj.direction) {
+            case UP:
+                playerArea.setBounds(x + pixelOffset, y - 1, playerSize, playerSize);
+                if (!playerArea.intersects(obstacleArea))
+                    xy = new CoordinateXY(x + 1, y);
+                playerArea.setBounds(x - pixelOffset, y - 1, playerSize, playerSize);
+                if (!playerArea.intersects(obstacleArea))
+                    xy = new CoordinateXY(x - 1, y);
+                break;
+
+            case DOWN:
+                playerArea.setBounds(x + pixelOffset, y + 1, playerSize, playerSize);
+                if (!playerArea.intersects(obstacleArea))
+                    xy = new CoordinateXY(x + 1, y);
+                playerArea.setBounds(x - pixelOffset, y + 1, playerSize, playerSize);
+                if (!playerArea.intersects(obstacleArea))
+                    xy = new CoordinateXY(x - 1, y);
+                break;
+            /*
+            case LEFT:
+            obstacleArea.setBounds(x, y, playerSize, playerSize);
+            if (!playerArea.intersects(obstacleArea))
+                xy = new CoordinateXY(x, y);
+            obstacleArea.setBounds(x, y, playerSize, playerSize);
+            if (!playerArea.intersects(obstacleArea))
+                xy = new CoordinateXY(x, y);
+            break;
+            case RIGHT:
+            obstacleArea.setBounds(x, y, playerSize, playerSize);
+            if (!playerArea.intersects(obstacleArea))
+                xy = new CoordinateXY(x, y);
+            obstacleArea.setBounds(x, y, playerSize, playerSize);
+            if (!playerArea.intersects(obstacleArea))
+                xy = new CoordinateXY(x, y);
+            break;
+            */
+        }
+
+        // HARD coded for moving upwards EVERYWHERE right now.
+        if (xy != null) {
+            int pSize = 8;
+            int adjustment = (int) Math.signum(xy.getX() - playerObj.getXpos());
+            for (int j = 0; j < obstacles.size(); j++) {
+                Rectangle obstacle = obstacles.get(j).getBoundary();
+                int checkDir = -1;
+                if (playerObj.direction == Player.Direction.DOWN)
+                    checkDir = 2;
+
+                if (obstacle.intersects(new Rectangle(playerObj.xpos, playerObj.ypos + checkDir, pSize, pSize))) {
+                    boolean collision = false;
+                    for (int k = 0; k < obstacles.size(); k++) {
+                        Rectangle obstacle2nd = obstacles.get(k).getBoundary();
+                        if (obstacle2nd
+                                .intersects(new Rectangle(playerObj.xpos + adjustment, playerObj.ypos, pSize, pSize))) {
+                            collision = true;
+                            break;
+                        }
+                    }
+                    if (!collision) {
+                        playerObj.xpos += Math.signum(xy.getX() - playerObj.getXpos());
+                        break;
+                    }
+
+                }
+
+            }
+        }
+
     }
 
     public void standingInFire(int player) {

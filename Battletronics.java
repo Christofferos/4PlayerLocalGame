@@ -416,8 +416,10 @@ public class Battletronics extends JPanel implements ActionListener {
             g.drawImage(fire.getImage(), fire.getXpos(), fire.getYpos(), this);
         }
 
-        if (!player1.dead)
+        if (!player1.dead) {
             g2.drawImage(player1.getImage(), player1.getXpos(), player1.getYpos(), this);
+            // g2.drawImage(new ImageIcon("Images/p1Hp3.png").getImage(), player1.getXpos(), player1.getYpos() - 3, this);
+        }
         if (!player2.dead)
             g2.drawImage(player2.getImage(), player2.getXpos(), player2.getYpos(), this);
         if (player3 != null)

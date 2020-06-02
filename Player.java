@@ -103,11 +103,6 @@ public class Player extends Sprite {
         lives++;
     }
 
-    public String toString() {
-        return "Player [ X-position: " + xpos + " Y-position: " + ypos + " Lives: " + lives + " Inventory: " + inventory
-                + " ]";
-    }
-
     public void loadSprite(String imgName) {
         ImageIcon img_player = new ImageIcon(imgName);
         img = img_player.getImage();

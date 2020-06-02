@@ -6,6 +6,7 @@ import javax.swing.Timer;
 
 public class LightningStorm {
     private static final long serialVersionUID = 1L;
+
     ArrayList<LightningBlock> lightningBlocks;
     int width;
     int height;

@@ -8,11 +8,13 @@ import java.awt.event.*;
 
 public class CollisionDetection implements Serializable {
     private static final long serialVersionUID = 1L;
+
     Player1 player1;
     Player2 player2;
     Player3 player3;
     Player4 player4;
     PlayerMovement playerMovement;
+
     ArrayList<Obstacle> obstacles;
     ArrayList<HealthPack> healthPacks;
     ArrayList<PowerUp> powerUps;
@@ -22,6 +24,7 @@ public class CollisionDetection implements Serializable {
 
     ArrayList<Boolean> stopSoundEffects;
 
+    /* Used to limit dmg to 2 when hit by explosion */
     boolean explosionDmgTaken1 = false;
     boolean explosionDmgTaken2 = false;
     boolean explosionDmgTaken3 = false;
@@ -44,7 +47,7 @@ public class CollisionDetection implements Serializable {
         this.powerUps = powerUps;
         this.stopSoundEffects = stopSoundEffects;
 
-        /* ## Timer: Explosion Damage To Players ## */
+        /* ## Timer (Polling): Check collision with explosions ## */
         int explosionFreq = 50;
         Timer explosionCheck = new Timer(explosionFreq, new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
@@ -59,22 +62,45 @@ public class CollisionDetection implements Serializable {
         explosionCheck.start();
     }
 
-    // Collision works only if object is of equal or greater size than the player.
+    /* CoordinateXY: [] */
+    public class CoordinateXY {
+        int newX;
+        int newY;
+
+        public CoordinateXY(int x, int y) {
+            newX = x;
+            newY = y;
+        }
+
+        public int getX() {
+            return newX;
+        }
+
+        public int getY() {
+            return newY;
+        }
+    }
+
+    public Player getPlayer(int playerID) {
+        Player playerObj = player1; // Default
+        if (playerID == 1)
+            playerObj = (Player1) player1;
+        else if (playerID == 2)
+            playerObj = (Player2) player2;
+        else if (playerID == 3)
+            playerObj = (Player3) player3;
+        else if (playerID == 4)
+            playerObj = (Player4) player4;
+        return playerObj;
+    }
+
+    // LIMITATION: Collision only works if (obstacle size) >= (player size).
     public boolean collision(int player, boolean mustBeMovable) {
         int x1 = 0;
         int x2 = 0;
         int y1 = 0;
         int y2 = 0;
-
-        Player playerObj = player1; // Default to player1.
-        if (player == 1)
-            playerObj = (Player1) player1;
-        else if (player == 2)
-            playerObj = (Player2) player2;
-        else if (player == 3)
-            playerObj = (Player3) player3;
-        else if (player == 4)
-            playerObj = (Player4) player4;
+        Player playerObj = getPlayer(player);
 
         if (playerObj.getDirection() == Player.Direction.UP) {
             x1 = playerObj.getXpos();
@@ -101,232 +127,92 @@ public class CollisionDetection implements Serializable {
         for (int i = 0; i < obstacles.size(); i++) {
             Rectangle obstacleArea = obstacles.get(i).getBoundary();
             if (obstacleArea.contains(x1, y1) || obstacleArea.contains(x2, y2)) {
+                /* Collision with movable obstacles. */
                 if (mustBeMovable) {
                     if (obstacles.get(i).movable()) {
                         obstacles.remove(i);
                         return true;
                     }
-                } else {
+                }
+                /* Collision with solid obstacles. */
+                else {
                     return true;
                 }
             }
         }
 
-        // Do not allow players to walk through each other.
+        /* Collision between players. */
         if (!mustBeMovable) {
-            Rectangle p1 = null;
-            Rectangle p2 = null;
-            Rectangle p3 = null;
-            Rectangle p4 = null;
+            Rectangle p1 = player1.getBoundary();
+            Rectangle p2 = player2.getBoundary();
+            Rectangle p3 = (player3 != null) ? player3.getBoundary() : null;
+            Rectangle p4 = (player4 != null) ? player4.getBoundary() : null;
 
-            if (player == 1) {
-                p2 = player2.getBoundary();
-                if ((p2.contains(x1, y1) || p2.contains(x2, y2)) && !player2.dead)
-                    return true;
-                if (player3 != null) {
-                    p3 = player3.getBoundary();
-                    if ((p3.contains(x1, y1) || p3.contains(x2, y2)) && !player3.dead)
+            switch (player) {
+                case 1:
+                    if ((p2.contains(x1, y1) || p2.contains(x2, y2)) && !player2.dead)
                         return true;
-                }
-                if (player4 != null) {
-                    p4 = player4.getBoundary();
-                    if ((p4.contains(x1, y1) || p4.contains(x2, y2)) && !player4.dead)
+                    if (player3 != null) {
+                        if ((p3.contains(x1, y1) || p3.contains(x2, y2)) && !player3.dead)
+                            return true;
+                    }
+                    if (player4 != null) {
+                        if ((p4.contains(x1, y1) || p4.contains(x2, y2)) && !player4.dead)
+                            return true;
+                    }
+                    break;
+                case 2:
+                    if ((p1.contains(x1, y1) || p1.contains(x2, y2)) && !player1.dead)
                         return true;
-                }
-            } else if (player == 2) {
-                p1 = player1.getBoundary();
-                if ((p1.contains(x1, y1) || p1.contains(x2, y2)) && !player1.dead)
-                    return true;
-                if (player3 != null) {
-                    p3 = player3.getBoundary();
-                    if ((p3.contains(x1, y1) || p3.contains(x2, y2)) && !player3.dead)
+                    if (player3 != null) {
+                        if ((p3.contains(x1, y1) || p3.contains(x2, y2)) && !player3.dead)
+                            return true;
+                    }
+                    if (player4 != null) {
+                        if ((p4.contains(x1, y1) || p4.contains(x2, y2)) && !player4.dead)
+                            return true;
+                    }
+                    break;
+                case 3:
+                    if ((p1.contains(x1, y1) || p1.contains(x2, y2)) && !player1.dead)
                         return true;
-                }
-                if (player4 != null) {
-                    p4 = player4.getBoundary();
-                    if ((p4.contains(x1, y1) || p4.contains(x2, y2)) && !player4.dead)
+                    if ((p2.contains(x1, y1) || p2.contains(x2, y2)) && !player2.dead)
                         return true;
-                }
-            } else if (player == 3) {
-                p1 = player1.getBoundary();
-                p2 = player2.getBoundary();
-                if ((p1.contains(x1, y1) || p1.contains(x2, y2)) && !player1.dead)
-                    return true;
-                if ((p2.contains(x1, y1) || p2.contains(x2, y2)) && !player2.dead)
-                    return true;
-                if (player4 != null) {
-                    p4 = player4.getBoundary();
-                    if ((p4.contains(x1, y1) || p4.contains(x2, y2)) && !player4.dead)
+                    if (player4 != null) {
+                        if ((p4.contains(x1, y1) || p4.contains(x2, y2)) && !player4.dead)
+                            return true;
+                    }
+                    break;
+                case 4:
+                    if ((p1.contains(x1, y1) || p1.contains(x2, y2)) && !player1.dead)
                         return true;
-                }
-            } else if (player == 4) {
-                p1 = player1.getBoundary();
-                p2 = player2.getBoundary();
-                if ((p1.contains(x1, y1) || p1.contains(x2, y2)) && !player1.dead)
-                    return true;
-                if ((p2.contains(x1, y1) || p2.contains(x2, y2)) && !player2.dead)
-                    return true;
-                if (player3 != null) {
-                    p3 = player3.getBoundary();
-                    if ((p3.contains(x1, y1) || p3.contains(x2, y2)) && !player3.dead)
+                    if ((p2.contains(x1, y1) || p2.contains(x2, y2)) && !player2.dead)
                         return true;
-                }
+                    if (player3 != null) {
+                        if ((p3.contains(x1, y1) || p3.contains(x2, y2)) && !player3.dead)
+                            return true;
+                    }
+                    break;
             }
         }
         return false;
     }
 
-    public void standingInFire(int player) {
-        Rectangle object;
-        for (int i = 0; i < fireBlocks.size(); i++) {
-            object = fireBlocks.get(i).getBoundary();
-            if (player == 1) {
-                if (object.intersects(player1.getBoundary())) {
-                    player1.decrementLives();
-                    break;
-                }
-            } else if (player == 2) {
-                if (object.intersects(player2.getBoundary())) {
-                    player2.decrementLives();
-                    break;
-                }
-            } else if (player == 3) {
-                if (object.intersects(player3.getBoundary())) {
-                    player3.decrementLives();
-                    break;
-                }
-            } else if (player == 4) {
-                if (object.intersects(player4.getBoundary())) {
-                    player4.decrementLives();
-                    break;
-                }
-            }
-        }
-    }
-
-    public boolean standingInWater(int player) {
-        Player playerObj = player1; // Default to player1.
-        if (player == 1)
-            playerObj = (Player1) player1;
-        else if (player == 2)
-            playerObj = (Player2) player2;
-        else if (player == 3)
-            playerObj = (Player3) player3;
-        else if (player == 4)
-            playerObj = (Player4) player4;
-
-        Rectangle object;
-        for (int i = 0; i < waterBlocks.size(); i++) {
-            object = waterBlocks.get(i).getBoundary();
-            if (object.intersects(playerObj.getBoundary())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public void standingInLightning(int player) {
-        Rectangle object;
-        for (int i = 0; i < lightningBlocks.size(); i++) {
-            object = lightningBlocks.get(i).getBoundary();
-            if (player == 1) {
-                if (object.intersects(player1.getBoundary())) {
-                    player1.decrementLives();
-                    break;
-                }
-            } else if (player == 2) {
-                if (object.intersects(player2.getBoundary())) {
-                    player2.decrementLives();
-                    break;
-                }
-            } else if (player == 3) {
-                if (object.intersects(player3.getBoundary())) {
-                    player3.decrementLives();
-                    break;
-                }
-            } else if (player == 4) {
-                if (object.intersects(player4.getBoundary())) {
-                    player4.decrementLives();
-                    break;
-                }
-            }
-        }
-    }
-
-    public void standingInExplosion(int player) {
-        Rectangle object;
-        Player playerObj = player1; // Default to player1.
-        if (player == 1)
-            playerObj = (Player1) player1;
-        else if (player == 2)
-            playerObj = (Player2) player2;
-        else if (player == 3)
-            playerObj = (Player3) player3;
-        else if (player == 4)
-            playerObj = (Player4) player4;
-
-        for (int i = 0; i < playerObj.getExplosion().size(); i++) {
-            object = playerObj.getExplosion().get(i).getBoundary();
-            if (player1.getBoundary() != null)
-                if (object.intersects(player1.getBoundary()) && !explosionDmgTaken1) {
-                    explosionDmgTaken1 = true;
-                    player1.decrementLives();
-                    player1.decrementLives();
-                    break;
-                }
-            if (player2.getBoundary() != null)
-                if (object.intersects(player2.getBoundary()) && !explosionDmgTaken2) {
-                    explosionDmgTaken2 = true;
-                    player2.decrementLives();
-                    player2.decrementLives();
-                    break;
-                }
-            if (player3 != null) {
-                if (player3.getBoundary() != null)
-                    if (object.intersects(player3.getBoundary()) && !explosionDmgTaken3) {
-                        explosionDmgTaken3 = true;
-                        player3.decrementLives();
-                        player3.decrementLives();
-                        break;
-                    }
-            }
-            if (player4 != null) {
-                if (player4.getBoundary() != null)
-                    if (object.intersects(player4.getBoundary()) && !explosionDmgTaken4) {
-                        explosionDmgTaken4 = true;
-                        player4.decrementLives();
-                        player4.decrementLives();
-                        break;
-                    }
-            }
-        }
-    }
-
+    /* SpaceToDropObstacle: [Check if player can drop movable obstacle] */
     public boolean spaceToDropObstacle(int player) {
         Rectangle space = new Rectangle(0, 0, 0, 0);
-        Rectangle object;
-        Player.Direction dir = Player.Direction.UP;
 
-        Player playerObj = player1; // Default to player1.
-        if (player == 1)
-            playerObj = (Player1) player1;
-        else if (player == 2)
-            playerObj = (Player2) player2;
-        else if (player == 3)
-            playerObj = (Player3) player3;
-        else if (player == 4)
-            playerObj = (Player4) player4;
-
-        dir = playerObj.direction;
+        Player playerObj = getPlayer(player);
+        Player.Direction dir = playerObj.direction;
         int x = playerObj.getXpos();
         int y = playerObj.getYpos();
 
-        int obstacleSize = 0;
-
-        obstacleSize = playerObj.inventoryObstacleSize;
-
+        Rectangle object;
+        int obstacleSize = playerObj.inventoryObstacleSize;
         int offset = (obstacleSize % 8) / 2;
         int fixPos = 0;
+
+        /* Adjustments were needed at changed size. */
         if (obstacleSize == 12)
             fixPos = 1;
         if (obstacleSize == 14)
@@ -346,7 +232,6 @@ public class CollisionDetection implements Serializable {
             object = obstacles.get(i).getBoundary();
             if (object.intersects(space)) {
                 CoordinateXY xy = placementAssistance(dir, object, space, x, y, offset, obstacleSize, fixPos);
-                // Placement assistance does not succeed if xy == null.
                 if (xy == null)
                     return false;
                 else {
@@ -355,69 +240,28 @@ public class CollisionDetection implements Serializable {
             }
         }
 
-        // Stop player from placing an obstacle on top of another player.
-        Rectangle p1 = null;
-        Rectangle p2 = null;
-        Rectangle p3 = null;
-        Rectangle p4 = null;
-        if (player == 1) {
-            p2 = player2.getBoundary();
-            if (p2.intersects(space) && !player2.dead)
+        // Collision between: players and obstacles one player wants to drop.
+        Rectangle p1 = player1.getBoundary();
+        Rectangle p2 = player2.getBoundary();
+        Rectangle p3 = (player3 != null) ? player3.getBoundary() : null;
+        Rectangle p4 = (player4 != null) ? player4.getBoundary() : null;
+
+        if (p1.intersects(space) && !player1.dead)
+            return false;
+        if (p2.intersects(space) && !player2.dead)
+            return false;
+        if (player3 != null)
+            if (p3.intersects(space) && !player3.dead)
                 return false;
-            if (player3 != null) {
-                p3 = player3.getBoundary();
-                if (p3.intersects(space) && !player3.dead)
-                    return false;
-            }
-            if (player4 != null) {
-                p4 = player4.getBoundary();
-                if (p4.intersects(space) && !player4.dead)
-                    return false;
-            }
-        } else if (player == 2) {
-            p1 = player1.getBoundary();
-            if (p1.intersects(space) && !player1.dead)
+        if (player4 != null)
+            if (p4.intersects(space) && !player4.dead)
                 return false;
-            if (player3 != null) {
-                p3 = player3.getBoundary();
-                if (p3.intersects(space) && !player3.dead)
-                    return false;
-            }
-            if (player4 != null) {
-                p4 = player4.getBoundary();
-                if (p4.intersects(space) && !player4.dead)
-                    return false;
-            }
-        } else if (player == 3) {
-            p1 = player1.getBoundary();
-            p2 = player2.getBoundary();
-            if (p1.intersects(space) && !player1.dead)
-                return false;
-            if (p2.intersects(space) && !player2.dead)
-                return false;
-            if (player4 != null) {
-                p4 = player4.getBoundary();
-                if (p4.intersects(space) && !player4.dead)
-                    return false;
-            }
-        } else if (player == 4) {
-            p1 = player1.getBoundary();
-            p2 = player2.getBoundary();
-            if (p1.intersects(space) && !player1.dead)
-                return false;
-            if (p2.intersects(space) && !player2.dead)
-                return false;
-            if (player3 != null) {
-                p3 = player3.getBoundary();
-                if (p3.intersects(space) && !player3.dead)
-                    return false;
-            }
-        }
 
         obstacles.add(new Obstacle(space.x, space.y, true, playerObj.inventoryObstacleSize));
         return true;
     }
 
+    /* PlacementAssistance: [Used if player stands besides a wall and tries to place an obstacle - push that obstacle onto a free area] */
     public CoordinateXY placementAssistance(Player.Direction dir, Rectangle object, Rectangle space, int x, int y,
             int offset, int obstacleSize, int fixPos) {
         CoordinateXY xy = null;
@@ -475,24 +319,120 @@ public class CollisionDetection implements Serializable {
         return xy;
     }
 
-    public class CoordinateXY {
-        int newX;
-        int newY;
-
-        public CoordinateXY(int x, int y) {
-            newX = x;
-            newY = y;
-        }
-
-        public int getX() {
-            return newX;
-        }
-
-        public int getY() {
-            return newY;
+    /* StandingInFire: Decrement player health. */
+    public void standingInFire(int player) {
+        Rectangle object;
+        for (int i = 0; i < fireBlocks.size(); i++) {
+            object = fireBlocks.get(i).getBoundary();
+            if (player == 1) {
+                if (object.intersects(player1.getBoundary())) {
+                    player1.decrementLives();
+                    break;
+                }
+            } else if (player == 2) {
+                if (object.intersects(player2.getBoundary())) {
+                    player2.decrementLives();
+                    break;
+                }
+            } else if (player == 3) {
+                if (object.intersects(player3.getBoundary())) {
+                    player3.decrementLives();
+                    break;
+                }
+            } else if (player == 4) {
+                if (object.intersects(player4.getBoundary())) {
+                    player4.decrementLives();
+                    break;
+                }
+            }
         }
     }
 
+    /* StandingInLightning: Decrement player health. */
+    public void standingInLightning(int player) {
+        Rectangle object;
+        for (int i = 0; i < lightningBlocks.size(); i++) {
+            object = lightningBlocks.get(i).getBoundary();
+            if (player == 1) {
+                if (object.intersects(player1.getBoundary())) {
+                    player1.decrementLives();
+                    break;
+                }
+            } else if (player == 2) {
+                if (object.intersects(player2.getBoundary())) {
+                    player2.decrementLives();
+                    break;
+                }
+            } else if (player == 3) {
+                if (object.intersects(player3.getBoundary())) {
+                    player3.decrementLives();
+                    break;
+                }
+            } else if (player == 4) {
+                if (object.intersects(player4.getBoundary())) {
+                    player4.decrementLives();
+                    break;
+                }
+            }
+        }
+    }
+
+    /* StandingInWater: Decrement player health. */
+    public boolean standingInWater(int player) {
+        Player playerObj = getPlayer(player);
+        Rectangle object;
+        for (int i = 0; i < waterBlocks.size(); i++) {
+            object = waterBlocks.get(i).getBoundary();
+            if (object.intersects(playerObj.getBoundary())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /* StandingInExplosion: Decrement player health. */
+    public void standingInExplosion(int player) {
+        Rectangle object;
+        Player playerObj = getPlayer(player);
+
+        for (int i = 0; i < playerObj.getExplosion().size(); i++) {
+            object = playerObj.getExplosion().get(i).getBoundary();
+            if (player1.getBoundary() != null)
+                if (object.intersects(player1.getBoundary()) && !explosionDmgTaken1) {
+                    explosionDmgTaken1 = true;
+                    player1.decrementLives();
+                    player1.decrementLives();
+                    break;
+                }
+            if (player2.getBoundary() != null)
+                if (object.intersects(player2.getBoundary()) && !explosionDmgTaken2) {
+                    explosionDmgTaken2 = true;
+                    player2.decrementLives();
+                    player2.decrementLives();
+                    break;
+                }
+            if (player3 != null) {
+                if (player3.getBoundary() != null)
+                    if (object.intersects(player3.getBoundary()) && !explosionDmgTaken3) {
+                        explosionDmgTaken3 = true;
+                        player3.decrementLives();
+                        player3.decrementLives();
+                        break;
+                    }
+            }
+            if (player4 != null) {
+                if (player4.getBoundary() != null)
+                    if (object.intersects(player4.getBoundary()) && !explosionDmgTaken4) {
+                        explosionDmgTaken4 = true;
+                        player4.decrementLives();
+                        player4.decrementLives();
+                        break;
+                    }
+            }
+        }
+    }
+
+    /* HealthSpawn: [] */
     public boolean healthSpawn(int x, int y) {
         Rectangle healthPack = new Rectangle(x, y, 8, 8);
         Rectangle object;
@@ -516,17 +456,9 @@ public class CollisionDetection implements Serializable {
         return true;
     }
 
+    /* HealthPickUp: [] */
     public void healthPickUp(int player) {
-        Player playerObj = player1; // Default to player1.
-        if (player == 1)
-            playerObj = (Player1) player1;
-        else if (player == 2)
-            playerObj = (Player2) player2;
-        else if (player == 3)
-            playerObj = (Player3) player3;
-        else if (player == 4)
-            playerObj = (Player4) player4;
-
+        Player playerObj = getPlayer(player);
         Rectangle p;
         Rectangle h;
         p = playerObj.getBoundary();
@@ -538,9 +470,9 @@ public class CollisionDetection implements Serializable {
                 healthPacks.remove(i);
             }
         }
-
     }
 
+    /* PowerUpSpawn: [] */
     public boolean powerUpSpawn(int x, int y) {
         Rectangle powerUp = new Rectangle(x, y, 16, 16);
         Rectangle object;
@@ -562,7 +494,8 @@ public class CollisionDetection implements Serializable {
             return false;
         Random rand = new Random();
         double doubleRand = rand.nextDouble();
-        // TESTING powerup
+
+        // TESTING: powerup percentage ratios
         if (doubleRand < 0.15)
             powerUps.add(new PowerUp(x, y, 1));
         if (doubleRand >= 0.15 && doubleRand < 0.35)
@@ -580,17 +513,9 @@ public class CollisionDetection implements Serializable {
         return true;
     }
 
+    /* PowerUpPickUp: [] */
     public void powerUpPickUp(int player) {
-        Player playerObj = player1; // Default to player1.
-        if (player == 1)
-            playerObj = (Player1) player1;
-        else if (player == 2)
-            playerObj = (Player2) player2;
-        else if (player == 3)
-            playerObj = (Player3) player3;
-        else if (player == 4)
-            playerObj = (Player4) player4;
-
+        Player playerObj = getPlayer(player);
         Rectangle p;
         Rectangle h;
 
@@ -628,121 +553,104 @@ public class CollisionDetection implements Serializable {
         }
     }
 
-    /* Hit: Checking for null values because player 3 and 4 does not always exist. */
+    /* Hit: [Check if player hit by bullets] */
     public void hit(int player) {
         Rectangle b;
-        Rectangle p1 = new Rectangle(0, 0, 0, 0);
-        Rectangle p2 = new Rectangle(0, 0, 0, 0);
-        Rectangle p3 = new Rectangle(0, 0, 0, 0);
-        Rectangle p4 = new Rectangle(0, 0, 0, 0);
+        Rectangle p1 = player1.getBoundary();
+        Rectangle p2 = player2.getBoundary();
+        Rectangle p3 = (player3 != null) ? player3.getBoundary() : null;
+        Rectangle p4 = (player4 != null) ? player4.getBoundary() : null;
 
-        if (player == 1) {
-            p2 = player2.getBoundary();
-            p3 = (player3 != null) ? player3.getBoundary() : new Rectangle(0, 0, 0, 0);
-            p4 = (player4 != null) ? player4.getBoundary() : new Rectangle(0, 0, 0, 0);
-            if (!player1.getBullets().isEmpty()) {
-                for (int i = 0; i < player1.getBullets().size(); i++) {
-                    b = player1.getBullets().get(i).getBoundary();
-                    if (p2.intersects(b) && !player2.dead) {
-                        player2.decrementLives();
-                        player1.getBullets().remove(i);
-                    } else if (p3.intersects(b)) {
-                        if (!player3.dead) {
-                            player3.decrementLives();
+        switch (player) {
+            case 1:
+                if (!player1.getBullets().isEmpty()) {
+                    for (int i = 0; i < player1.getBullets().size(); i++) {
+                        b = player1.getBullets().get(i).getBoundary();
+                        if (p2.intersects(b) && !player2.dead) {
+                            player2.decrementLives();
                             player1.getBullets().remove(i);
-                        }
-                    } else if (p4.intersects(b)) {
-                        if (!player4.dead) {
-                            player4.decrementLives();
-                            player1.getBullets().remove(i);
+                        } else if (p3.intersects(b)) {
+                            if (!player3.dead) {
+                                player3.decrementLives();
+                                player1.getBullets().remove(i);
+                            }
+                        } else if (p4.intersects(b)) {
+                            if (!player4.dead) {
+                                player4.decrementLives();
+                                player1.getBullets().remove(i);
+                            }
                         }
                     }
                 }
-            }
-        } else if (player == 2) {
-            p1 = player1.getBoundary();
-            p3 = (player3 != null) ? player3.getBoundary() : new Rectangle(0, 0, 0, 0);
-            p4 = (player4 != null) ? player4.getBoundary() : new Rectangle(0, 0, 0, 0);
-            if (!player2.getBullets().isEmpty()) {
-                player2.getBullets().toString();
-                for (int i = 0; i < player2.getBullets().size(); i++) {
-                    b = player2.getBullets().get(i).getBoundary();
-                    if (p1.intersects(b) && !player1.dead) {
-                        player1.decrementLives();
-                        player2.getBullets().remove(i);
-                    } else if (p3.intersects(b)) {
-                        if (!player3.dead) {
-                            player3.decrementLives();
+                break;
+            case 2:
+                if (!player2.getBullets().isEmpty()) {
+                    player2.getBullets().toString();
+                    for (int i = 0; i < player2.getBullets().size(); i++) {
+                        b = player2.getBullets().get(i).getBoundary();
+                        if (p1.intersects(b) && !player1.dead) {
+                            player1.decrementLives();
                             player2.getBullets().remove(i);
-                        }
-                    } else if (p4.intersects(b)) {
-                        if (!player4.dead) {
-                            player4.decrementLives();
-                            player2.getBullets().remove(i);
+                        } else if (p3.intersects(b)) {
+                            if (!player3.dead) {
+                                player3.decrementLives();
+                                player2.getBullets().remove(i);
+                            }
+                        } else if (p4.intersects(b)) {
+                            if (!player4.dead) {
+                                player4.decrementLives();
+                                player2.getBullets().remove(i);
+                            }
                         }
                     }
                 }
-            }
-        } else if (player == 3) {
-            p1 = player1.getBoundary();
-            p2 = player2.getBoundary();
-            p4 = (player4 != null) ? player4.getBoundary() : new Rectangle(0, 0, 0, 0);
-            if (!player3.getBullets().isEmpty()) {
-                player3.getBullets().toString();
-                for (int i = 0; i < player3.getBullets().size(); i++) {
-                    b = player3.getBullets().get(i).getBoundary();
-                    if (p1.intersects(b) && !player1.dead) {
-                        player1.decrementLives();
-                        player3.getBullets().remove(i);
-                    } else if (p2.intersects(b) && !player2.dead) {
-                        player2.decrementLives();
-                        player3.getBullets().remove(i);
-                    } else if (p4.intersects(b)) {
-                        if (!player4.dead) {
-                            player4.decrementLives();
+                break;
+            case 3:
+                if (!player3.getBullets().isEmpty()) {
+                    player3.getBullets().toString();
+                    for (int i = 0; i < player3.getBullets().size(); i++) {
+                        b = player3.getBullets().get(i).getBoundary();
+                        if (p1.intersects(b) && !player1.dead) {
+                            player1.decrementLives();
                             player3.getBullets().remove(i);
+                        } else if (p2.intersects(b) && !player2.dead) {
+                            player2.decrementLives();
+                            player3.getBullets().remove(i);
+                        } else if (p4.intersects(b)) {
+                            if (!player4.dead) {
+                                player4.decrementLives();
+                                player3.getBullets().remove(i);
+                            }
                         }
                     }
                 }
-            }
-        } else if (player == 4) {
-            p1 = player1.getBoundary();
-            p2 = player2.getBoundary();
-            p3 = (player3 != null) ? player3.getBoundary() : new Rectangle(0, 0, 0, 0);
-            if (!player4.getBullets().isEmpty()) {
-                player4.getBullets().toString();
-                for (int i = 0; i < player4.getBullets().size(); i++) {
-                    b = player4.getBullets().get(i).getBoundary();
-                    if (p1.intersects(b) && !player1.dead) {
-                        player1.decrementLives();
-                        player4.getBullets().remove(i);
-                    } else if (p2.intersects(b) && !player2.dead) {
-                        player2.decrementLives();
-                        player4.getBullets().remove(i);
-                    } else if (p3.intersects(b)) {
-                        if (!player3.dead) {
-                            player3.decrementLives();
+                break;
+            case 4:
+                if (!player4.getBullets().isEmpty()) {
+                    player4.getBullets().toString();
+                    for (int i = 0; i < player4.getBullets().size(); i++) {
+                        b = player4.getBullets().get(i).getBoundary();
+                        if (p1.intersects(b) && !player1.dead) {
+                            player1.decrementLives();
                             player4.getBullets().remove(i);
+                        } else if (p2.intersects(b) && !player2.dead) {
+                            player2.decrementLives();
+                            player4.getBullets().remove(i);
+                        } else if (p3.intersects(b)) {
+                            if (!player3.dead) {
+                                player3.decrementLives();
+                                player4.getBullets().remove(i);
+                            }
                         }
                     }
                 }
-            }
+                break;
         }
 
-        Player playerObj = player1; // Default to player1.
-        if (player == 1)
-            playerObj = (Player1) player1;
-        else if (player == 2)
-            playerObj = (Player2) player2;
-        else if (player == 3)
-            playerObj = (Player3) player3;
-        else if (player == 4)
-            playerObj = (Player4) player4;
-
-        Rectangle o;
+        Player playerObj = getPlayer(player);
         ArrayList<Bullet> bullets = new ArrayList<Bullet>();
-
         bullets.addAll(playerObj.getBullets());
+        Rectangle o;
 
         for (Bullet bullet : bullets) {
             b = bullet.getBoundary();
@@ -755,167 +663,148 @@ public class CollisionDetection implements Serializable {
         }
     }
 
+    /* RocketHit: [Check if player hit by rocket] */
     public void rocketHit(int player) {
         Rectangle b;
-        Rectangle p1 = new Rectangle(0, 0, 0, 0);
-        Rectangle p2 = new Rectangle(0, 0, 0, 0);
-        Rectangle p3 = new Rectangle(0, 0, 0, 0);
-        Rectangle p4 = new Rectangle(0, 0, 0, 0);
+        Rectangle p1 = player1.getBoundary();
+        Rectangle p2 = player2.getBoundary();
+        Rectangle p3 = (player3 != null) ? player3.getBoundary() : null;
+        Rectangle p4 = (player4 != null) ? player4.getBoundary() : null;
 
-        // Collision with player objects
-        if (player == 1) {
-            p2 = player2.getBoundary();
-            p3 = (player3 != null) ? player3.getBoundary() : new Rectangle(0, 0, 0, 0);
-            p4 = (player4 != null) ? player4.getBoundary() : new Rectangle(0, 0, 0, 0);
-            if (!player1.getRocket().isEmpty()) {
-                b = player1.getRocket().get(0).getBoundary();
-                if (p2.intersects(b) && !player2.dead) {
-                    explosion(b.x, b.y, player1);
-                    player1.getRocket().clear();
-                } else if (p3.intersects(b)) {
-                    if (!player3.dead) {
+        switch (player) {
+            case 1:
+                if (!player1.getRocket().isEmpty()) {
+                    b = player1.getRocket().get(0).getBoundary();
+                    if (p2.intersects(b) && !player2.dead) {
                         explosion(b.x, b.y, player1);
                         player1.getRocket().clear();
-                    }
-                } else if (p4.intersects(b)) {
-                    if (!player4.dead) {
-                        explosion(b.x, b.y, player1);
-                        player1.getRocket().clear();
-                    }
-                }
-
-                // Rocket can collide with other players' bullets.
-                List<Bullet> bullets = player2.getBullets();
-                if (player3 != null)
-                    bullets.addAll(player3.getBullets());
-                if (player4 != null)
-                    bullets.addAll(player4.getBullets());
-                for (Bullet bullet : bullets) {
-                    if (bullet.getBoundary().intersects(b)) {
-                        if (!player1.getRocket().isEmpty()) {
+                    } else if (p3.intersects(b)) {
+                        if (!player3.dead) {
+                            explosion(b.x, b.y, player1);
+                            player1.getRocket().clear();
+                        }
+                    } else if (p4.intersects(b)) {
+                        if (!player4.dead) {
                             explosion(b.x, b.y, player1);
                             player1.getRocket().clear();
                         }
                     }
-                }
-            }
-        } else if (player == 2) {
-            p1 = player1.getBoundary();
-            p3 = (player3 != null) ? player3.getBoundary() : new Rectangle(0, 0, 0, 0);
-            p4 = (player4 != null) ? player4.getBoundary() : new Rectangle(0, 0, 0, 0);
-            if (!player2.getRocket().isEmpty()) {
-                b = player2.getRocket().get(0).getBoundary();
-                if (p1.intersects(b) && !player1.dead) {
-                    explosion(b.x, b.y, player2);
-                    player2.getRocket().clear();
-                } else if (p3.intersects(b)) {
-                    if (!player3.dead) {
-                        explosion(b.x, b.y, player2);
-                        player2.getRocket().clear();
-                    }
-                } else if (p4.intersects(b)) {
-                    if (!player4.dead) {
-                        explosion(b.x, b.y, player2);
-                        player2.getRocket().clear();
-                    }
-                }
 
-                // Rocket can collide with other players' bullets.
-                List<Bullet> bullets = player1.getBullets();
-                if (player3 != null)
-                    bullets.addAll(player3.getBullets());
-                if (player4 != null)
-                    bullets.addAll(player4.getBullets());
-                for (Bullet bullet : bullets) {
-                    if (bullet.getBoundary().intersects(b)) {
-                        if (!player2.getRocket().isEmpty()) {
+                    // Rocket can collide with other players' bullets.
+                    List<Bullet> bullets = player2.getBullets();
+                    if (player3 != null)
+                        bullets.addAll(player3.getBullets());
+                    if (player4 != null)
+                        bullets.addAll(player4.getBullets());
+                    for (Bullet bullet : bullets) {
+                        if (bullet.getBoundary().intersects(b)) {
+                            if (!player1.getRocket().isEmpty()) {
+                                explosion(b.x, b.y, player1);
+                                player1.getRocket().clear();
+                            }
+                        }
+                    }
+                }
+                break;
+            case 2:
+                if (!player2.getRocket().isEmpty()) {
+                    b = player2.getRocket().get(0).getBoundary();
+                    if (p1.intersects(b) && !player1.dead) {
+                        explosion(b.x, b.y, player2);
+                        player2.getRocket().clear();
+                    } else if (p3.intersects(b)) {
+                        if (!player3.dead) {
+                            explosion(b.x, b.y, player2);
+                            player2.getRocket().clear();
+                        }
+                    } else if (p4.intersects(b)) {
+                        if (!player4.dead) {
                             explosion(b.x, b.y, player2);
                             player2.getRocket().clear();
                         }
                     }
-                }
-            }
-        } else if (player == 3) {
-            p1 = player1.getBoundary();
-            p2 = player2.getBoundary();
-            p4 = (player4 != null) ? player4.getBoundary() : new Rectangle(0, 0, 0, 0);
-            if (!player3.getRocket().isEmpty()) {
-                b = player3.getRocket().get(0).getBoundary();
-                if (p1.intersects(b) && !player1.dead) {
-                    explosion(b.x, b.y, player3);
-                    player3.getRocket().clear();
-                } else if (p2.intersects(b) && !player2.dead) {
-                    explosion(b.x, b.y, player3);
-                    player3.getRocket().clear();
-                } else if (p4.intersects(b)) {
-                    if (!player4.dead) {
-                        explosion(b.x, b.y, player3);
-                        player3.getRocket().clear();
+
+                    List<Bullet> bullets = player1.getBullets();
+                    if (player3 != null)
+                        bullets.addAll(player3.getBullets());
+                    if (player4 != null)
+                        bullets.addAll(player4.getBullets());
+                    for (Bullet bullet : bullets) {
+                        if (bullet.getBoundary().intersects(b)) {
+                            if (!player2.getRocket().isEmpty()) {
+                                explosion(b.x, b.y, player2);
+                                player2.getRocket().clear();
+                            }
+                        }
                     }
                 }
-
-                // Rocket can collide with other players' bullets.
-                List<Bullet> bullets = player1.getBullets();
-                bullets.addAll(player2.getBullets());
-                if (player4 != null)
-                    bullets.addAll(player4.getBullets());
-                for (Bullet bullet : bullets) {
-                    if (bullet.getBoundary().intersects(b)) {
-                        if (!player3.getRocket().isEmpty()) {
+                break;
+            case 3:
+                if (!player3.getRocket().isEmpty()) {
+                    b = player3.getRocket().get(0).getBoundary();
+                    if (p1.intersects(b) && !player1.dead) {
+                        explosion(b.x, b.y, player3);
+                        player3.getRocket().clear();
+                    } else if (p2.intersects(b) && !player2.dead) {
+                        explosion(b.x, b.y, player3);
+                        player3.getRocket().clear();
+                    } else if (p4.intersects(b)) {
+                        if (!player4.dead) {
                             explosion(b.x, b.y, player3);
                             player3.getRocket().clear();
                         }
                     }
-                }
-            }
-        } else if (player == 4) {
-            p1 = player1.getBoundary();
-            p2 = player2.getBoundary();
-            p3 = (player3 != null) ? player3.getBoundary() : new Rectangle(0, 0, 0, 0);
-            if (!player4.getRocket().isEmpty()) {
-                b = player4.getRocket().get(0).getBoundary();
-                if (p1.intersects(b) && !player1.dead) {
-                    explosion(b.x, b.y, player4);
-                    player4.getRocket().clear();
-                } else if (p2.intersects(b) && !player2.dead) {
-                    explosion(b.x, b.y, player4);
-                    player4.getRocket().clear();
-                } else if (p3.intersects(b)) {
-                    if (!player3.dead) {
-                        explosion(b.x, b.y, player4);
-                        player4.getRocket().clear();
+
+                    List<Bullet> bullets = player1.getBullets();
+                    bullets.addAll(player2.getBullets());
+                    if (player4 != null)
+                        bullets.addAll(player4.getBullets());
+                    for (Bullet bullet : bullets) {
+                        if (bullet.getBoundary().intersects(b)) {
+                            if (!player3.getRocket().isEmpty()) {
+                                explosion(b.x, b.y, player3);
+                                player3.getRocket().clear();
+                            }
+                        }
                     }
                 }
-
-                // Rocket can collide with other players' bullets.
-                List<Bullet> bullets = player1.getBullets();
-                bullets.addAll(player2.getBullets());
-                if (player3 != null)
-                    bullets.addAll(player3.getBullets());
-                for (Bullet bullet : bullets) {
-                    if (bullet.getBoundary().intersects(b)) {
-                        if (!player4.getRocket().isEmpty()) {
+                break;
+            case 4:
+                if (!player4.getRocket().isEmpty()) {
+                    b = player4.getRocket().get(0).getBoundary();
+                    if (p1.intersects(b) && !player1.dead) {
+                        explosion(b.x, b.y, player4);
+                        player4.getRocket().clear();
+                    } else if (p2.intersects(b) && !player2.dead) {
+                        explosion(b.x, b.y, player4);
+                        player4.getRocket().clear();
+                    } else if (p3.intersects(b)) {
+                        if (!player3.dead) {
                             explosion(b.x, b.y, player4);
                             player4.getRocket().clear();
                         }
                     }
+
+                    List<Bullet> bullets = player1.getBullets();
+                    bullets.addAll(player2.getBullets());
+                    if (player3 != null)
+                        bullets.addAll(player3.getBullets());
+                    for (Bullet bullet : bullets) {
+                        if (bullet.getBoundary().intersects(b)) {
+                            if (!player4.getRocket().isEmpty()) {
+                                explosion(b.x, b.y, player4);
+                                player4.getRocket().clear();
+                            }
+                        }
+                    }
                 }
-            }
+                break;
         }
 
         // Collision with obstacles
-        Player playerObj = player1; // Default to player1.
-        if (player == 1)
-            playerObj = (Player1) player1;
-        else if (player == 2)
-            playerObj = (Player2) player2;
-        else if (player == 3)
-            playerObj = (Player3) player3;
-        else if (player == 4)
-            playerObj = (Player4) player4;
-
-        Rectangle o;
+        Player playerObj = getPlayer(player);
         ArrayList<Rocket> rocket = playerObj.getRocket();
+        Rectangle o;
 
         for (int i = 0; i < rocket.size(); i++) {
             Rocket rocketCheck = rocket.get(i);
@@ -931,108 +820,101 @@ public class CollisionDetection implements Serializable {
         }
     }
 
-    /* Check for mine collision */
+    /* MineHit: [Check if player walks on invisible mine] */
     public void mineHit(int player) {
         Rectangle b;
-        Rectangle p1 = new Rectangle(0, 0, 0, 0);
-        Rectangle p2 = new Rectangle(0, 0, 0, 0);
-        Rectangle p3 = new Rectangle(0, 0, 0, 0);
-        Rectangle p4 = new Rectangle(0, 0, 0, 0);
+        Rectangle p1 = player1.getBoundary();
+        Rectangle p2 = player2.getBoundary();
+        Rectangle p3 = (player3 != null) ? player3.getBoundary() : null;
+        Rectangle p4 = (player4 != null) ? player4.getBoundary() : null;
 
         // Collision with player objects
-        if (player == 1) {
-            p2 = player2.getBoundary();
-            p3 = (player3 != null) ? player3.getBoundary() : new Rectangle(0, 0, 0, 0);
-            p4 = (player4 != null) ? player4.getBoundary() : new Rectangle(0, 0, 0, 0);
-            if (!player1.getMines().isEmpty()) {
-                for (int i = 0; i < player1.getMines().size(); i++) {
-                    b = player1.getMines().get(i).getBoundary();
-                    if (p2.intersects(b) && !player2.dead) {
-                        explosion(b.x, b.y, player1);
-                        player1.getMines().remove(i);
-                    } else if (p3.intersects(b)) {
-                        if (!player3.dead) {
+        switch (player) {
+            case 1:
+                if (!player1.getMines().isEmpty()) {
+                    for (int i = 0; i < player1.getMines().size(); i++) {
+                        b = player1.getMines().get(i).getBoundary();
+                        if (p2.intersects(b) && !player2.dead) {
                             explosion(b.x, b.y, player1);
                             player1.getMines().remove(i);
-                        }
-                    } else if (p4.intersects(b)) {
-                        if (!player4.dead) {
-                            explosion(b.x, b.y, player1);
-                            player1.getMines().remove(i);
+                        } else if (p3.intersects(b)) {
+                            if (!player3.dead) {
+                                explosion(b.x, b.y, player1);
+                                player1.getMines().remove(i);
+                            }
+                        } else if (p4.intersects(b)) {
+                            if (!player4.dead) {
+                                explosion(b.x, b.y, player1);
+                                player1.getMines().remove(i);
+                            }
                         }
                     }
                 }
-            }
-        } else if (player == 2) {
-            p1 = player1.getBoundary();
-            p3 = (player3 != null) ? player3.getBoundary() : new Rectangle(0, 0, 0, 0);
-            p4 = (player4 != null) ? player4.getBoundary() : new Rectangle(0, 0, 0, 0);
-            if (!player2.getMines().isEmpty()) {
-                for (int i = 0; i < player2.getMines().size(); i++) {
-                    b = player2.getMines().get(i).getBoundary();
-                    if (p1.intersects(b) && !player1.dead) {
-                        explosion(b.x, b.y, player2);
-                        player2.getMines().remove(i);
-                    } else if (p3.intersects(b)) {
-                        if (!player3.dead) {
+                break;
+            case 2:
+                if (!player2.getMines().isEmpty()) {
+                    for (int i = 0; i < player2.getMines().size(); i++) {
+                        b = player2.getMines().get(i).getBoundary();
+                        if (p1.intersects(b) && !player1.dead) {
                             explosion(b.x, b.y, player2);
                             player2.getMines().remove(i);
-                        }
-                    } else if (p4.intersects(b)) {
-                        if (!player4.dead) {
-                            explosion(b.x, b.y, player2);
-                            player2.getMines().remove(i);
+                        } else if (p3.intersects(b)) {
+                            if (!player3.dead) {
+                                explosion(b.x, b.y, player2);
+                                player2.getMines().remove(i);
+                            }
+                        } else if (p4.intersects(b)) {
+                            if (!player4.dead) {
+                                explosion(b.x, b.y, player2);
+                                player2.getMines().remove(i);
+                            }
                         }
                     }
                 }
-            }
-        } else if (player == 3) {
-            p1 = player1.getBoundary();
-            p2 = player2.getBoundary();
-            p4 = (player4 != null) ? player4.getBoundary() : new Rectangle(0, 0, 0, 0);
-            if (!player3.getMines().isEmpty()) {
-                for (int i = 0; i < player3.getMines().size(); i++) {
-                    b = player3.getMines().get(i).getBoundary();
-                    if (p1.intersects(b) && !player1.dead) {
-                        explosion(b.x, b.y, player3);
-                        player3.getMines().remove(i);
-                    } else if (p2.intersects(b) && !player2.dead) {
-                        explosion(b.x, b.y, player3);
-                        player3.getMines().remove(i);
-                    } else if (p4.intersects(b)) {
-                        if (!player4.dead) {
+                break;
+            case 3:
+                if (!player3.getMines().isEmpty()) {
+                    for (int i = 0; i < player3.getMines().size(); i++) {
+                        b = player3.getMines().get(i).getBoundary();
+                        if (p1.intersects(b) && !player1.dead) {
                             explosion(b.x, b.y, player3);
                             player3.getMines().remove(i);
+                        } else if (p2.intersects(b) && !player2.dead) {
+                            explosion(b.x, b.y, player3);
+                            player3.getMines().remove(i);
+                        } else if (p4.intersects(b)) {
+                            if (!player4.dead) {
+                                explosion(b.x, b.y, player3);
+                                player3.getMines().remove(i);
+                            }
                         }
                     }
                 }
-            }
-        } else if (player == 4) {
-            p1 = player1.getBoundary();
-            p2 = player2.getBoundary();
-            p3 = (player3 != null) ? player3.getBoundary() : new Rectangle(0, 0, 0, 0);
-            if (!player4.getMines().isEmpty()) {
-                for (int i = 0; i < player4.getMines().size(); i++) {
-                    b = player4.getMines().get(0).getBoundary();
-                    if (p1.intersects(b) && !player1.dead) {
-                        explosion(b.x, b.y, player4);
-                        player4.getMines().remove(i);
-                    } else if (p2.intersects(b) && !player2.dead) {
-                        explosion(b.x, b.y, player4);
-                        player4.getMines().remove(i);
-                    } else if (p3.intersects(b)) {
-                        if (!player3.dead) {
+                break;
+            case 4:
+                if (!player4.getMines().isEmpty()) {
+                    for (int i = 0; i < player4.getMines().size(); i++) {
+                        b = player4.getMines().get(0).getBoundary();
+                        if (p1.intersects(b) && !player1.dead) {
                             explosion(b.x, b.y, player4);
                             player4.getMines().remove(i);
+                        } else if (p2.intersects(b) && !player2.dead) {
+                            explosion(b.x, b.y, player4);
+                            player4.getMines().remove(i);
+                        } else if (p3.intersects(b)) {
+                            if (!player3.dead) {
+                                explosion(b.x, b.y, player4);
+                                player4.getMines().remove(i);
+                            }
                         }
                     }
                 }
-            }
+                break;
         }
     }
 
+    /* Explosion: [Result of rocket or mine] */
     public void explosion(int x, int y, Player player) {
-        // Sound effect
         try {
             SoundEffect soundEffect = new SoundEffect("Sound/explosion.wav");
             soundEffect.play();
@@ -1051,37 +933,6 @@ public class CollisionDetection implements Serializable {
                 explosionDmgTaken2 = false;
                 explosionDmgTaken3 = false;
                 explosionDmgTaken4 = false;
-                ((Timer) e.getSource()).stop();
-            }
-        });
-        explosionTime.setInitialDelay(350);
-        explosionTime.start();
-    }
-
-    public void explosionBig(int x, int y, Player player) {
-        // Sound effect
-        try {
-            SoundEffect soundEffect = new SoundEffect("Sound/explosion64.wav");
-            soundEffect.play();
-        } catch (Exception ex) {
-            System.out.println("Soundtrack not found");
-            ex.printStackTrace();
-        }
-
-        player.rocketExplosion.add(new RocketExplosion(x, y));
-
-        Timer explosionTime = new Timer(1, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                player.rocketExplosion.clear();
-                if (player.id == 1)
-                    explosionDmgTaken1 = false;
-                if (player.id == 2)
-                    explosionDmgTaken2 = false;
-                if (player.id == 3)
-                    explosionDmgTaken3 = false;
-                if (player.id == 4)
-                    explosionDmgTaken4 = false;
                 ((Timer) e.getSource()).stop();
             }
         });

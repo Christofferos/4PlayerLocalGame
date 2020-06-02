@@ -3,6 +3,7 @@ import java.awt.event.*;
 
 public class SetKeyBindings {
     public SetKeyBindings(InputMap im, ActionMap am, PlayerMovement playerMovement) {
+        /* Player 2 */
         im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0, false), "down-pressed");
         im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0, true), "down-released");
         im.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0, false), "up-pressed");
@@ -21,6 +22,7 @@ public class SetKeyBindings {
         im.put(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0, false), "d-pressed");
         im.put(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0, true), "d-released");
 
+        /* Player 2 */
         am.put("down-pressed", playerMovement.returnNewY(playerMovement.movement1, 1));
         am.put("down-released", playerMovement.returnNewY(playerMovement.movement1, 0));
         am.put("up-pressed", playerMovement.returnNewY(playerMovement.movement1, -1));
@@ -39,7 +41,7 @@ public class SetKeyBindings {
         am.put("d-pressed", playerMovement.returnNewX(playerMovement.movement2, 1));
         am.put("d-released", playerMovement.returnNewX(playerMovement.movement2, 0));
 
-        /* 3 Players */
+        /* Player 3 */
         im.put(KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD5, 0, false), "numpad5-pressed");
         im.put(KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD5, 0, true), "numpad5-released");
         im.put(KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD8, 0, false), "numpad8-pressed");
@@ -58,7 +60,7 @@ public class SetKeyBindings {
         am.put("numpad6-pressed", playerMovement.returnNewX(playerMovement.movement3, 1));
         am.put("numpad6-released", playerMovement.returnNewX(playerMovement.movement3, 0));
 
-        /* 4 Players */
+        /* Player 4 */
         im.put(KeyStroke.getKeyStroke(KeyEvent.VK_J, 0, false), "j-pressed");
         im.put(KeyStroke.getKeyStroke(KeyEvent.VK_J, 0, true), "j-released");
         im.put(KeyStroke.getKeyStroke(KeyEvent.VK_U, 0, false), "u-pressed");

@@ -83,29 +83,12 @@ public class Player extends Sprite {
         return lives;
     }
 
-    public int getInventory() {
-        return inventory;
-    }
-
     public Direction getDirection() {
         return direction;
     }
 
-    public void pickUpObstacle() {
-        inventory++;
-    }
-
-    public void throwAwayObstacle() {
-        inventory--;
-    }
-
     public void incrementLives() {
         lives++;
-    }
-
-    public String toString() {
-        return "Player [ X-position: " + xpos + " Y-position: " + ypos + " Lives: " + lives + " Inventory: " + inventory
-                + " ]";
     }
 
     public void loadSprite(String imgName) {

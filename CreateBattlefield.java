@@ -19,6 +19,16 @@ public class CreateBattlefield implements Serializable {
         size = 8;
     }
 
+    /* AddRectangleArea: [Practical way of placing multiple obstacles] */
+    public void addRectangleArea(int x1, int y1, int x2, int y2, boolean movable) {
+        for (int i = x1; i < x2; i += 9) {
+            for (int j = y1; j < y2; j += 9) {
+                obstacles.add(new Obstacle(i, j, movable, size));
+            }
+        }
+    }
+
+    /* CreateBorder: [4 edges around the battlefield] */
     public void createBorder() {
         Obstacle obj = new Obstacle(-10, -10, false, size);
         for (int i = 0; i < width - xOffset; i += obj.getWidth()) {
@@ -31,6 +41,7 @@ public class CreateBattlefield implements Serializable {
         }
     }
 
+    /* CreateBattlefield: [Placing obstacles on battlefield. Sorry for the mess here..] */
     public void createBattlefield() {
         obstacles.add(new Obstacle(8, 8, true, size));
         obstacles.add(new Obstacle(16, 8, true, size));
@@ -58,7 +69,7 @@ public class CreateBattlefield implements Serializable {
         addRectangleArea((width - xOffset) / 2 - 32, (height - yOffset) / 2 + 48, (width - xOffset) / 2 - 16,
                 (height - yOffset) / 2 + 56, true);
 
-        // Undre väggen
+        // LOWER WALL
         for (int i = 32; i < width / 2 - xOffset + 16; i += 8) {
             obstacles.add(new Obstacle(i, height - 32 - yOffset, false, size));
             obstacles.add(new Obstacle(i + 8 * 12, height - 32 - yOffset, false, size));
@@ -81,7 +92,7 @@ public class CreateBattlefield implements Serializable {
         addRectangleArea(3 * (width - xOffset) / 4, 3 * (height - yOffset) / 4 + 45, 3 * (width - xOffset) / 4 + 8,
                 3 * (height - yOffset) / 4 + 61, true);
 
-        // Allra vänstra väggen
+        // LEFTMOST WALL
         for (int i = 48; i < height / 2 - yOffset; i += 8) {
             obstacles.add(new Obstacle(32, i, false, size));
             obstacles.add(new Obstacle(32, i + height / 2 - yOffset - 16, false, size));
@@ -98,7 +109,7 @@ public class CreateBattlefield implements Serializable {
         addRectangleArea((width - xOffset) / 4 - 4, 3 * (height - yOffset) / 4 + 10, (width - xOffset) / 4 + 4,
                 3 * (height - yOffset) / 4 + 26, true);
 
-        // Näst vänstra väggen
+        // SECOND LEFT WALL
         obstacles.add(new Obstacle(72, 32, false, size));
         obstacles.add(new Obstacle(80, 32, false, size));
 
@@ -114,7 +125,7 @@ public class CreateBattlefield implements Serializable {
         obstacles.add(new Obstacle(82, (height - yOffset) / 2 - 24, true, size));
         obstacles.add(new Obstacle(82, (height - yOffset) / 2 - 32, true, size));
 
-        // Lodrätt vägg som sticker ut från övre kanten av spelplanen
+        // VERTICAL WALL FROM TOP EDGE
         obstacles.add(new Obstacle(2 * (width - xOffset) / 3, 8, false, size));
         obstacles.add(new Obstacle(2 * (width - xOffset) / 3, 16, false, size));
         obstacles.add(new Obstacle(2 * (width - xOffset) / 3 + 8, 17, true, size));
@@ -124,7 +135,7 @@ public class CreateBattlefield implements Serializable {
         obstacles.add(new Obstacle((width - xOffset) / 2 + 71, 24, true, size));
         obstacles.add(new Obstacle((width - xOffset) / 2 + 71, 16, true, size));
 
-        // Väggen närmast högra kanten
+        // RIGHTMOST WALL
         for (int i = 48; i < height / 2 - yOffset; i += 8) {
             obstacles.add(new Obstacle(width - xOffset - 32, i, false, size));
             obstacles.add(new Obstacle(width - xOffset - 32, i + height / 2 - yOffset - 16, false, size));
@@ -135,7 +146,7 @@ public class CreateBattlefield implements Serializable {
         addRectangleArea(width - xOffset - 88, 3 * (height - yOffset) / 4 + 12, width - xOffset - 68,
                 3 * (height - yOffset) / 4 + 20, true);
 
-        // Väggen näst närmast högra kanten
+        // SECOND RIGHT WALL
         for (int i = 120; i < height / 2 - yOffset + 64; i += 8) {
             obstacles.add(new Obstacle(width - xOffset - 70, i, false, size));
         }
@@ -150,13 +161,5 @@ public class CreateBattlefield implements Serializable {
 
         obstacles.add(new Obstacle(width - xOffset - 62, height - yOffset - 64, true, size));
         obstacles.add(new Obstacle(width - xOffset - 58, 110, true, size));
-    }
-
-    public void addRectangleArea(int x1, int y1, int x2, int y2, boolean movable) {
-        for (int i = x1; i < x2; i += 9) {
-            for (int j = y1; j < y2; j += 9) {
-                obstacles.add(new Obstacle(i, j, movable, size));
-            }
-        }
     }
 }

@@ -1,14 +1,13 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
-
-import javax.swing.Action;
 import javax.swing.Timer;
 
 public class Environment {
     boolean water;
     boolean fire;
     boolean lightning;
+
     private Timer waterCheck1;
     private Timer waterCheck2;
     private Timer waterCheck3;
@@ -18,11 +17,12 @@ public class Environment {
             FireRing fireRing, LightningStorm lightningStorm, CollisionDetection collisionDetection,
             int environmentLastMatch) {
 
+        // First time the game is started from menu:
         if (environmentLastMatch == -1) {
             Random randSpawnType = new Random();
             double randSpawnTypeD = randSpawnType.nextDouble();
 
-            // TESTING ENVIRONMENT >< randSpawnTypeD = 0.66;
+            // TESTING ENVIRONMENT: randSpawnTypeD = 0.66;
             initiateEnvironment(randSpawnTypeD, waterFlood, fireRing, lightningStorm, collisionDetection, player1,
                     player2, player3, player4);
         } else {
@@ -31,6 +31,7 @@ public class Environment {
         }
     }
 
+    /* ## NewEnvironment: [At restarted game - create a new different environment] ## */
     public void newEnvironment(int environmentLastMatch, WaterFlood waterFlood, FireRing fireRing,
             LightningStorm lightningStorm, CollisionDetection collisionDetection, Player1 player1, Player2 player2,
             Player3 player3, Player4 player4) {
@@ -57,9 +58,11 @@ public class Environment {
                 player3, player4);
     }
 
+    /* ## InitiateEnvironment [Function to spawn WaterFlood, FireRing or LightningStorm] ## */
     public void initiateEnvironment(double randSpawnTypeD, WaterFlood waterFlood, FireRing fireRing,
             LightningStorm lightningStorm, CollisionDetection collisionDetection, Player1 player1, Player2 player2,
             Player3 player3, Player4 player4) {
+
         //randSpawnTypeD = 0.66;
         if (randSpawnTypeD <= 0.30) {
             /* ## Timer: LightningSpawn ## */
@@ -139,7 +142,7 @@ public class Environment {
         } else if (randSpawnTypeD > 0.65) {
             fire = true;
             /* ## Timer: Firespawn ## */
-            // TESTING FIRE
+            // TESTING FIRE: []
             int flameIncrementTime = 4000;
             Timer fireTimer = new Timer(flameIncrementTime, new ActionListener() {
                 public void actionPerformed(ActionEvent evt) {
@@ -169,14 +172,10 @@ public class Environment {
     }
 
     public boolean isWaterEnvironment() {
-        if (water)
-            return water;
         return water;
     }
 
     public boolean isFireEnvironment() {
-        if (fire)
-            return fire;
         return fire;
     }
 

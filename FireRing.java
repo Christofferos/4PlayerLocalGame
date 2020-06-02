@@ -1,14 +1,12 @@
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
-
 import javax.swing.*;
-
 import java.awt.Rectangle;
 import java.awt.event.ActionListener;
 
 public class FireRing implements ActionListener {
     private static final long serialVersionUID = 1L;
+
     ArrayList<FireBlock> fireBlocks;
     int width;
     int height;
@@ -19,10 +17,13 @@ public class FireRing implements ActionListener {
     Timer moveTimer;
     Timer moveTimer2;
     Timer goalTimer;
+
     int xGoal = 0;
     int yGoal = 0;
+
     int moveIteration = 1;
     int moveDirCounter = 1;
+
     int xCenterOfNoDieZone;
     int yCenterOfNoDieZone;
     int noDieZoneRadius = 62;
@@ -37,6 +38,27 @@ public class FireRing implements ActionListener {
         this.yOffset = yOffset;
     }
 
+    /* ## AddFireRectangle: [NOTE: x1, x2, y1, y2] ## */
+    public void addFireRectangle(int x1, int x2, int y1, int y2) {
+        for (int i = x1; i < x2; i += 8) {
+            for (int j = y1; j < y2; j += 8) {
+                fireBlocks.add(new FireBlock(i, j));
+            }
+        }
+    }
+
+    /* ## RemoveFireRectangle: [NOTE: x1, x2, y1, y2] ## */
+    public void removeFireRectangle(int x1, int x2, int y1, int y2) {
+        Rectangle rec = new Rectangle(x1, y1, Math.abs(x1 - x2), Math.abs(y1 - y2));
+        for (int i = 0; i < fireBlocks.size();) {
+            if (rec.intersects(fireBlocks.get(i).getBoundary()))
+                fireBlocks.remove(i);
+            else
+                i++;
+        }
+    }
+
+    /* ## IncreaseFlames: [Flames moves towards middle] ## */
     public void increaseFlames() {
         flameCount++;
         if (flameCount <= 7) {
@@ -63,29 +85,26 @@ public class FireRing implements ActionListener {
         if (flameCount == 8) {
             xCenterOfNoDieZone = (width - xOffset) / 2;
             yCenterOfNoDieZone = (height - yOffset) / 2;
-            // Move xCenterOfNoDieZone according to the updated position the flames will
-            // move towards.
-            Random randomZeroToOne = new Random();
-            double randDir = randomZeroToOne.nextDouble();
 
             Random rand = new Random();
             int max = 9;
             int min = 1;
             int randomNum = rand.nextInt((max - min) + 1) + min;
+
             availablePositions(randomNum);
             removeFireRectangle(xCenterOfNoDieZone - 45, xCenterOfNoDieZone + 45, yCenterOfNoDieZone - 45,
                     yCenterOfNoDieZone + 45);
             startTimer();
-            // moveFlames(1);
         }
     }
 
-    // TESTING FIRE
+    /* ## StartTimer: [Move fire ring with certain update rate] ## */
     public void startTimer() {
         goalTimer = new Timer(850, (ActionListener) this);
         goalTimer.start();
     }
 
+    /* ## ActionPerformed: [Called by StartTimer - every Tick] ## */
     @Override
     public void actionPerformed(java.awt.event.ActionEvent e) {
         goalPosition(xGoal, yGoal);
@@ -96,7 +115,7 @@ public class FireRing implements ActionListener {
         }
     }
 
-    // TESTING FIRE
+    /* ## GoalPosition: [Move fire circle towards a 2D point] ## */
     public void goalPosition(int x, int y) {
         fireBlocks.clear();
         addFireRectangle(0, (width - xOffset), 0, (height - yOffset));
@@ -151,7 +170,7 @@ public class FireRing implements ActionListener {
 
     }
 
-    // TESTING FIRE
+    /* ## AvailablePositions: [Define 9 positions where the fire ring can move] ## */
     public void availablePositions(int posIndex) {
         // 1 2 3
         // 4 5 6
@@ -195,72 +214,4 @@ public class FireRing implements ActionListener {
                 break;
         }
     }
-
-    // LEGACY CODE - Early development cross moving.
-    public void moveFlames(int randomDir) {
-        fireBlocks.clear();
-        addFireRectangle(0, (width - xOffset), 0, (height - yOffset));
-        removeFireRectangle((width - xOffset) / 4, 3 * (width - xOffset) / 4, (height - yOffset) / 4,
-                3 * (height - yOffset) / 4);
-
-        switch (randomDir) {
-            // Move flames [Cross Dir: \ ]
-            case 1:
-                moveTimer = new Timer(1000, new ActionListener() {
-                    @Override
-                    public void actionPerformed(java.awt.event.ActionEvent e) {
-                        fireBlocks.clear();
-                        addFireRectangle(0, (width - xOffset), 0, (height - yOffset));
-                        removeFireRectangle(8 * moveIteration + (width - xOffset) / 4,
-                                8 * moveIteration + 3 * (width - xOffset) / 4,
-                                8 * moveIteration + (height - yOffset) / 4,
-                                8 * moveIteration + 3 * (height - yOffset) / 4);
-                        moveIteration += moveDirCounter;
-                        if (moveIteration == 9 || moveIteration == -8)
-                            moveDirCounter *= -1;
-                    }
-                });
-                moveTimer.start();
-                break;
-            // Move flames [Cross Dir: / ]
-            case 2:
-                moveTimer2 = new Timer(1000, new ActionListener() {
-                    @Override
-                    public void actionPerformed(java.awt.event.ActionEvent e) {
-                        fireBlocks.clear();
-                        addFireRectangle(0, (width - xOffset), 0, (height - yOffset));
-                        removeFireRectangle(-8 * moveIteration + (width - xOffset) / 4,
-                                -8 * moveIteration + 3 * (width - xOffset) / 4,
-                                8 * moveIteration + (height - yOffset) / 4,
-                                8 * moveIteration + 3 * (height - yOffset) / 4);
-                        moveIteration += moveDirCounter;
-                        if (moveIteration == 9 || moveIteration == -8)
-                            moveDirCounter *= -1;
-                    }
-                });
-                moveTimer2.start();
-
-                break;
-        }
-    }
-
-    public void addFireRectangle(int x1, int x2, int y1, int y2) {
-        for (int i = x1; i < x2; i += 8) {
-            for (int j = y1; j < y2; j += 8) {
-                fireBlocks.add(new FireBlock(i, j));
-            }
-        }
-    }
-
-    // Top left corner to bottom right cornor.
-    public void removeFireRectangle(int x1, int x2, int y1, int y2) {
-        Rectangle rec = new Rectangle(x1, y1, Math.abs(x1 - x2), Math.abs(y1 - y2));
-        for (int i = 0; i < fireBlocks.size();) {
-            if (rec.intersects(fireBlocks.get(i).getBoundary()))
-                fireBlocks.remove(i);
-            else
-                i++;
-        }
-    }
-
 }

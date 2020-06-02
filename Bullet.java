@@ -34,10 +34,6 @@ public class Bullet extends Sprite {
                 xpos += bulletSpeed;
                 break;
         }
-
-        if (xpos > 500 || xpos < 0 || ypos > 500 || ypos < 0) {
-            visible = false;
-        }
     }
 
     // In order to align hit radius of the bullet with the actual sprite.

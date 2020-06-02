@@ -1,9 +1,7 @@
 
-// Shift + Alt + A  To do a multiline comment
+// Shift + Alt + A  To do a multiline comment in VSC
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 public class App extends JFrame {
     private static final long serialVersionUID = 1L;

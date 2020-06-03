@@ -29,6 +29,7 @@ public class Battletronics extends JPanel implements ActionListener {
     public Player3 player3;
     public Player4 player4;
     private int winner = 0;
+    private String endGameColor = "";
 
     /* Bullet types */
     HashSet<Bullet> allBullets = new HashSet<Bullet>();
@@ -402,19 +403,20 @@ public class Battletronics extends JPanel implements ActionListener {
         if (nrOfPlayers == 4)
             g.drawString("HP: " + player4.getLives() + " / " + player4.maxLives, (width - xOffset) / 2 + 10, 288);
 
+        /*
         if (nrOfPlayers == 2) {
-            g.setColor(Color.RED); // Optional
-            g.drawString("Inventory:  " + player1.inventory + " / " + player1.inventoryMaxCap, 5, 280);
-            g.drawString(
-                    "Fire-rate:   " + (double) Math.round((1.0 / ((double) player1.reloadFreq / 1000)) * 100d) / 100d,
-                    5, 295);
-            g.setColor(Color.GREEN); // Optional
-            g.drawString("Inventory:     " + player2.inventory + " / " + player2.inventoryMaxCap, 165, 280);
-            g.drawString(
-                    "Fire-rate:      "
-                            + (double) Math.round((1.0 / ((double) player2.reloadFreq / 1000)) * 100d) / 100d,
-                    165, 295);
-        }
+        g.setColor(Color.RED); // Optional
+        g.drawString("Inventory:  " + player1.inventory + " / " + player1.inventoryMaxCap, 5, 280);
+        g.drawString(
+                "Fire-rate:   " + (double) Math.round((1.0 / ((double) player1.reloadFreq / 1000)) * 100d) / 100d,
+                5, 295);
+        g.setColor(Color.GREEN); // Optional
+        g.drawString("Inventory:     " + player2.inventory + " / " + player2.inventoryMaxCap, 165, 280);
+        g.drawString(
+                "Fire-rate:      "
+                        + (double) Math.round((1.0 / ((double) player2.reloadFreq / 1000)) * 100d) / 100d,
+                165, 295);
+        }*/
 
         // DRAW MACHINE GUN PROGRESS BAR
         if (player1.holdingMachineGun) {
@@ -504,7 +506,7 @@ public class Battletronics extends JPanel implements ActionListener {
 
     /* ## GameOver: Prepare Window to be repainted [Called from GameLoop] ## */
     private void gameOver(Graphics g) {
-        String color = "";
+
         if (nrOfPlayers == 2) {
             if (player1.getLives() <= 0) {
                 winner = 2;
@@ -512,44 +514,48 @@ public class Battletronics extends JPanel implements ActionListener {
                 winner = 1;
             }
             if (winner == 1) {
-                color = "Red";
+                endGameColor = "Red";
                 setBackground(Color.red);
                 g.setColor(Color.white);
             } else if (winner == 2) {
-                color = "Green";
+                endGameColor = "Green";
                 setBackground(Color.green);
                 g.setColor(Color.black);
             }
         } else if (nrOfPlayers >= 3) {
             if (!player1.dead) {
+                player1.dead = true;
                 winner = 1;
-                color = "Red";
+                endGameColor = "Red";
                 setBackground(Color.red);
                 g.setColor(Color.white);
             } else if (!player2.dead) {
+                player2.dead = true;
                 winner = 2;
-                color = "Green";
+                endGameColor = "Green";
                 setBackground(Color.green);
-                g.setColor(Color.black);
+                g.setColor(Color.BLACK);
             } else if (!player3.dead) {
+                player3.dead = true;
                 winner = 3;
-                color = "Purple";
+                endGameColor = "Purple";
                 setBackground(Color.MAGENTA);
-                g.setColor(Color.black);
+                g.setColor(Color.BLACK);
             } else if (nrOfPlayers == 4) {
                 if (!player4.dead) {
+                    player4.dead = true;
                     winner = 4;
-                    color = "Orange";
+                    endGameColor = "Orange";
                     setBackground(Color.orange);
-                    g.setColor(Color.black);
+                    g.setColor(Color.WHITE);
                 }
             }
         }
         String message;
-        if (color == "") {
+        if (endGameColor == "") {
             message = "No player wins!";
         } else {
-            message = color + " player wins!";
+            message = endGameColor + " player wins!";
         }
         String message2 = "Press R to restart";
         Font f = new Font("Nunito", Font.BOLD, 14);
@@ -621,6 +627,7 @@ public class Battletronics extends JPanel implements ActionListener {
     }
 
     public void restartGame() {
+        endGameColor = "";
         winner = 0;
         ongoingGame = true;
         tAdapter = new TAdapter();

@@ -569,17 +569,21 @@ public class CollisionDetection implements Serializable {
                         if (p2.intersects(b) && !player2.dead) {
                             player2.decrementLives();
                             player1.getBullets().remove(i);
-                        } else if (p3.intersects(b)) {
-                            if (!player3.dead) {
-                                player3.decrementLives();
-                                player1.getBullets().remove(i);
-                            }
-                        } else if (p4.intersects(b)) {
-                            if (!player4.dead) {
-                                player4.decrementLives();
-                                player1.getBullets().remove(i);
-                            }
                         }
+                        if (p3 != null)
+                            if (p3.intersects(b)) {
+                                if (!player3.dead) {
+                                    player3.decrementLives();
+                                    player1.getBullets().remove(i);
+                                }
+                            }
+                        if (p4 != null)
+                            if (p4.intersects(b)) {
+                                if (!player4.dead) {
+                                    player4.decrementLives();
+                                    player1.getBullets().remove(i);
+                                }
+                            }
                     }
                 }
                 break;
@@ -591,17 +595,21 @@ public class CollisionDetection implements Serializable {
                         if (p1.intersects(b) && !player1.dead) {
                             player1.decrementLives();
                             player2.getBullets().remove(i);
-                        } else if (p3.intersects(b)) {
-                            if (!player3.dead) {
-                                player3.decrementLives();
-                                player2.getBullets().remove(i);
-                            }
-                        } else if (p4.intersects(b)) {
-                            if (!player4.dead) {
-                                player4.decrementLives();
-                                player2.getBullets().remove(i);
-                            }
                         }
+                        if (p3 != null)
+                            if (p3.intersects(b)) {
+                                if (!player3.dead) {
+                                    player3.decrementLives();
+                                    player2.getBullets().remove(i);
+                                }
+                            }
+                        if (p4 != null)
+                            if (p4.intersects(b)) {
+                                if (!player4.dead) {
+                                    player4.decrementLives();
+                                    player2.getBullets().remove(i);
+                                }
+                            }
                     }
                 }
                 break;
@@ -613,15 +621,18 @@ public class CollisionDetection implements Serializable {
                         if (p1.intersects(b) && !player1.dead) {
                             player1.decrementLives();
                             player3.getBullets().remove(i);
-                        } else if (p2.intersects(b) && !player2.dead) {
+                        }
+                        if (p2.intersects(b) && !player2.dead) {
                             player2.decrementLives();
                             player3.getBullets().remove(i);
-                        } else if (p4.intersects(b)) {
-                            if (!player4.dead) {
-                                player4.decrementLives();
-                                player3.getBullets().remove(i);
-                            }
                         }
+                        if (p4 != null)
+                            if (p4.intersects(b)) {
+                                if (!player4.dead) {
+                                    player4.decrementLives();
+                                    player3.getBullets().remove(i);
+                                }
+                            }
                     }
                 }
                 break;
@@ -636,12 +647,14 @@ public class CollisionDetection implements Serializable {
                         } else if (p2.intersects(b) && !player2.dead) {
                             player2.decrementLives();
                             player4.getBullets().remove(i);
-                        } else if (p3.intersects(b)) {
-                            if (!player3.dead) {
-                                player3.decrementLives();
-                                player4.getBullets().remove(i);
-                            }
                         }
+                        if (p3 != null)
+                            if (p3.intersects(b)) {
+                                if (!player3.dead) {
+                                    player3.decrementLives();
+                                    player4.getBullets().remove(i);
+                                }
+                            }
                     }
                 }
                 break;
@@ -678,17 +691,21 @@ public class CollisionDetection implements Serializable {
                     if (p2.intersects(b) && !player2.dead) {
                         explosion(b.x, b.y, player1);
                         player1.getRocket().clear();
-                    } else if (p3.intersects(b)) {
-                        if (!player3.dead) {
-                            explosion(b.x, b.y, player1);
-                            player1.getRocket().clear();
-                        }
-                    } else if (p4.intersects(b)) {
-                        if (!player4.dead) {
-                            explosion(b.x, b.y, player1);
-                            player1.getRocket().clear();
-                        }
                     }
+                    if (p3 != null)
+                        if (p3.intersects(b)) {
+                            if (!player3.dead) {
+                                explosion(b.x, b.y, player1);
+                                player1.getRocket().clear();
+                            }
+                        }
+                    if (p4 != null)
+                        if (p4.intersects(b)) {
+                            if (!player4.dead) {
+                                explosion(b.x, b.y, player1);
+                                player1.getRocket().clear();
+                            }
+                        }
 
                     // Rocket can collide with other players' bullets.
                     List<Bullet> bullets = player2.getBullets();
@@ -712,17 +729,21 @@ public class CollisionDetection implements Serializable {
                     if (p1.intersects(b) && !player1.dead) {
                         explosion(b.x, b.y, player2);
                         player2.getRocket().clear();
-                    } else if (p3.intersects(b)) {
-                        if (!player3.dead) {
-                            explosion(b.x, b.y, player2);
-                            player2.getRocket().clear();
-                        }
-                    } else if (p4.intersects(b)) {
-                        if (!player4.dead) {
-                            explosion(b.x, b.y, player2);
-                            player2.getRocket().clear();
-                        }
                     }
+                    if (p3 != null)
+                        if (p3.intersects(b)) {
+                            if (!player3.dead) {
+                                explosion(b.x, b.y, player2);
+                                player2.getRocket().clear();
+                            }
+                        }
+                    if (p4 != null)
+                        if (p4.intersects(b)) {
+                            if (!player4.dead) {
+                                explosion(b.x, b.y, player2);
+                                player2.getRocket().clear();
+                            }
+                        }
 
                     List<Bullet> bullets = player1.getBullets();
                     if (player3 != null)
@@ -748,12 +769,14 @@ public class CollisionDetection implements Serializable {
                     } else if (p2.intersects(b) && !player2.dead) {
                         explosion(b.x, b.y, player3);
                         player3.getRocket().clear();
-                    } else if (p4.intersects(b)) {
-                        if (!player4.dead) {
-                            explosion(b.x, b.y, player3);
-                            player3.getRocket().clear();
-                        }
                     }
+                    if (p4 != null)
+                        if (p4.intersects(b)) {
+                            if (!player4.dead) {
+                                explosion(b.x, b.y, player3);
+                                player3.getRocket().clear();
+                            }
+                        }
 
                     List<Bullet> bullets = player1.getBullets();
                     bullets.addAll(player2.getBullets());
@@ -778,12 +801,14 @@ public class CollisionDetection implements Serializable {
                     } else if (p2.intersects(b) && !player2.dead) {
                         explosion(b.x, b.y, player4);
                         player4.getRocket().clear();
-                    } else if (p3.intersects(b)) {
-                        if (!player3.dead) {
-                            explosion(b.x, b.y, player4);
-                            player4.getRocket().clear();
-                        }
                     }
+                    if (p3 != null)
+                        if (p3.intersects(b)) {
+                            if (!player3.dead) {
+                                explosion(b.x, b.y, player4);
+                                player4.getRocket().clear();
+                            }
+                        }
 
                     List<Bullet> bullets = player1.getBullets();
                     bullets.addAll(player2.getBullets());
@@ -837,17 +862,21 @@ public class CollisionDetection implements Serializable {
                         if (p2.intersects(b) && !player2.dead) {
                             explosion(b.x, b.y + 2, player1);
                             player1.getMines().remove(i);
-                        } else if (p3.intersects(b)) {
-                            if (!player3.dead) {
-                                explosion(b.x, b.y + 2, player1);
-                                player1.getMines().remove(i);
-                            }
-                        } else if (p4.intersects(b)) {
-                            if (!player4.dead) {
-                                explosion(b.x, b.y + 2, player1);
-                                player1.getMines().remove(i);
-                            }
                         }
+                        if (p3 != null)
+                            if (p3.intersects(b)) {
+                                if (!player3.dead) {
+                                    explosion(b.x, b.y + 2, player1);
+                                    player1.getMines().remove(i);
+                                }
+                            }
+                        if (p4 != null)
+                            if (p4.intersects(b)) {
+                                if (!player4.dead) {
+                                    explosion(b.x, b.y + 2, player1);
+                                    player1.getMines().remove(i);
+                                }
+                            }
                     }
                 }
                 break;
@@ -858,17 +887,21 @@ public class CollisionDetection implements Serializable {
                         if (p1.intersects(b) && !player1.dead) {
                             explosion(b.x + 2, b.y + 2, player2);
                             player2.getMines().remove(i);
-                        } else if (p3.intersects(b)) {
-                            if (!player3.dead) {
-                                explosion(b.x + 2, b.y + 2, player2);
-                                player2.getMines().remove(i);
-                            }
-                        } else if (p4.intersects(b)) {
-                            if (!player4.dead) {
-                                explosion(b.x + 2, b.y + 2, player2);
-                                player2.getMines().remove(i);
-                            }
                         }
+                        if (p3 != null)
+                            if (p3.intersects(b)) {
+                                if (!player3.dead) {
+                                    explosion(b.x + 2, b.y + 2, player2);
+                                    player2.getMines().remove(i);
+                                }
+                            }
+                        if (p4 != null)
+                            if (p4.intersects(b)) {
+                                if (!player4.dead) {
+                                    explosion(b.x + 2, b.y + 2, player2);
+                                    player2.getMines().remove(i);
+                                }
+                            }
                     }
                 }
                 break;
@@ -882,12 +915,14 @@ public class CollisionDetection implements Serializable {
                         } else if (p2.intersects(b) && !player2.dead) {
                             explosion(b.x + 2, b.y + 2, player3);
                             player3.getMines().remove(i);
-                        } else if (p4.intersects(b)) {
-                            if (!player4.dead) {
-                                explosion(b.x + 2, b.y + 2, player3);
-                                player3.getMines().remove(i);
-                            }
                         }
+                        if (p4 != null)
+                            if (p4.intersects(b)) {
+                                if (!player4.dead) {
+                                    explosion(b.x + 2, b.y + 2, player3);
+                                    player3.getMines().remove(i);
+                                }
+                            }
                     }
                 }
                 break;
@@ -901,12 +936,14 @@ public class CollisionDetection implements Serializable {
                         } else if (p2.intersects(b) && !player2.dead) {
                             explosion(b.x + 2, b.y + 2, player4);
                             player4.getMines().remove(i);
-                        } else if (p3.intersects(b)) {
-                            if (!player3.dead) {
-                                explosion(b.x + 2, b.y + 2, player4);
-                                player4.getMines().remove(i);
-                            }
                         }
+                        if (p3 != null)
+                            if (p3.intersects(b)) {
+                                if (!player3.dead) {
+                                    explosion(b.x + 2, b.y + 2, player4);
+                                    player4.getMines().remove(i);
+                                }
+                            }
                     }
                 }
                 break;

@@ -1,9 +1,6 @@
 import javax.swing.*;
 import java.awt.event.*;
 import java.util.ArrayList;
-import javax.swing.*;
-import java.awt.geom.Arc2D;
-import java.awt.*;
 
 public class PowerUpMachineGun {
     SoundEffect soundEffect;

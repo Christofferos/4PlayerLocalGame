@@ -531,7 +531,7 @@ public class CollisionDetection implements Serializable {
                         playerObj.reloadFreq -= 25;
                 } else if (powerUps.get(i).getType() == 3) {
                     playerObj.inventoryMaxCap += 1;
-                    if (playerObj.inventoryFrequency > 100) {
+                    if (playerObj.inventoryFrequency > 150) {
                         playerObj.inventoryFrequency -= 100;
                         if (playerObj.inventoryObstacleSize != 12)
                             playerObj.inventoryObstacleSize += 2;

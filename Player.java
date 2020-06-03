@@ -7,53 +7,41 @@ public class Player extends Sprite {
     private static final long serialVersionUID = 1L;
 
     enum Direction {
-        UP {
-            public String toString() {
-                return "UP";
-            }
-        },
-        DOWN {
-            public String toString() {
-                return "DOWN";
-            }
-        },
-        LEFT {
-            public String toString() {
-                return "LEFT";
-            }
-        },
-        RIGHT {
-            public String toString() {
-                return "RIGHT";
-            }
-        }
+        UP, DOWN, LEFT, RIGHT
     }
 
     enum BulletSound {
         RIFLE, SNIPER, MACHINEGUN
     }
 
-    public boolean dead;
     public int id;
+    public boolean dead;
+
     public Timer reloadTimer;
     public boolean reload;
     public int reloadFreq = 250;
+
     public boolean pickUpOrDrop;
-    public int inventoryFrequency = 400;
+    public int inventoryFrequency = 450;
     public int inventoryObstacleSize = 8;
-    protected int lives;
-    public Direction direction;
     public int inventory;
     public int inventoryMaxCap = 3;
+
+    protected int lives;
     public int maxLives;
-    protected List<Bullet> bullets;
+
+    public Direction direction;
+
     public int bulletSpeed = 3;
     public BulletSound bulletSound = BulletSound.RIFLE;
+
+    protected List<Bullet> bullets;
     public ArrayList<Rocket> rocket;
     public ArrayList<RocketExplosion> rocketExplosion;
     public ArrayList<Mine> mines;
 
     public boolean holdingMachineGun;
+    public int sniperAmmo = 5;
 
     public boolean disablePlayerMovement = false;
     public boolean disablePlayerShooting = false;
@@ -62,8 +50,8 @@ public class Player extends Sprite {
         super(xpos, ypos);
         this.id = id;
         this.lives = lives;
-        direction = Direction.RIGHT;
         maxLives = lives;
+        direction = Direction.RIGHT;
         width = 0;
         height = 0;
         img = null;
@@ -98,7 +86,6 @@ public class Player extends Sprite {
         img = img_player.getImage();
         width = img.getWidth(null);
         height = img.getHeight(null);
-
     }
 
     public void dirKeyPress(int xDir, int yDir) {

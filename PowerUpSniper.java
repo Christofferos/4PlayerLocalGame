@@ -1,5 +1,4 @@
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.*;
 
 public class PowerUpSniper {
@@ -20,11 +19,11 @@ public class PowerUpSniper {
                 if (player.reload && !once) {
                     once = true;
                     ammo--;
+                    player.sniperAmmo = ammo;
                     decrementAmmoOnce();
                 }
                 if (ammo == 0) {
-                    player.bulletSpeed = 2;
-                    player.bulletSound = Player.BulletSound.RIFLE;
+                    letLastShotFly(player);
                     ((Timer) e.getSource()).stop();
                 }
             }
@@ -43,6 +42,21 @@ public class PowerUpSniper {
         decrementTimer.setInitialDelay(300);
         decrementTimer.setRepeats(false);
         decrementTimer.start();
+    }
+
+    public void letLastShotFly(Player player) {
+        Timer delay = new Timer(1, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                player.bulletSpeed = 2;
+                player.bulletSound = Player.BulletSound.RIFLE;
+                player.sniperAmmo = 5;
+                ((Timer) e.getSource()).stop();
+            }
+        });
+        delay.setInitialDelay(200);
+        delay.setRepeats(false);
+        delay.start();
     }
 
 }

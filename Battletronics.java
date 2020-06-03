@@ -444,6 +444,23 @@ public class Battletronics extends JPanel implements ActionListener {
             if (progressBar4 <= 0)
                 progressBar4 = 360;
         }
+
+        // DRAW SNIPER BULLET COUNT
+        if (!player1.dead && player1.bulletSound == Player.BulletSound.SNIPER) {
+            sniperAmmo(g2, player1);
+        }
+        if (!player2.dead && player2.bulletSound == Player.BulletSound.SNIPER) {
+            sniperAmmo(g2, player2);
+        }
+        if (player3 != null)
+            if (!player3.dead && player3.bulletSound == Player.BulletSound.SNIPER) {
+                sniperAmmo(g2, player3);
+            }
+        if (player4 != null) {
+            if (!player4.dead && player4.bulletSound == Player.BulletSound.SNIPER) {
+                sniperAmmo(g2, player4);
+            }
+        }
     }
 
     public void machineGunProgressBar(Graphics2D g2, Player player, double progress) {
@@ -456,6 +473,33 @@ public class Battletronics extends JPanel implements ActionListener {
         arc.setAngleExtent(-progress);
         g2.draw(arc);
         g2.fill(arc);
+    }
+
+    public void sniperAmmo(Graphics2D g2, Player player) {
+        g2.setColor(Color.LIGHT_GRAY);
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.translate(player.getXpos() + 15, player.getYpos() - 5);
+        Rectangle2D.Float rec = new Rectangle2D.Float();
+        if (player.sniperAmmo >= 1) {
+            rec.setFrameFromCenter(new Point(0, 0), new Point(1, 1));
+            g2.fill(rec);
+        }
+        if (player.sniperAmmo >= 2) {
+            rec.setFrameFromCenter(new Point(0, 3), new Point(1, 4));
+            g2.fill(rec);
+        }
+        if (player.sniperAmmo >= 3) {
+            rec.setFrameFromCenter(new Point(0, 6), new Point(1, 7));
+            g2.fill(rec);
+        }
+        if (player.sniperAmmo >= 4) {
+            rec.setFrameFromCenter(new Point(0, 9), new Point(1, 10));
+            g2.fill(rec);
+        }
+        if (player.sniperAmmo >= 5) {
+            rec.setFrameFromCenter(new Point(0, 12), new Point(1, 13));
+            g2.fill(rec);
+        }
     }
 
     /* ## GameOver: Prepare Window to be repainted [Called from GameLoop] ## */

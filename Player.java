@@ -1,9 +1,11 @@
 import javax.swing.*;
 import java.util.List;
+import java.util.Map;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 
-public class Player extends Sprite {
+public abstract class Player extends Sprite {
     private static final long serialVersionUID = 1L;
 
     enum Direction {
@@ -31,6 +33,8 @@ public class Player extends Sprite {
     public int maxLives;
 
     public Direction direction;
+    HashMap<String, Boolean> keyState = new HashMap<String, Boolean>();
+    ArrayList<String> directionPreference = new ArrayList<String>();
 
     public int bulletSpeed = 3;
     public BulletSound bulletSound = BulletSound.RIFLE;
@@ -52,6 +56,11 @@ public class Player extends Sprite {
         this.lives = lives;
         maxLives = lives;
         direction = Direction.RIGHT;
+        keyState.put("UP", false);
+        keyState.put("DOWN", false);
+        keyState.put("LEFT", false);
+        keyState.put("RIGHT", false);
+
         width = 0;
         height = 0;
         img = null;
@@ -59,6 +68,55 @@ public class Player extends Sprite {
         rocket = new ArrayList<>();
         rocketExplosion = new ArrayList<>();
         mines = new ArrayList<>();
+    }
+
+    public abstract Map<String, Integer> getKeys();
+
+    public void onKeyPressed(String keyName) {
+        if (keyState.get(keyName))
+            return;
+        keyState.put(keyName, true);
+        if (!directionPreference.contains(keyName)) {
+            directionPreference.add(keyName);
+        }
+    }
+
+    public void onKeyReleased(String keyName) {
+        if (!keyState.get(keyName))
+            return;
+        keyState.put(keyName, false);
+        if (directionPreference.contains(keyName)) {
+            directionPreference.remove(keyName);
+        }
+    }
+
+    public Pair calculateDirection() {
+        int dx = 0;
+        int dy = 0;
+        if (directionPreference.size() > 0) {
+            String dir = directionPreference.get(directionPreference.size() - 1);
+            if (dir == "RIGHT") {
+                dx = 1;
+                direction = Direction.RIGHT;
+            } else if (dir == "LEFT") {
+                dx = -1;
+                direction = Direction.LEFT;
+            } else if (dir == "UP") {
+                dy = -1;
+                direction = Direction.UP;
+            } else if (dir == "DOWN") {
+                dy = 1;
+                direction = Direction.DOWN;
+            }
+        }
+        return new Pair(dx, dy);
+    }
+
+    public void move(int dx, int dy) {
+        if (!disablePlayerMovement) {
+            xpos += dx;
+            ypos += dy;
+        }
     }
 
     public int getWidth() {
@@ -86,44 +144,6 @@ public class Player extends Sprite {
         img = img_player.getImage();
         width = img.getWidth(null);
         height = img.getHeight(null);
-    }
-
-    public void dirKeyPress(int xDir, int yDir) {
-        if (yDir < 0) {
-            changeDirection(Direction.UP);
-        } else if (yDir > 0) {
-            changeDirection(Direction.DOWN);
-        } else if (xDir < 0) {
-            changeDirection(Direction.LEFT);
-        } else if (xDir > 0) {
-            changeDirection(Direction.RIGHT);
-        }
-    }
-
-    public void changeDirection(Direction dir) {
-        if (dir == Direction.UP) {
-            direction = Direction.UP;
-        } else if (dir == Direction.DOWN) {
-            direction = Direction.DOWN;
-        } else if (dir == Direction.LEFT) {
-            direction = Direction.LEFT;
-        } else if (dir == Direction.RIGHT) {
-            direction = Direction.RIGHT;
-        }
-    }
-
-    public void move(int xStep, int yStep) {
-        if (!disablePlayerMovement) {
-            if (direction == Direction.UP) {
-                ypos += yStep;
-            } else if (direction == Direction.DOWN) {
-                ypos += yStep;
-            } else if (direction == Direction.RIGHT) {
-                xpos += xStep;
-            } else if (direction == Direction.LEFT) {
-                xpos += xStep;
-            }
-        }
     }
 
     public void shoot() {

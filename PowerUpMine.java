@@ -6,20 +6,13 @@ public class PowerUpMine {
     Timer deactivate;
     Timer mine;
 
-    public PowerUpMine(Player player, PlayerMovement playerMovement) {
+    public PowerUpMine(Player player) {
         mine = new Timer(10, new ActionListener() {
             boolean once = true;
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (player.id == 1)
-                    player.dirKeyPress(playerMovement.movement1.xStep, playerMovement.movement1.yStep);
-                if (player.id == 2)
-                    player.dirKeyPress(playerMovement.movement2.xStep, playerMovement.movement2.yStep);
-                if (player.id == 3)
-                    player.dirKeyPress(playerMovement.movement3.xStep, playerMovement.movement3.yStep);
-                if (player.id == 4)
-                    player.dirKeyPress(playerMovement.movement4.xStep, playerMovement.movement4.yStep);
+                player.calculateDirection();
 
                 // Mine dropped!
                 if (player.reload && once) {

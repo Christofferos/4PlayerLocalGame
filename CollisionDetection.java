@@ -13,7 +13,6 @@ public class CollisionDetection implements Serializable {
     Player2 player2;
     Player3 player3;
     Player4 player4;
-    PlayerMovement playerMovement;
 
     ArrayList<Obstacle> obstacles;
     ArrayList<HealthPack> healthPacks;
@@ -31,14 +30,13 @@ public class CollisionDetection implements Serializable {
     boolean explosionDmgTaken4 = false;
 
     public CollisionDetection(Player1 player1, Player2 player2, Player3 player3, Player4 player4,
-            PlayerMovement playerMovement, ArrayList<Obstacle> obstacles, ArrayList<HealthPack> healthPacks,
-            ArrayList<PowerUp> powerUps, ArrayList<FireBlock> fireBlocks, ArrayList<WaterBlock> waterBlocks,
+            ArrayList<Obstacle> obstacles, ArrayList<HealthPack> healthPacks, ArrayList<PowerUp> powerUps,
+            ArrayList<FireBlock> fireBlocks, ArrayList<WaterBlock> waterBlocks,
             ArrayList<LightningBlock> lightningBlocks, ArrayList<Boolean> stopSoundEffects) {
         this.player1 = player1;
         this.player2 = player2;
         this.player3 = player3;
         this.player4 = player4;
-        this.playerMovement = playerMovement;
         this.obstacles = obstacles;
         this.healthPacks = healthPacks;
         this.fireBlocks = fireBlocks;
@@ -544,9 +542,9 @@ public class CollisionDetection implements Serializable {
                 } else if (powerUps.get(i).getType() == 5) {
                     new PowerUpSniper(playerObj);
                 } else if (powerUps.get(i).getType() == 6) {
-                    new PowerUpRocket(playerObj, playerMovement, stopSoundEffects);
+                    new PowerUpRocket(playerObj, stopSoundEffects);
                 } else if (powerUps.get(i).getType() == 7) {
-                    new PowerUpMine(playerObj, playerMovement);
+                    new PowerUpMine(playerObj);
                 }
                 powerUps.remove(i);
             }

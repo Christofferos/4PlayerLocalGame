@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.event.*;
+import java.util.Map;
 
 public class Player2 extends Player {
     private static final long serialVersionUID = 1L;
@@ -8,6 +9,10 @@ public class Player2 extends Player {
         super(id, lives, xpos, ypos);
 
         loadSprite("Images/player2.png");
+    }
+
+    public Map<String, Integer> getKeys() {
+        return Map.of("DOWN", KeyEvent.VK_S, "UP", KeyEvent.VK_W, "LEFT", KeyEvent.VK_A, "RIGHT", KeyEvent.VK_D);
     }
 
     public void btnPress(KeyEvent e) {

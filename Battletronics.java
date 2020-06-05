@@ -1,8 +1,7 @@
 import javax.swing.*;
-
 import java.awt.geom.*;
-
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.awt.*;
@@ -28,6 +27,7 @@ public class Battletronics extends JPanel implements ActionListener {
     public Player2 player2;
     public Player3 player3;
     public Player4 player4;
+    private List<Player> players;
     private int winner = 0;
     private String endGameColor = "";
 
@@ -75,7 +75,6 @@ public class Battletronics extends JPanel implements ActionListener {
     /* # Player Movement # */
     private InputMap im;
     private ActionMap am;
-    private PlayerMovement playerMovement;
 
     public Battletronics(int height, int width, int nrOfPlayers) {
 
@@ -91,12 +90,6 @@ public class Battletronics extends JPanel implements ActionListener {
         gameLoopTimer = new Timer(gameLoopUpdateRate, this);
         gameLoopTimer.start();
 
-        /* ## Player Movement ## */
-        playerMovement = new PlayerMovement();
-        im = getInputMap(WHEN_IN_FOCUSED_WINDOW);
-        am = getActionMap();
-        new SetKeyBindings(im, am, playerMovement); // Void
-
         /* ## Player Objects ## 
                 @params: ID, startingHealth, xPos, yPos ## */
         this.nrOfPlayers = nrOfPlayers;
@@ -106,6 +99,12 @@ public class Battletronics extends JPanel implements ActionListener {
             player3 = new Player3(3, 3, 18, 226);
         if (nrOfPlayers == 4)
             player4 = new Player4(4, 3, 232, 18);
+        players = Arrays.asList(player1, player2, player3, player4);
+
+        /* ## Player Movement ## */
+        im = getInputMap(WHEN_IN_FOCUSED_WINDOW);
+        am = getActionMap();
+        new SetKeyBindings(players, im, am); // Void
 
         /* ## Object Lists ## */
         obstacles = new ArrayList<Obstacle>();
@@ -122,8 +121,8 @@ public class Battletronics extends JPanel implements ActionListener {
         createBattlefield.createBattlefield();
 
         /* ## Collision Object ## */
-        collisionDetection = new CollisionDetection(player1, player2, player3, player4, playerMovement, obstacles,
-                healthPacks, powerUps, fireBlocks, waterBlocks, lightningBlocks, stopSoundEffects);
+        collisionDetection = new CollisionDetection(player1, player2, player3, player4, obstacles, healthPacks,
+                powerUps, fireBlocks, waterBlocks, lightningBlocks, stopSoundEffects);
 
         /* ## Player Actions ## */
         tAdapter = new TAdapter();
@@ -158,31 +157,35 @@ public class Battletronics extends JPanel implements ActionListener {
         healthPackSpawn.checkHealthPackCount();
         powerUpSpawn.checkPowerUpCount();
 
-        // Collect player input data
-        if (!player1.dead)
-            player1.dirKeyPress(playerMovement.movement1.xStep, playerMovement.movement1.yStep);
-        if (!player2.dead)
-            player2.dirKeyPress(playerMovement.movement2.xStep, playerMovement.movement2.yStep);
+        // Update player Movement
+        if (!player1.dead) {
+            Pair dxdy = player1.calculateDirection();
+            if (!collisionDetection.collision(1, false)) {
+                player1.move(dxdy.dx, dxdy.dy);
+            }
+        }
+        if (!player2.dead) {
+            Pair dxdy = player2.calculateDirection();
+            if (!collisionDetection.collision(2, false)) {
+                player2.move(dxdy.dx, dxdy.dy);
+            }
+        }
         if (nrOfPlayers >= 3) {
-            if (!player3.dead)
-                player3.dirKeyPress(playerMovement.movement3.xStep, playerMovement.movement3.yStep);
+            if (!player3.dead) {
+                Pair dxdy = player3.calculateDirection();
+                if (!collisionDetection.collision(3, false)) {
+                    player3.move(dxdy.dx, dxdy.dy);
+                }
+            }
         }
         if (nrOfPlayers == 4) {
-            if (!player4.dead)
-                player4.dirKeyPress(playerMovement.movement4.xStep, playerMovement.movement4.yStep);
+            if (!player4.dead) {
+                Pair dxdy = player4.calculateDirection();
+                if (!collisionDetection.collision(4, false)) {
+                    player4.move(dxdy.dx, dxdy.dy);
+                }
+            }
         }
-
-        // Move players according to input
-        if (nrOfPlayers == 2)
-            movePlayers(playerMovement.movement1.xStep, playerMovement.movement1.yStep, playerMovement.movement2.xStep,
-                    playerMovement.movement2.yStep);
-        else if (nrOfPlayers == 3)
-            movePlayers(playerMovement.movement1.xStep, playerMovement.movement1.yStep, playerMovement.movement2.xStep,
-                    playerMovement.movement2.yStep, playerMovement.movement3.xStep, playerMovement.movement3.yStep);
-        else if (nrOfPlayers == 4)
-            movePlayers(playerMovement.movement1.xStep, playerMovement.movement1.yStep, playerMovement.movement2.xStep,
-                    playerMovement.movement2.yStep, playerMovement.movement3.xStep, playerMovement.movement3.yStep,
-                    playerMovement.movement4.xStep, playerMovement.movement4.yStep);
 
         // Check healthpack pickup
         collisionDetection.healthPickUp(1);
@@ -528,7 +531,7 @@ public class Battletronics extends JPanel implements ActionListener {
                 winner = 1;
                 endGameColor = "Red";
                 setBackground(Color.red);
-                g.setColor(Color.white);
+                g.setColor(Color.WHITE);
             } else if (!player2.dead) {
                 player2.dead = true;
                 winner = 2;
@@ -560,6 +563,7 @@ public class Battletronics extends JPanel implements ActionListener {
         String message2 = "Press R to restart";
         Font f = new Font("Nunito", Font.BOLD, 14);
         g.setFont(f);
+        g.setColor(Color.WHITE);
         g.drawString(message, 75, 130);
         g.drawString(message2, 73, 185);
         startRestartGameOption();
@@ -649,6 +653,9 @@ public class Battletronics extends JPanel implements ActionListener {
         if (nrOfPlayers == 4)
             player4 = new Player4(4, 3, 232, 18);
 
+        players = Arrays.asList(player1, player2, player3, player4);
+        new SetKeyBindings(players, im, am);
+
         // Stop timers from earlier rounds.
         if (environment.fireTimer != null)
             environment.fireTimer.stop();
@@ -667,8 +674,8 @@ public class Battletronics extends JPanel implements ActionListener {
         createBattlefield = new CreateBattlefield(obstacles, width, height, xOffset, yOffset);
         createBattlefield.createBorder();
         createBattlefield.createBattlefield();
-        collisionDetection = new CollisionDetection(player1, player2, player3, player4, playerMovement, obstacles,
-                healthPacks, powerUps, fireBlocks, waterBlocks, lightningBlocks, stopSoundEffects);
+        collisionDetection = new CollisionDetection(player1, player2, player3, player4, obstacles, healthPacks,
+                powerUps, fireBlocks, waterBlocks, lightningBlocks, stopSoundEffects);
         playerInventory = new PlayerInventory(player1, player2, player3, player4, collisionDetection);
         fireRing = new FireRing(fireBlocks, width, height, xOffset, yOffset, stopSoundEffects);
 
@@ -862,45 +869,6 @@ public class Battletronics extends JPanel implements ActionListener {
             allExplosions.addAll(player3.getExplosion());
         if (nrOfPlayers == 4)
             allExplosions.addAll(player4.getExplosion());
-    }
-
-    /* ## Player Movement: [Called from GameLoop] ## */
-    public void movePlayers(int P1x, int P1y, int P2x, int P2y) {
-        if (!collisionDetection.collision(1, false)) {
-            player1.move(P1x, P1y);
-        }
-        if (!collisionDetection.collision(2, false)) {
-            player2.move(P2x, P2y);
-        }
-    }
-
-    /* ## Player Movement: 3 Players ## */
-    public void movePlayers(int P1x, int P1y, int P2x, int P2y, int P3x, int P3y) {
-        if (!collisionDetection.collision(1, false)) {
-            player1.move(P1x, P1y);
-        }
-        if (!collisionDetection.collision(2, false)) {
-            player2.move(P2x, P2y);
-        }
-        if (!collisionDetection.collision(3, false)) {
-            player3.move(P3x, P3y);
-        }
-    }
-
-    /* ## Player Movement: 4 Players ## */
-    public void movePlayers(int P1x, int P1y, int P2x, int P2y, int P3x, int P3y, int P4x, int P4y) {
-        if (!collisionDetection.collision(1, false)) {
-            player1.move(P1x, P1y);
-        }
-        if (!collisionDetection.collision(2, false)) {
-            player2.move(P2x, P2y);
-        }
-        if (!collisionDetection.collision(3, false)) {
-            player3.move(P3x, P3y);
-        }
-        if (!collisionDetection.collision(4, false)) {
-            player4.move(P4x, P4y);
-        }
     }
 
     /* ## Water DMG: Clock reset if DMG ticked [Called from GameLoop] ## */

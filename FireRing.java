@@ -5,7 +5,6 @@ import java.awt.Rectangle;
 import java.awt.event.ActionListener;
 
 public class FireRing implements ActionListener {
-    private static final long serialVersionUID = 1L;
 
     ArrayList<FireBlock> fireBlocks;
     ArrayList<Boolean> stopSoundEffects;

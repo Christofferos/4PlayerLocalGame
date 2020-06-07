@@ -1,4 +1,3 @@
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -10,7 +9,6 @@ import java.awt.event.ActionListener;
 import java.awt.Rectangle;
 
 public class WaterFlood {
-    private static final long serialVersionUID = 1L;
     ArrayList<WaterBlock> waterBlocks;
     ArrayList<Boolean> stopSoundEffects;
     int width;

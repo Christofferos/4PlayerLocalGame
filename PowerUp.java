@@ -1,5 +1,4 @@
 import javax.swing.*;
-import java.awt.event.*;
 
 public class PowerUp extends Sprite {
     private static final long serialVersionUID = 1L;

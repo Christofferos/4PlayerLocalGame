@@ -2,6 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public class RocketExplosion extends Sprite {
+    private static final long serialVersionUID = 1L;
+
     public RocketExplosion(int xPos, int yPos) {
         super(xPos, yPos);
         loadSprite("Images/explosion.png");

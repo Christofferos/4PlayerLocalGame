@@ -73,18 +73,12 @@ public abstract class Player extends Sprite {
     public abstract Map<String, Integer> getKeys();
 
     public void onKeyPressed(String keyName) {
-        if (keyState.get(keyName))
-            return;
-        keyState.put(keyName, true);
         if (!directionPreference.contains(keyName)) {
             directionPreference.add(keyName);
         }
     }
 
     public void onKeyReleased(String keyName) {
-        if (!keyState.get(keyName))
-            return;
-        keyState.put(keyName, false);
         if (directionPreference.contains(keyName)) {
             directionPreference.remove(keyName);
         }

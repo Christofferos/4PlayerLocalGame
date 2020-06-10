@@ -29,3 +29,6 @@
 - FireRing / LightningStorm / WaterFlood
 - Sprite is parent to -> All visable objects
 - Blocks / HealthPacks / Powerups
+
+#### Preview video of the game
+![](readmeImages/previewVid.gif)

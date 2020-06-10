@@ -54,7 +54,7 @@ public class PowerUpSniper {
                 ((Timer) e.getSource()).stop();
             }
         });
-        delay.setInitialDelay(200);
+        delay.setInitialDelay(350);
         delay.setRepeats(false);
         delay.start();
     }

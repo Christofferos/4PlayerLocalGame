@@ -265,7 +265,7 @@ public class LightningStorm {
                         }
 
                         i++;
-                        if (i == 20)
+                        if (i == 10) // 20
                             ((Timer) e.getSource()).stop();
                     }
                 });

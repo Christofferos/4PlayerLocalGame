@@ -38,7 +38,7 @@ public class PowerUpMachineGun {
                 ((Timer) e.getSource()).stop();
             }
         });
-        deactivate.setInitialDelay(7500);
+        deactivate.setInitialDelay(5000); // 7500
         deactivate.setRepeats(false);
         deactivate.start();
     }

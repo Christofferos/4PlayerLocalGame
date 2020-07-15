@@ -68,7 +68,7 @@ public class PowerUpRocket {
                 ((Timer) e.getSource()).stop();
             }
         });
-        deactivate.setInitialDelay(10000);
+        deactivate.setInitialDelay(7500); // 10000
         deactivate.setRepeats(false);
         deactivate.start();
     }

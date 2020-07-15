@@ -76,7 +76,16 @@ public class Battletronics extends JPanel implements ActionListener {
     private InputMap im;
     private ActionMap am;
 
+    /* Background Image */
+    // public Image backgroundImage;
+    // ImageIcon ii = new ImageIcon("Images/fireTheme.png");
+
     public Battletronics(int height, int width, int nrOfPlayers) {
+        /* Background Image */
+        //  backgroundImage = ii.getImage();
+        // int w = backgroundImage.getWidth(this) + 20;
+        // int h = backgroundImage.getHeight(this) + 20;
+        // setPreferredSize(new Dimension(w, h));
 
         /* ## Window Metrics ## */
         this.height = height;
@@ -298,6 +307,9 @@ public class Battletronics extends JPanel implements ActionListener {
     private void draw(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
 
+        // Background picture ...
+        // g.drawImage(backgroundImage, 0, 0, null);
+
         // DRAW BULLETS
         for (Bullet bullet : allBullets) {
             g2.drawImage(bullet.getImage(), bullet.getXpos() + 2, bullet.getYpos() + 2, this); // +2 to center.
@@ -424,27 +436,27 @@ public class Battletronics extends JPanel implements ActionListener {
         // DRAW MACHINE GUN PROGRESS BAR
         if (player1.holdingMachineGun) {
             machineGunProgressBar(g2, player1, progressBar1);
-            progressBar1 -= 0.54;
+            progressBar1 -= 0.81; // -0.54 for 7500 milli machine.
             if (progressBar1 <= 0)
                 progressBar1 = 360;
         }
         if (player2.holdingMachineGun) {
             machineGunProgressBar(g2, player2, progressBar2);
-            progressBar2 -= 0.54;
+            progressBar2 -= 0.81;
             if (progressBar2 <= 0)
                 progressBar2 = 360;
         }
         if (player3 != null)
             if (player3.holdingMachineGun) {
                 machineGunProgressBar(g2, player3, progressBar3);
-                progressBar3 -= 0.54;
+                progressBar3 -= 0.81;
                 if (progressBar3 <= 0)
                     progressBar3 = 360;
             }
         if (player4 != null) {
             if (player4.holdingMachineGun) {
                 machineGunProgressBar(g2, player4, progressBar4);
-                progressBar4 -= 0.54;
+                progressBar4 -= 0.81;
             }
             if (progressBar4 <= 0)
                 progressBar4 = 360;
@@ -466,6 +478,7 @@ public class Battletronics extends JPanel implements ActionListener {
                 sniperAmmo(g2, player4);
             }
         }
+
     }
 
     public void machineGunProgressBar(Graphics2D g2, Player player, double progress) {

@@ -113,6 +113,8 @@ public class FireRing implements ActionListener {
     public void startTimer() {
         goalTimer = new Timer(850, (ActionListener) this);
         goalTimer.start();
+        removeFireRectangle(xCenterOfNoDieZone - 45, xCenterOfNoDieZone + 45, yCenterOfNoDieZone - 45,
+                yCenterOfNoDieZone + 45);
     }
 
     /* ## ActionPerformed: [Called by StartTimer - every Tick] ## */
@@ -168,9 +170,15 @@ public class FireRing implements ActionListener {
                 removeFireRectangle(xCenterOfNoDieZone - r, xCenterOfNoDieZone + r, yCenterOfNoDieZone - r,
                         yCenterOfNoDieZone + r);
             }
+        } else {
+            removeFireRectangle(xCenterOfNoDieZone - r, xCenterOfNoDieZone + r, yCenterOfNoDieZone - r,
+                    yCenterOfNoDieZone + r);
         }
+
         if (Math.abs(xCenterOfNoDieZone - x) < 10 && Math.abs(yCenterOfNoDieZone - y) < 10) {
             goalTimer.stop();
+            removeFireRectangle(xCenterOfNoDieZone - r, xCenterOfNoDieZone + r, yCenterOfNoDieZone - r,
+                    yCenterOfNoDieZone + r);
             Random rand = new Random();
             int max = 9;
             int min = 1;

@@ -14,8 +14,8 @@ public class FireRing implements ActionListener {
     int yOffset;
     int flameCount = 0;
     int increaseCount = 1;
-    Timer moveTimer;
-    Timer moveTimer2;
+    // Timer moveTimer;
+    // Timer moveTimer2;
     Timer goalTimer;
 
     int xGoal = 0;

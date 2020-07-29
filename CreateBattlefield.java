@@ -16,13 +16,13 @@ public class CreateBattlefield implements Serializable {
         this.height = height;
         this.xOffset = xOffset;
         this.yOffset = yOffset;
-        size = 8;
+        size = 24;
     }
 
     /* AddRectangleArea: [Practical way of placing multiple obstacles] */
     public void addRectangleArea(int x1, int y1, int x2, int y2, boolean movable) {
-        for (int i = x1; i < x2; i += 9) {
-            for (int j = y1; j < y2; j += 9) {
+        for (int i = x1; i < x2; i += 25) {
+            for (int j = y1; j < y2; j += 25) {
                 obstacles.add(new Obstacle(i, j, movable, size));
             }
         }
@@ -43,128 +43,109 @@ public class CreateBattlefield implements Serializable {
 
     /* CreateBattlefield: [Placing obstacles on battlefield. Sorry for the mess here..] */
     public void createBattlefield() {
-        obstacles.add(new Obstacle(8, 8, true, size));
-        /* obstacles.add(new Obstacle(16, 8, true, size));
-        obstacles.add(new Obstacle(8, 16, true, size)); */
-        obstacles.add(new Obstacle(width - xOffset - 8, height - yOffset - 8, true, size));
-        /* obstacles.add(new Obstacle(width - xOffset - 16, height - yOffset - 8, true, size));
-        obstacles.add(new Obstacle(width - xOffset - 8, height - yOffset - 16, true, size)); */
+        obstacles.add(new Obstacle(24, 24, true, size));
+        obstacles.add(new Obstacle(width - xOffset - 24, height - yOffset - 24, true, size));
 
-        obstacles.add(new Obstacle(width - xOffset - 8, 8, true, size));
-        /* obstacles.add(new Obstacle(width - xOffset - 16, 8, true, size));
-        obstacles.add(new Obstacle(width - xOffset - 8, 16, true, size)); */
-        obstacles.add(new Obstacle(8, height - yOffset - 8, true, size));
-        /* obstacles.add(new Obstacle(16, height - yOffset - 8, true, size));
-        obstacles.add(new Obstacle(8, height - yOffset - 16, true, size)); */
+        obstacles.add(new Obstacle(width - xOffset - 24, 24, true, size));
+        obstacles.add(new Obstacle(24, height - yOffset - 24, true, size));
 
-        obstacles.add(new Obstacle(width - xOffset - 16, height - yOffset - 48, true, size));
-
-        // CENTER
-        /* addRectangleArea((width - xOffset) / 2 - 8, (height - yOffset) / 2 - 8, (width - xOffset) / 2 + 8,
-                (height - yOffset) / 2 + 8, true); */
-
-        /* addRectangleArea((width - xOffset) / 2 + 24, (height - yOffset) / 2 - 48, (width - xOffset) / 2 + 40,
-                (height - yOffset) / 2 - 40, true);
-        
-        addRectangleArea((width - xOffset) / 2 - 32, (height - yOffset) / 2 + 48, (width - xOffset) / 2 - 16,
-                (height - yOffset) / 2 + 56, true); */
+        obstacles.add(new Obstacle(width - xOffset - 48, height - yOffset - 144, true, size));
 
         // LOWER WALL
-        for (int i = 32; i < width / 2 - xOffset + 16; i += 8) {
-            obstacles.add(new Obstacle(i, height - 32 - yOffset, false, size));
-            obstacles.add(new Obstacle(i + 8 * 12, height - 32 - yOffset, false, size));
+        for (int i = 96; i < width / 2 - xOffset + 12; i += 24) {
+            obstacles.add(new Obstacle(i, height - 96 - yOffset, false, size));
+            obstacles.add(new Obstacle(i + 24 * 14, height - 96 - yOffset, false, size));
         }
-        // obstacles.add(new Obstacle((width - xOffset) / 4, height - yOffset - 8, true, size));
-        obstacles.add(new Obstacle((width - xOffset) / 4, height - yOffset - 16, true, size));
+        
+        obstacles.add(new Obstacle((width - xOffset) / 4, height - yOffset - 48, true, size));
 
-        // obstacles.add(new Obstacle((width - xOffset) / 2 - 19, height - yOffset - 16, true, size));
-        //obstacles.add(new Obstacle((width - xOffset) / 2 - 19, height - yOffset - 18, true, size));
-        // obstacles.add(new Obstacle((width - xOffset) / 2 - 8, height - yOffset - 18, true, size));
-        //obstacles.add(new Obstacle((width - xOffset) / 2 + 2, height - yOffset - 10, true, size));
-        // obstacles.add(new Obstacle((width - xOffset) / 2 + 2, height - yOffset - 16, true, size));
+        obstacles.add(new Obstacle(width / 2 - xOffset + 38 + 24 * 12, height - 120 - yOffset, false, size));
+        obstacles.add(new Obstacle(width / 2 - xOffset + 38 + 24 * 12, height - 144 - yOffset, false, size));
 
-        obstacles.add(new Obstacle(width / 2 - xOffset + 16 + 8 * 12 - 4, height - 40 - yOffset, false, size));
-        obstacles.add(new Obstacle(width / 2 - xOffset + 16 + 8 * 12 - 4, height - 48 - yOffset, false, size));
+        obstacles.add(new Obstacle(3 * (width - xOffset) / 4 + 78, 3 * (height - yOffset) / 4 + 58, true, size));
 
-        // obstacles.add(new Obstacle(width / 2 - xOffset + 22, height - 32 - yOffset, true, size));
-        obstacles.add(new Obstacle(3 * (width - xOffset) / 4 + 22, 3 * (height - yOffset) / 4 + 10, true, size));
-
-        obstacles.add(new Obstacle(3 * (width - xOffset) / 4, height - yOffset - 16, true, size));
+        obstacles.add(new Obstacle(3 * (width - xOffset) / 4, height - yOffset - 48, true, size));
 
         // LEFTMOST WALL
-        for (int i = 48; i < height / 2 - yOffset; i += 8) {
-            obstacles.add(new Obstacle(32, i, false, size));
-            obstacles.add(new Obstacle(32, i + height / 2 - yOffset - 24, false, size));
+        for (int i = 144; i < height / 2 - yOffset - 48; i += 24) {
+            obstacles.add(new Obstacle(96, i, false, size));
+            obstacles.add(new Obstacle(96, i + height / 2 - yOffset - 72, false, size));
         }
-        obstacles.add(new Obstacle(32, (height - yOffset) / 2 + 66, false, size));
-        // obstacles.add(new Obstacle(8, 3 * (height - yOffset) / 4 - 32, true, size));
-        obstacles.add(new Obstacle(16, 3 * (height - yOffset) / 4 - 32, true, size));
+        
+        obstacles.add(new Obstacle(48, 3 * (height - yOffset) / 4 -96, true, size));
 
-        // addRectangleArea(40, 14, 48, 38, true);
-        obstacles.add(new Obstacle(40, 12, true, size));
-        obstacles.add(new Obstacle(40, 32, true, size));
-        addRectangleArea(16, 48, 24, 56, true);
+        
+        obstacles.add(new Obstacle(120, 36, true, size));
+        obstacles.add(new Obstacle(120, 100, true, size));
 
-        obstacles.add(new Obstacle((width - xOffset) / 4 - 28, 3 * (height - yOffset) / 4 + 20, true, size));
+        
 
-        addRectangleArea((width - xOffset) / 4 - 12, 3 * (height - yOffset) / 4 + 2, (width - xOffset) / 4 - 4,
-                3 * (height - yOffset) / 4 + 10, true);
-        addRectangleArea((width - xOffset) / 4 - 4, 3 * (height - yOffset) / 4 + 10, (width - xOffset) / 4 + 4,
-                3 * (height - yOffset) / 4 + 18, true);
+        obstacles.add(new Obstacle(48, 144, true, size));
+
+        
+        obstacles.add(new Obstacle((width - xOffset) / 4 - 101, 3 * (height - yOffset) / 4 + 56, true, size));
+
+        
+        obstacles.add(new Obstacle((width - xOffset) / 4 - 36, 3 * (height - yOffset) / 4 + 6, true, size));
+        obstacles.add(new Obstacle((width - xOffset) / 4 - 16, 3 * (height - yOffset) / 4 + 30, true, size));
 
         // SECOND LEFT WALL
-        obstacles.add(new Obstacle(72, 32, false, size));
-        obstacles.add(new Obstacle(80, 32, false, size));
+        obstacles.add(new Obstacle(216, 96, false, size));
+        obstacles.add(new Obstacle(240, 96, false, size));
 
-        obstacles.add(new Obstacle(64, 32, false, size));
-        obstacles.add(new Obstacle(64, 44, true, size));
-        obstacles.add(new Obstacle(64, 56, false, size));
+        obstacles.add(new Obstacle(192, 96, false, size));
+        obstacles.add(new Obstacle(192, 132, true, size));
+        obstacles.add(new Obstacle(192, 168, false, size));
 
-        obstacles.add(new Obstacle(40, 48, false, size));
-        for (int i = 64; i < height / 2 - yOffset + 16; i += 8) {
-            obstacles.add(new Obstacle(64, i, false, size));
+
+        obstacles.add(new Obstacle(120, 144, false, size));
+
+        
+        for (int i = 192; i < height / 2 - yOffset + 48; i += 24) {
+            obstacles.add(new Obstacle(192, i, false, size));
         }
-        // obstacles.add(new Obstacle(74, (height - yOffset) / 2 - 24, true, size));
-        obstacles.add(new Obstacle(82, (height - yOffset) / 2 - 24, true, size));
-        obstacles.add(new Obstacle(82, (height - yOffset) / 2 - 32, true, size));
+
+        
+        obstacles.add(new Obstacle(246, (height - yOffset) / 2 - 72, true, size));
+        obstacles.add(new Obstacle(246, (height - yOffset) / 2 - 96, true, size));
 
         // VERTICAL WALL FROM TOP EDGE
-        obstacles.add(new Obstacle(2 * (width - xOffset) / 3, 8, false, size));
-        obstacles.add(new Obstacle(2 * (width - xOffset) / 3, 16, false, size));
-        obstacles.add(new Obstacle(2 * (width - xOffset) / 3 + 9, 17, true, size));
-        obstacles.add(new Obstacle(2 * (width - xOffset) / 3 + 17, 17, true, size));
+        obstacles.add(new Obstacle(2 * (width - xOffset) / 3, 24, false, size));
+        obstacles.add(new Obstacle(2 * (width - xOffset) / 3, 48, false, size));
+        obstacles.add(new Obstacle(2 * (width - xOffset) / 3 + 27, 51, true, size));
+        obstacles.add(new Obstacle(2 * (width - xOffset) / 3 + 51, 51, true, size));
 
-        addRectangleArea((width - xOffset) / 2 + 6, 17, (width - xOffset) / 2 + 30, 25, true);
-        addRectangleArea((width - xOffset) / 2 + 80, 34, (width - xOffset) / 2 + 88, 40, true);
+        addRectangleArea((width - xOffset) / 2 + 18, 51, (width - xOffset) / 2 + 90, 75, true);
+        addRectangleArea((width - xOffset) / 2 + 240, 102, (width - xOffset) / 2 + 282, 120, true);
 
-        obstacles.add(new Obstacle((width - xOffset) / 2 + 71, 24, true, size));
-        // obstacles.add(new Obstacle((width - xOffset) / 2 + 71, 16, true, size));
+        obstacles.add(new Obstacle((width - xOffset) / 2 + 213, 72, true, size));
 
         // RIGHTMOST WALL
-        for (int i = 48; i < height / 2 - yOffset; i += 8) {
-            obstacles.add(new Obstacle(width - xOffset - 32, i, false, size));
-            obstacles.add(new Obstacle(width - xOffset - 32, i + height / 2 - yOffset - 16, false, size));
+        for (int i = 144; i < height / 2 - yOffset - 48; i += 24) {
+            obstacles.add(new Obstacle(width - xOffset - 96, i, false, size));
+            obstacles.add(new Obstacle(width - xOffset - 96, i + height / 2 - yOffset - 48, false, size));
         }
 
-        obstacles.add(new Obstacle(width - xOffset - 45, height / 2 - yOffset + 5, true, size));
+        obstacles.add(new Obstacle(width - xOffset - 130, height / 2 - yOffset - 50, true, size));
 
-        addRectangleArea(width - xOffset - 88, 3 * (height - yOffset) / 4 + 12, width - xOffset - 68,
-                3 * (height - yOffset) / 4 + 20, true);
+        addRectangleArea(width - xOffset - 258, 3 * (height - yOffset) / 4 + 50, width - xOffset - 204,
+                3 * (height - yOffset) / 4 + 68, true);
 
         // SECOND RIGHT WALL
-        for (int i = 120; i < height / 2 - yOffset + 64; i += 8) {
-            obstacles.add(new Obstacle(width - xOffset - 70, i, false, size));
+        for (int i = 360; i < height / 2 - yOffset + 192; i += 24) {
+            obstacles.add(new Obstacle(width - xOffset - 210, i, false, size));
         }
-        // obstacles.add(new Obstacle(width - xOffset - 80, (height - yOffset) / 2 + 16, true, size));
-        obstacles.add(new Obstacle(width - xOffset - 88, (height - yOffset) / 2 + 16, true, size));
-        obstacles.add(new Obstacle(width - xOffset - 88, (height - yOffset) / 2 + 24, true, size));
+        
+        obstacles.add(new Obstacle(width - xOffset - 264, (height - yOffset) / 2 + 48, true, size));
+        obstacles.add(new Obstacle(width - xOffset - 264, (height - yOffset) / 2 + 72, true, size));
 
-        obstacles.add(new Obstacle(width - xOffset - 16, 48, true, size));
+        obstacles.add(new Obstacle(width - xOffset - 48, 144, true, size));
 
-        obstacles.add(new Obstacle(96, 16, true, size));
-        obstacles.add(new Obstacle(48, 132, true, size));
+        
+        obstacles.add(new Obstacle(288, 48, true, size));
+        obstacles.add(new Obstacle(144, 450, true, size));
 
-        obstacles.add(new Obstacle(width - xOffset - 70, height - yOffset - 64, true, size));
-        obstacles.add(new Obstacle(width - xOffset - 58, 110, true, size));
+        obstacles.add(new Obstacle(width - xOffset - 210, height - yOffset - 192, true, size));
+        obstacles.add(new Obstacle(width - xOffset - 174, 330, true, size)); 
     }
 }

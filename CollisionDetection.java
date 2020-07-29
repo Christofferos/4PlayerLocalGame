@@ -207,14 +207,15 @@ public class CollisionDetection implements Serializable {
 
         Rectangle object;
         int obstacleSize = playerObj.inventoryObstacleSize;
-        int offset = (obstacleSize % 8) / 2;
+        int offset = (obstacleSize % 24) / 2; // 2
         int fixPos = 0;
 
         /* Adjustments were needed at changed size. */
-        if (obstacleSize == 12)
-            fixPos = 1;
-        if (obstacleSize == 14)
+        fixPos = -1;
+        if (obstacleSize == 30)
             fixPos = 2;
+        if (obstacleSize == 36)
+            fixPos = 5;
 
         if (dir == Player.Direction.UP) {
             space = new Rectangle(x - offset, y - obstacleSize, obstacleSize, obstacleSize);
@@ -266,40 +267,40 @@ public class CollisionDetection implements Serializable {
 
         switch (dir) {
             case UP:
-                space.setBounds(x - offset - obstacleSize % 8, y - obstacleSize, obstacleSize, obstacleSize);
+                space.setBounds(x - offset - obstacleSize % 24, y - obstacleSize, obstacleSize, obstacleSize);
                 if (!object.intersects(space))
-                    xy = new CoordinateXY(x - offset - obstacleSize % 8, y - obstacleSize);
-                space.setBounds(x - offset + obstacleSize % 8, y - obstacleSize, obstacleSize, obstacleSize);
+                    xy = new CoordinateXY(x - offset - obstacleSize % 24, y - obstacleSize);
+                space.setBounds(x - offset + obstacleSize % 24, y - obstacleSize, obstacleSize, obstacleSize);
                 if (!object.intersects(space))
-                    xy = new CoordinateXY(x - offset + obstacleSize % 8, y - obstacleSize);
+                    xy = new CoordinateXY(x - offset + obstacleSize % 24, y - obstacleSize);
                 break;
             case DOWN:
-                space.setBounds(x - offset - obstacleSize % 8, y + obstacleSize - offset - fixPos, obstacleSize,
+                space.setBounds(x - offset - obstacleSize % 24, y + obstacleSize - offset - fixPos, obstacleSize,
                         obstacleSize);
                 if (!object.intersects(space))
-                    xy = new CoordinateXY(x - offset - obstacleSize % 8, y + obstacleSize - offset - fixPos);
-                space.setBounds(x - offset + obstacleSize % 8, y + obstacleSize - offset - fixPos, obstacleSize,
+                    xy = new CoordinateXY(x - offset - obstacleSize % 24, y + obstacleSize - offset - fixPos);
+                space.setBounds(x - offset + obstacleSize % 24, y + obstacleSize - offset - fixPos, obstacleSize,
                         obstacleSize);
                 if (!object.intersects(space))
-                    xy = new CoordinateXY(x - offset + obstacleSize % 8, y + obstacleSize - offset - fixPos);
+                    xy = new CoordinateXY(x - offset + obstacleSize % 24, y + obstacleSize - offset - fixPos);
                 break;
             case LEFT:
-                space.setBounds(x - obstacleSize, y - offset - obstacleSize % 8, obstacleSize, obstacleSize);
+                space.setBounds(x - obstacleSize, y - offset - obstacleSize % 24, obstacleSize, obstacleSize);
                 if (!object.intersects(space))
-                    xy = new CoordinateXY(x - obstacleSize, y - offset - obstacleSize % 8);
-                space.setBounds(x - obstacleSize, y - offset + obstacleSize % 8, obstacleSize, obstacleSize);
+                    xy = new CoordinateXY(x - obstacleSize, y - offset - obstacleSize % 24);
+                space.setBounds(x - obstacleSize, y - offset + obstacleSize % 24, obstacleSize, obstacleSize);
                 if (!object.intersects(space))
-                    xy = new CoordinateXY(x - obstacleSize, y - offset + obstacleSize % 8);
+                    xy = new CoordinateXY(x - obstacleSize, y - offset + obstacleSize % 24);
                 break;
             case RIGHT:
-                space.setBounds(x + obstacleSize - offset - fixPos, y - offset - obstacleSize % 8, obstacleSize,
+                space.setBounds(x + obstacleSize - offset - fixPos, y - offset - obstacleSize % 24, obstacleSize,
                         obstacleSize);
                 if (!object.intersects(space))
-                    xy = new CoordinateXY(x + obstacleSize - offset - fixPos, y - offset - obstacleSize % 8);
-                space.setBounds(x + obstacleSize - offset - fixPos, y - offset + obstacleSize % 8, obstacleSize,
+                    xy = new CoordinateXY(x + obstacleSize - offset - fixPos, y - offset - obstacleSize % 24);
+                space.setBounds(x + obstacleSize - offset - fixPos, y - offset + obstacleSize % 24, obstacleSize,
                         obstacleSize);
                 if (!object.intersects(space))
-                    xy = new CoordinateXY(x + obstacleSize - offset - fixPos, y - offset + obstacleSize % 8);
+                    xy = new CoordinateXY(x + obstacleSize - offset - fixPos, y - offset + obstacleSize % 24);
                 break;
         }
 
@@ -432,7 +433,7 @@ public class CollisionDetection implements Serializable {
 
     /* HealthSpawn: [] */
     public boolean healthSpawn(int x, int y) {
-        Rectangle healthPack = new Rectangle(x, y, 8, 8);
+        Rectangle healthPack = new Rectangle(x, y, 16, 16);
         Rectangle object;
         for (int i = 0; i < obstacles.size(); i++) {
             object = obstacles.get(i).getBoundary();
@@ -472,7 +473,7 @@ public class CollisionDetection implements Serializable {
 
     /* PowerUpSpawn: [] */
     public boolean powerUpSpawn(int x, int y) {
-        Rectangle powerUp = new Rectangle(x, y, 16, 16);
+        Rectangle powerUp = new Rectangle(x, y, 32, 32);
         Rectangle object;
         for (int i = 0; i < obstacles.size(); i++) {
             object = obstacles.get(i).getBoundary();
@@ -531,10 +532,10 @@ public class CollisionDetection implements Serializable {
                     playerObj.inventoryMaxCap += 1;
                     if (playerObj.inventoryFrequency > 150) {
                         playerObj.inventoryFrequency -= 100;
-                        if (playerObj.inventoryObstacleSize != 12)
-                            playerObj.inventoryObstacleSize += 2;
+                        if (playerObj.inventoryObstacleSize != 36)
+                            playerObj.inventoryObstacleSize += 6;
                     }
-                    if (playerObj.inventory != playerObj.inventoryMaxCap - 1) {
+                    if (playerObj.inventory != playerObj.inventoryMaxCap - 2) {
                         playerObj.inventory++;
                     }
                 } else if (powerUps.get(i).getType() == 4) {

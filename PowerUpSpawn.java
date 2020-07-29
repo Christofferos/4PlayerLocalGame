@@ -19,11 +19,11 @@ public class PowerUpSpawn {
         this.height = height;
         this.xOffset = xOffset;
         this.yOffset = yOffset;
-        maxPowerUpSpawnCap = 3;
+        maxPowerUpSpawnCap = 100; // 3
 
         /* ## Timer: PowerUps ## */
         // TESTING Powerups 5000
-        powerUpTimer = new Timer(5000, new ActionListener() {
+        powerUpTimer = new Timer(1000, new ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 spawnPowerUp(collisionDetection);
@@ -40,11 +40,11 @@ public class PowerUpSpawn {
             double max = 0.98;
             double min = 0.56;
             Random rand = new Random();
-            double doubleRand = 135 * Math.sqrt(rand.nextDouble() * (max - min) + min);
+            double doubleRand = 405 * Math.sqrt(rand.nextDouble() * (max - min) + min);
             double theta = rand.nextDouble() * 2 * Math.PI;
             int xPlacement = (int) ((width - xOffset) / 2 + doubleRand * Math.cos(theta));
             int yPlacement = (int) ((height - yOffset) / 2 + doubleRand * Math.sin(theta));
-            spawned = collisionDetection.powerUpSpawn(xPlacement - 6, yPlacement - 4);
+            spawned = collisionDetection.powerUpSpawn(xPlacement - 12, yPlacement - 8);
         }
     }
 

@@ -10,10 +10,10 @@ import java.io.*;
 import javax.sound.sampled.*;
 
 public class Menu {
-    public int height = 315;
-    public int width = 275;
-    public int windowHeight = 335;
-    public int windowWidth = 275;
+    public int height = 945;
+    public int width = 825;
+    public int windowHeight = 1005;
+    public int windowWidth = 825;
     JFrame frame;
 
     public static void main(String[] args) {
@@ -169,8 +169,8 @@ public class Menu {
             Graphics2D g2d = (Graphics2D) g.create();
             if (menuBounds == null) {
                 menuBounds = new HashMap<>(menuItems.size());
-                int width = 100;
-                int height = 30;
+                int width = 200;
+                int height = 60;
                 for (String text : menuItems) {
                     Dimension dim = painter.getPreferredSize(g2d, text);
                     width = Math.max(width, dim.width);
@@ -261,7 +261,7 @@ public class Menu {
 
         @Override
         public void paint(Graphics2D g2d, String text, Rectangle bounds, boolean isSelected, boolean isFocused) {
-            Font f = new Font("Nunito", Font.BOLD, 18);
+            Font f = new Font("Nunito", Font.BOLD, 28);
             g2d.setFont(f);
             FontMetrics fm = g2d.getFontMetrics();
             if (isSelected) {
@@ -277,9 +277,9 @@ public class Menu {
 
             g2d.drawString(text, x, y);
 
-            f = new Font("Nunito", Font.BOLD, 22);
+            f = new Font("Nunito", Font.BOLD, 50);
             g2d.setFont(f);
-            g2d.drawString("BATTLETRONICS", 45, 50);
+            g2d.drawString("BATTLETRONICS", width/4, height/4);
 
         }
 

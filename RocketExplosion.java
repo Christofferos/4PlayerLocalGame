@@ -19,6 +19,6 @@ public class RocketExplosion extends Sprite {
     // In order to align hit radius of the bullet with the actual sprite.
     @Override
     public Rectangle getBoundary() {
-        return new Rectangle(xpos - 16, ypos - 16, width, height);
+        return new Rectangle(xpos - 40, ypos - 48, width, height); 
     }
 }

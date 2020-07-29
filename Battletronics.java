@@ -13,7 +13,7 @@ public class Battletronics extends JPanel implements ActionListener {
     /* # Game Loop # */
     private boolean ongoingGame = true;
     public Timer gameLoopTimer;
-    private final int gameLoopUpdateRate = 10; // milliseconds
+    private final int gameLoopUpdateRate = 3; // milliseconds
 
     /* # Window # */
     private int height;
@@ -90,7 +90,7 @@ public class Battletronics extends JPanel implements ActionListener {
         /* ## Window Metrics ## */
         this.height = height;
         this.width = width;
-        xOffset = 65;
+        xOffset = 150;
         yOffset = 32;
         setBackground(Color.black);
         setFocusable(true);
@@ -102,12 +102,12 @@ public class Battletronics extends JPanel implements ActionListener {
         /* ## Player Objects ## 
                 @params: ID, startingHealth, xPos, yPos ## */
         this.nrOfPlayers = nrOfPlayers;
-        player1 = new Player1(1, 3, 18, 18);
-        player2 = new Player2(2, 3, 232, 226);
+        player1 = new Player1(1, 3, 54, 54);
+        player2 = new Player2(2, 3, 8 * this.width / 10 - 5, 13 * this.height / 15);
         if (nrOfPlayers >= 3)
-            player3 = new Player3(3, 3, 18, 226);
+            player3 = new Player3(3, 3, 54, 13 * this.height / 15);
         if (nrOfPlayers == 4)
-            player4 = new Player4(4, 3, 232, 18);
+            player4 = new Player4(4, 3, 8 * this.width / 10 - 5, 54);
         players = Arrays.asList(player1, player2, player3, player4);
 
         /* ## Player Movement ## */
@@ -310,25 +310,30 @@ public class Battletronics extends JPanel implements ActionListener {
         // Background picture ...
         // g.drawImage(backgroundImage, 0, 0, null);
 
+        // DRAW WATER
+        for (WaterBlock water : waterBlocks) {
+            g.drawImage(water.getImage(), water.getXpos(), water.getYpos(), this);
+        }
+
         // DRAW BULLETS
         for (Bullet bullet : allBullets) {
-            g2.drawImage(bullet.getImage(), bullet.getXpos() + 2, bullet.getYpos() + 2, this); // +2 to center.
+            g2.drawImage(bullet.getImage(), bullet.getXpos(), bullet.getYpos(), this); // +2 to center.
         }
 
         // DRAW ROCKETS
         for (Rocket rocket : allRockets) {
-            g2.drawImage(rocket.getImage(), rocket.getXpos() + 2, rocket.getYpos() + 2, this); // +2 to center.
+            g2.drawImage(rocket.getImage(), rocket.getXpos() + player1.width/4, rocket.getYpos() + player1.width/4, this); // +2 to center.
         }
 
         // DRAW MINES 
         for (Mine mine : allMines) {
             if (mine.isVisible())
-                g2.drawImage(mine.getImage(), mine.getXpos() - 4, mine.getYpos() - 4, this);
+                g2.drawImage(mine.getImage(), mine.getXpos() - player1.width/4, mine.getYpos() - player1.width/4, this);
         }
 
         // DRAW EXPLOSIONS
         for (RocketExplosion explosion : allExplosions) {
-            g2.drawImage(explosion.getImage(), explosion.getXpos() - 14, explosion.getYpos() - 16, this);
+            g2.drawImage(explosion.getImage(), explosion.getXpos() - explosion.width/2, explosion.getYpos() - explosion.width/2, this);
         }
 
         // DRAW MOVABLE OBSTACLES
@@ -337,10 +342,7 @@ public class Battletronics extends JPanel implements ActionListener {
                 g.drawImage(obstacle.getImage(), obstacle.getXpos(), obstacle.getYpos(), this);
         }
 
-        // DRAW WATER
-        for (WaterBlock water : waterBlocks) {
-            g.drawImage(water.getImage(), water.getXpos(), water.getYpos(), this);
-        }
+        
 
         // DRAW LIGHTNING
         for (LightningBlock lightning : lightningBlocks) {
@@ -373,16 +375,25 @@ public class Battletronics extends JPanel implements ActionListener {
             g2.drawImage(player1.getImage(), player1.getXpos(), player1.getYpos(), this);
             g.setFont(new Font("Nunito", Font.PLAIN, 7));
             g.setColor(Color.WHITE);
-            g.drawString(player1.inventory + " / " + player1.inventoryMaxCap, player1.getXpos() - 3,
+            g.drawString(player1.inventory + " / " + player1.inventoryMaxCap, player1.getXpos() - 4,
                     player1.getYpos() - 2);
+            // HP
+            g.setColor(Color.RED);
+            g.drawString(player1.lives + " / " + player1.maxLives, player1.getXpos() + 16,
+                    player1.getYpos() - 2);
+            
         }
 
         if (!player2.dead) {
             g2.drawImage(player2.getImage(), player2.getXpos(), player2.getYpos(), this);
             g.setFont(new Font("Nunito", Font.PLAIN, 7));
             g.setColor(Color.WHITE);
-            g.drawString(player2.inventory + " / " + player2.inventoryMaxCap, player2.getXpos() - 3,
+            g.drawString(player2.inventory + " / " + player2.inventoryMaxCap, player2.getXpos() - 4,
                     player2.getYpos() - 2);
+            // HP
+            g.setColor(Color.GREEN);
+            g.drawString(player2.lives + " / " + player2.maxLives, player2.getXpos() + 16,
+            player2.getYpos() - 2);
         }
 
         if (player3 != null)
@@ -390,33 +401,41 @@ public class Battletronics extends JPanel implements ActionListener {
                 g2.drawImage(player3.getImage(), player3.getXpos(), player3.getYpos(), this);
                 g.setFont(new Font("Nunito", Font.PLAIN, 7));
                 g.setColor(Color.WHITE);
-                g.drawString(player3.inventory + " / " + player3.inventoryMaxCap, player3.getXpos() - 3,
+                g.drawString(player3.inventory + " / " + player3.inventoryMaxCap, player3.getXpos() - 4,
                         player3.getYpos() - 2);
-            }
+                // HP
+                g.setColor(Color.MAGENTA);
+                g.drawString(player3.lives + " / " + player3.maxLives, player3.getXpos() + 16,
+                player3.getYpos() - 2);
+                }
         if (player4 != null)
             if (!player4.dead) {
                 g2.drawImage(player4.getImage(), player4.getXpos(), player4.getYpos(), this);
                 g.setFont(new Font("Nunito", Font.PLAIN, 7));
                 g.setColor(Color.WHITE);
-                g.drawString(player4.inventory + " / " + player4.inventoryMaxCap, player4.getXpos() - 3,
+                g.drawString(player4.inventory + " / " + player4.inventoryMaxCap, player4.getXpos() - 4,
                         player4.getYpos() - 2);
+                        // HP
+            g.setColor(Color.ORANGE);
+            g.drawString(player4.lives + " / " + player4.maxLives, player4.getXpos() + 16,
+            player4.getYpos() - 2);
             }
 
         // WRITE PLAYER STATS
-        g.setFont(new Font("Nunito", Font.BOLD, 13)); // Optional
+        g.setFont(new Font("Nunito", Font.BOLD, 30)); // Optional
         g.setColor(Color.RED); // Optional
-        g.drawString("HP: " + player1.getLives() + " / " + player1.maxLives, (width - xOffset) / 4 - 3, 268);
+        g.drawString("HP: " + player1.getLives() + " / " + player1.maxLives, this.width/3, this.height + 40);
 
         g.setColor(Color.GREEN); // Optional
-        g.drawString("HP: " + player2.getLives() + " / " + player2.maxLives, (width - xOffset) / 2 + 10, 268);
+        g.drawString("HP: " + player2.getLives() + " / " + player2.maxLives, this.width/2, this.height + 40);
 
         g.setColor(Color.MAGENTA); // Optional
         if (nrOfPlayers >= 3)
-            g.drawString("HP: " + player3.getLives() + " / " + player3.maxLives, (width - xOffset) / 4 - 3, 288);
+            g.drawString("HP: " + player3.getLives() + " / " + player3.maxLives, this.width/3, this.height + 100);
 
         g.setColor(Color.ORANGE); // Optional
         if (nrOfPlayers == 4)
-            g.drawString("HP: " + player4.getLives() + " / " + player4.maxLives, (width - xOffset) / 2 + 10, 288);
+            g.drawString("HP: " + player4.getLives() + " / " + player4.maxLives, this.width/2, this.height + 100);
 
         /*
         if (nrOfPlayers == 2) {
@@ -436,27 +455,28 @@ public class Battletronics extends JPanel implements ActionListener {
         // DRAW MACHINE GUN PROGRESS BAR
         if (player1.holdingMachineGun) {
             machineGunProgressBar(g2, player1, progressBar1);
-            progressBar1 -= 0.81; // -0.54 for 7500 milli machine.
-            if (progressBar1 <= 0)
-                progressBar1 = 360;
+            progressBar1 -= 0.33; // -0.54 for 7500 milli machine.
         }
+        if (progressBar1 <= 0)
+                progressBar1 = 360;
         if (player2.holdingMachineGun) {
             machineGunProgressBar(g2, player2, progressBar2);
-            progressBar2 -= 0.81;
-            if (progressBar2 <= 0)
-                progressBar2 = 360;
+            progressBar2 -= 0.33;
         }
-        if (player3 != null)
+        if (progressBar2 <= 0)
+                progressBar2 = 360;
+        if (player3 != null) {
             if (player3.holdingMachineGun) {
                 machineGunProgressBar(g2, player3, progressBar3);
-                progressBar3 -= 0.81;
-                if (progressBar3 <= 0)
-                    progressBar3 = 360;
+                progressBar3 -= 0.33;
             }
+            if (progressBar3 <= 0)
+                    progressBar3 = 360;
+        }
         if (player4 != null) {
             if (player4.holdingMachineGun) {
                 machineGunProgressBar(g2, player4, progressBar4);
-                progressBar4 -= 0.81;
+                progressBar4 -= 0.33;
             }
             if (progressBar4 <= 0)
                 progressBar4 = 360;
@@ -484,7 +504,7 @@ public class Battletronics extends JPanel implements ActionListener {
     public void machineGunProgressBar(Graphics2D g2, Player player, double progress) {
         g2.setColor(Color.WHITE);
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2.translate(player.getXpos() + 17, player.getYpos() - 5);
+        g2.translate(player.getXpos() + player.width + 12, player.getYpos() - 5);
         Arc2D.Float arc = new Arc2D.Float(Arc2D.PIE);
         arc.setFrameFromCenter(new Point(0, 0), new Point(3, 3));
         arc.setAngleStart(90);
@@ -496,7 +516,7 @@ public class Battletronics extends JPanel implements ActionListener {
     public void sniperAmmo(Graphics2D g2, Player player) {
         g2.setColor(Color.LIGHT_GRAY);
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2.translate(player.getXpos() + 15, player.getYpos() - 5);
+        g2.translate(player.getXpos() + player.width + 12, player.getYpos() - 5);
         Rectangle2D.Float rec = new Rectangle2D.Float();
         if (player.sniperAmmo >= 1) {
             rec.setFrameFromCenter(new Point(0, 0), new Point(1, 1));
@@ -574,11 +594,11 @@ public class Battletronics extends JPanel implements ActionListener {
             message = endGameColor + " player wins!";
         }
         String message2 = "Press R to restart";
-        Font f = new Font("Nunito", Font.BOLD, 14);
+        Font f = new Font("Nunito", Font.BOLD, 28);
         g.setFont(f);
         g.setColor(Color.WHITE);
-        g.drawString(message, 75, 130);
-        g.drawString(message2, 73, 185);
+        g.drawString(message, this.width / 3, this.height / 2);
+        g.drawString(message2, this.width / 3, this.height / 2 + 30);
         startRestartGameOption();
         stopSoundEffects.add(true);
         removeKeyListener(tAdapter);
@@ -659,12 +679,12 @@ public class Battletronics extends JPanel implements ActionListener {
         progressBar3 = 360;
         progressBar4 = 360;
 
-        player1 = new Player1(1, 3, 18, 18);
-        player2 = new Player2(2, 3, 232, 226);
+        player1 = new Player1(1, 3, 54, 54);
+        player2 = new Player2(2, 3, 8 * this.width / 10 - 5, 13 * this.height / 15);
         if (nrOfPlayers >= 3)
-            player3 = new Player3(3, 3, 18, 226);
+            player3 = new Player3(3, 3, 54, 13 * this.height / 15);
         if (nrOfPlayers == 4)
-            player4 = new Player4(4, 3, 232, 18);
+            player4 = new Player4(4, 3, 8 * this.width / 10 - 5, 54);
 
         players = Arrays.asList(player1, player2, player3, player4);
         new SetKeyBindings(players, im, am);

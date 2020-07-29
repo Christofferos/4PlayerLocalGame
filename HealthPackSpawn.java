@@ -34,7 +34,7 @@ public class HealthPackSpawn {
     /* ## HealthSpawn: Centered in Window ## */
     public void spawnHealthPacks(CollisionDetection collisionDetection) {
         Random rand = new Random();
-        double doubleRand = 75 * Math.sqrt(rand.nextDouble()); // 55
+        double doubleRand = 225 * Math.sqrt(rand.nextDouble()); // 55
         double theta = rand.nextDouble() * 2 * Math.PI;
         int xPlacement = (int) ((width - xOffset) / 2 + doubleRand * Math.cos(theta));
         int yPlacement = (int) ((height - yOffset) / 2 + doubleRand * Math.sin(theta));

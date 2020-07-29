@@ -32,13 +32,13 @@ public class PowerUpRocket {
                     player.disablePlayerShooting = true;
                     player.disablePlayerMovement = true;
                     if (player.direction == Player.Direction.UP) {
-                        player.rocket.add(new Rocket(player.xpos, player.ypos - player.height / 2));
+                        player.rocket.add(new Rocket(player.xpos, player.ypos - player.height / 2 - 4));
                     } else if (player.direction == Player.Direction.DOWN) {
-                        player.rocket.add(new Rocket(player.xpos, player.ypos + player.height / 2));
+                        player.rocket.add(new Rocket(player.xpos, player.ypos + player.height / 2 + 4));
                     } else if (player.direction == Player.Direction.LEFT) {
-                        player.rocket.add(new Rocket(player.xpos - player.width / 2, player.ypos));
+                        player.rocket.add(new Rocket(player.xpos - player.width / 2 - 4, player.ypos ));
                     } else if (player.direction == Player.Direction.RIGHT) {
-                        player.rocket.add(new Rocket(player.xpos + player.width / 2, player.ypos));
+                        player.rocket.add(new Rocket(player.xpos + player.width / 2 + 4, player.ypos));
                     }
                 }
                 if (once == false && player.getRocket().size() == 0) {
@@ -68,7 +68,7 @@ public class PowerUpRocket {
                 ((Timer) e.getSource()).stop();
             }
         });
-        deactivate.setInitialDelay(7500); // 10000
+        deactivate.setInitialDelay(7500); // 7500
         deactivate.setRepeats(false);
         deactivate.start();
     }

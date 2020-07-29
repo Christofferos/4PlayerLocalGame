@@ -17,7 +17,10 @@ public class PowerUpMachineGun {
             ex.printStackTrace();
         }
 
-        Timer machineGunFireRate = new Timer(player.reloadFreq / 2, new ActionListener() {
+        int fireFreq = player.reloadFreq - 50;
+        if (player.reloadFreq < 150)
+            fireFreq = 100;
+        Timer machineGunFireRate = new Timer(fireFreq, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (soundEffect.status != "stopped") {
@@ -38,7 +41,7 @@ public class PowerUpMachineGun {
                 ((Timer) e.getSource()).stop();
             }
         });
-        deactivate.setInitialDelay(5000); // 7500
+        deactivate.setInitialDelay(4900); // 5000
         deactivate.setRepeats(false);
         deactivate.start();
     }

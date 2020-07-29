@@ -51,11 +51,11 @@ public class Obstacle implements Serializable {
 
     public void loadSprite() {
         ImageIcon img_obstacle;
-        if (size == 8 && movable()) {
+        if (size == 24 && movable()) {
             img_obstacle = new ImageIcon("Images/movableObstacle.png");
-        } else if (size == 10 && movable()) {
+        } else if (size == 30 && movable()) {
             img_obstacle = new ImageIcon("Images/movableObstacle10.png");
-        } else if (size == 12 && movable()) {
+        } else if (size == 36 && movable()) {
             img_obstacle = new ImageIcon("Images/movableObstacle12.png");
         } else if (!movable()) {
             img_obstacle = new ImageIcon("Images/obstacle.png");

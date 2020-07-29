@@ -39,8 +39,8 @@ public class WaterFlood {
     }
 
     public void waterRectangle(int x1, int y1, int x2, int y2) {
-        for (int i = x1; i < x2; i += 8) {
-            for (int j = y1; j < y2; j += 8) {
+        for (int i = x1; i < x2; i += 24) {
+            for (int j = y1; j < y2; j += 24) {
                 waterBlocks.add(new WaterBlock(i, j));
             }
         }
@@ -63,17 +63,17 @@ public class WaterFlood {
         int yCenter = (height - yOffset) / 2;
         if (waterCount <= 6) {
             if (waterCount == 2) {
-                waterRectangle(xCenter - 16, yCenter - 16, xCenter + 16, yCenter + 16);
+                waterRectangle(xCenter - 48, yCenter - 48, xCenter + 48, yCenter + 48);
             } else if (waterCount == 3) {
                 waterBlocks.clear();
-                waterRectangle(xCenter - 32, yCenter - 32, xCenter + 32, yCenter + 32);
+                waterRectangle(xCenter - 96, yCenter - 96, xCenter + 96, yCenter + 96);
             } else if (waterCount == 4) {
-                waterRectangle(8, yCenter - 8, xCenter * 2 - 8, yCenter + 8);
-                waterRectangle(xCenter - 8, 8, xCenter + 8, yCenter * 2 - 8);
+                waterRectangle(24, yCenter - 24, xCenter * 2 - 24, yCenter + 24);
+                waterRectangle(xCenter - 24, 24, xCenter + 24, yCenter * 2 - 24);
             } else {
                 double max = 1;
                 double min = 0.7;
-                double r = 80;
+                double r = 240;
                 for (int k = 7; k > 0; k--) {
                     Random rand = new Random();
                     double doubleRand = r * Math.sqrt(rand.nextDouble() * (max - min) + min);
@@ -84,10 +84,10 @@ public class WaterFlood {
                     if (waterCount == 5) {
                         max = 1.4;
                         min = 0.9;
-                        waterRectangle(xPlacement, yPlacement, xPlacement + 16, yPlacement + 16);
+                        waterRectangle(xPlacement, yPlacement, xPlacement + 48, yPlacement + 48);
                     } else if (waterCount == 6) {
-                        waterRectangle(xPlacement, yPlacement, xPlacement + 24, yPlacement + 24);
-                        r = 100;
+                        waterRectangle(xPlacement, yPlacement, xPlacement + 72, yPlacement + 72);
+                        r = 300;
                         min = 1.1;
                     }
                 }
@@ -111,7 +111,7 @@ public class WaterFlood {
                 xNoDieZone = width - xOffset;
                 yNoDieZone = 0;
                 tsunamiPosY = height;
-                xTsunamiDir = 8;
+                xTsunamiDir = 24;
                 break;
             // Move wave left
             case 2:
@@ -119,7 +119,7 @@ public class WaterFlood {
                 xNoDieZone = 0;
                 yNoDieZone = 0;
                 tsunamiPosY = height;
-                xTsunamiDir = -8;
+                xTsunamiDir = -24;
                 break;
             // Move wave down
             case 3:
@@ -127,7 +127,7 @@ public class WaterFlood {
                 yNoDieZone = height - yOffset;
                 xNoDieZone = 0;
                 tsunamiPosX = width;
-                yTsunamiDir = 8;
+                yTsunamiDir = 24;
                 break;
             // Move wave up
             case 4:
@@ -135,7 +135,7 @@ public class WaterFlood {
                 yNoDieZone = 0;
                 xNoDieZone = 0;
                 tsunamiPosX = width;
-                yTsunamiDir = -8;
+                yTsunamiDir = -24;
                 break;
         }
 
@@ -158,13 +158,13 @@ public class WaterFlood {
 
             if (directionTsunami == 1) {
                 removeWaterRectangle(tsunamiPosX, xNoDieZone, yNoDieZone, tsunamiPosY);
-                if (Math.abs(xNoDieZone - tsunamiPosX) < 20) {
+                if (Math.abs(xNoDieZone - tsunamiPosX) < 60) {
                     xTsunamiDir = 0;
 
                     holdWaterLevel = new Timer(5000, new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                            xTsunamiDir = -8;
+                            xTsunamiDir = -24;
                             returnTsunami = true;
                             ((Timer) e.getSource()).stop();
                         }
@@ -173,14 +173,14 @@ public class WaterFlood {
                 }
             } else if (directionTsunami == 2) {
                 removeWaterRectangle(xNoDieZone, tsunamiPosX, yNoDieZone, tsunamiPosY);
-                if (Math.abs(xNoDieZone - tsunamiPosX) < 20) {
+                if (Math.abs(xNoDieZone - tsunamiPosX) < 60) {
                     xTsunamiDir = 0;
 
                     holdWaterLevel = new Timer(5000, new ActionListener() {
 
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                            xTsunamiDir = 8;
+                            xTsunamiDir = 24;
                             returnTsunami = true;
                             ((Timer) e.getSource()).stop();
                         }
@@ -193,12 +193,12 @@ public class WaterFlood {
             tsunamiPosY += yTsunamiDir;
             if (directionTsunami == 3) {
                 removeWaterRectangle(xNoDieZone, tsunamiPosX, tsunamiPosY, yNoDieZone);
-                if (Math.abs(yNoDieZone - tsunamiPosY) < 20) {
+                if (Math.abs(yNoDieZone - tsunamiPosY) < 60) {
                     yTsunamiDir = 0;
                     holdWaterLevel = new Timer(5000, new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                            yTsunamiDir = -8;
+                            yTsunamiDir = -24;
                             returnTsunami = true;
                             ((Timer) e.getSource()).stop();
                         }
@@ -207,13 +207,13 @@ public class WaterFlood {
                 }
             } else if (directionTsunami == 4) {
                 removeWaterRectangle(xNoDieZone, tsunamiPosX, yNoDieZone, tsunamiPosY);
-                if (Math.abs(yNoDieZone - tsunamiPosY) < 20) {
+                if (Math.abs(yNoDieZone - tsunamiPosY) < 60) {
                     yTsunamiDir = 0;
                     holdWaterLevel = new Timer(5000, new ActionListener() {
 
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                            yTsunamiDir = 8;
+                            yTsunamiDir = 24;
                             returnTsunami = true;
                             ((Timer) e.getSource()).stop();
                         }
@@ -226,9 +226,9 @@ public class WaterFlood {
         int xCenter = (width - xOffset) / 2;
         int yCenter = (height - yOffset) / 2;
 
-        waterRectangle(xCenter - 32, yCenter - 32, xCenter + 32, yCenter + 32);
-        waterRectangle(8, yCenter - 8, xCenter * 2 - 8, yCenter + 8);
-        waterRectangle(xCenter - 8, 8, xCenter + 8, yCenter * 2 - 8);
+        waterRectangle(xCenter - 96, yCenter - 96, xCenter + 96, yCenter + 96);
+        waterRectangle(24, yCenter - 24, xCenter * 2 - 24, yCenter + 24);
+        waterRectangle(xCenter - 24, 24, xCenter + 24, yCenter * 2 - 24);
 
         if (returnTsunami && (tsunamiPosX <= 0 || tsunamiPosX >= width - xOffset)
                 && (tsunamiPosY <= 0 || tsunamiPosY >= height - yOffset)) {

@@ -7,10 +7,10 @@ import java.util.List;
 import java.util.Map;
 
 public class MenuInstructions {
-    public int height = 315;
-    public int width = 275;
-    public int windowHeight = 335;
-    public int windowWidth = 275;
+    public int height = 945;
+    public int width = 825;
+    public int windowHeight = 975;
+    public int windowWidth = 825;
     JFrame frame;
 
     public MenuInstructions() {
@@ -190,66 +190,66 @@ public class MenuInstructions {
             int y = bounds.y + ((bounds.height - fm.getHeight()) / 2) + fm.getAscent();
             g2d.setColor(isSelected ? Color.WHITE : Color.LIGHT_GRAY);
 
-            f = new Font("Nunito", Font.BOLD, 22);
+            /* f = new Font("Nunito", Font.BOLD, 50);
             g2d.setFont(f);
-            g2d.drawString("BATTLETRONICS", 45, 50);
-            g2d.drawString(text, x, y);
+            g2d.drawString("BATTLETRONICS", width/3, height/4);
+            */
+            g2d.drawString(text, x, y); 
 
-            f = new Font("Nunito", Font.PLAIN, 14);
+            f = new Font("Nunito", Font.PLAIN, 22);
             g2d.setFont(f);
 
             Image p1 = new ImageIcon("Images/player1.png").getImage();
-            g2d.drawImage(p1, 10, 70, null);
-            g2d.drawString("P1 Controls: Arrow Keys, Del, End.", 25, 80);
+            g2d.drawImage(p1, width/3, height/5, null);
+            g2d.drawString("P1 Controls: Arrow Keys, Del, End.", width/3 + 35, height/5 + 20);
 
             Image p2 = new ImageIcon("Images/player2.png").getImage();
-            g2d.drawImage(p2, 10, 90, null);
-            g2d.drawString("P2 Controls: W, A, S, D, 1, Q.", 25, 100);
+            g2d.drawImage(p2, width/3, height/5 + 30, null);
+            g2d.drawString("P2 Controls: W, A, S, D, 1, Q.", width/3 + 35, height/5 + 50);
 
             Image p3 = new ImageIcon("Images/player3.png").getImage();
-            g2d.drawImage(p3, 10, 110, null);
-            g2d.drawString("P3 Controls: U, H, J, K, '.', '-'.", 25, 120);
+            g2d.drawImage(p3, width/3, height/5 + 60, null);
+            g2d.drawString("P3 Controls: NumKeys, Div, Mult.", width/3 + 35, height/5 + 80);
 
             Image p4 = new ImageIcon("Images/player4.png").getImage();
-            g2d.drawImage(p4, 10, 130, null);
-            g2d.drawString("P4 Controls: NumKeys, Div, Mult.", 25, 140);
+            g2d.drawImage(p4, width/3, height/5 + 90, null);
+            g2d.drawString("P4 Controls: U, H, J, K, '.', '-'.", width/3 + 35, height/5 + 110);
 
-            f = new Font("Nunito", Font.PLAIN, 12);
+            f = new Font("Nunito", Font.PLAIN, 18);
             g2d.setFont(f);
             Image i1 = new ImageIcon("Images/health.png").getImage();
-            g2d.drawImage(i1, 15, 160, null);
-            g2d.drawString(": health", 25, 168);
+            g2d.drawImage(i1, width/3 + 10, height/5 + 130, null);
+            g2d.drawString(": health", width/3 + 25, height/5 + 145);
 
             Image i2 = new ImageIcon("Images/mine.png").getImage();
-            g2d.drawImage(i2, 90, 160, null);
-            g2d.drawString(": mine", 105, 168);
+            g2d.drawImage(i2, width/3, height/5 + 155, null);
+            g2d.drawString(": mine", width/3 + 35, height/5 + 175);
 
             Image i3 = new ImageIcon("Images/minigun.png").getImage();
-            g2d.drawImage(i3, 155, 160, null);
-            g2d.drawString(": machineGun", 180, 168);
+            g2d.drawImage(i3, width/3, height/5 + 190, null);
+            g2d.drawString(": machineGun", width/3 + 35, height/5 + 205);
 
             // Ny rad
             Image i4 = new ImageIcon("Images/strengthBoost.png").getImage();
-            g2d.drawImage(i4, 13, 177, null);
-            g2d.drawString(": maxHP", 25, 188);
+            g2d.drawImage(i4,  width/3, height/5 + 220, null);
+            g2d.drawString(": maxHP", width/3 + 35, height/5 + 235);
 
             Image i5 = new ImageIcon("Images/fireBoost3.png").getImage();
-            g2d.drawImage(i5, 93, 180, null);
-            g2d.drawString(": firerate", 105, 188);
+            g2d.drawImage(i5, width/3, height/5 + 250, null);
+            g2d.drawString(": firerate", width/3 + 35, height/5 + 265);
 
             Image i6 = new ImageIcon("Images/movementBoost2.png").getImage();
-            g2d.drawImage(i6, 160, 180, null);
-            g2d.drawString(": pickUpBoost", 175, 188);
+            g2d.drawImage(i6, width/3, height/5 + 280, null);
+            g2d.drawString(": pickUpBoost", width/3 + 35, height/5 + 295);
 
             // Ny rad
             Image i7 = new ImageIcon("Images/rocket.png").getImage();
-            g2d.drawImage(i7, 15, 200, null);
-            g2d.drawString(": rocket", 25, 208);
+            g2d.drawImage(i7, width/3, height/5 + 310, null);
+            g2d.drawString(": rocket", width/3 + 35, height/5 + 325);
 
             Image i8 = new ImageIcon("Images/sniper.png").getImage();
-            g2d.drawImage(i8, 90, 200, null);
-            g2d.drawString(": sniper", 110, 208);
-
+            g2d.drawImage(i8, width/3, height/5 + 340, null);
+            g2d.drawString(": sniper", width/3 + 50, height/5 + 360);
         }
 
         protected void paintBackground(Graphics2D g2d, Rectangle bounds, Color background, Color foreground) {

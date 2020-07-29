@@ -31,15 +31,11 @@ public class Rocket extends Sprite {
                 xpos += bulletSpeed;
                 break;
         }
-
-        if (xpos > 500 || xpos < 0 || ypos > 500 || ypos < 0) {
-            visible = false;
-        }
     }
 
     // In order to align hit radius of the bullet with the actual sprite.
     @Override
     public Rectangle getBoundary() {
-        return new Rectangle(xpos + 1, ypos + 1, width, height);
+        return new Rectangle(xpos + 2, ypos + 2, width, height);
     }
 }

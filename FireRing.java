@@ -26,7 +26,7 @@ public class FireRing implements ActionListener {
 
     int xCenterOfNoDieZone;
     int yCenterOfNoDieZone;
-    int noDieZoneRadius = 62;
+    int noDieZoneRadius = 210;
     int r = noDieZoneRadius;
     int iteration = 0;
 
@@ -42,8 +42,8 @@ public class FireRing implements ActionListener {
 
     /* ## AddFireRectangle: [NOTE: x1, x2, y1, y2] ## */
     public void addFireRectangle(int x1, int x2, int y1, int y2) {
-        for (int i = x1; i < x2; i += 8) {
-            for (int j = y1; j < y2; j += 8) {
+        for (int i = x1; i < x2; i += 24) {
+            for (int j = y1; j < y2; j += 24) {
                 fireBlocks.add(new FireBlock(i, j));
             }
         }
@@ -64,7 +64,7 @@ public class FireRing implements ActionListener {
     public void increaseFlames() {
         flameCount++;
 
-        if (flameCount <= 7) {
+        if (flameCount <= 6) {
             try {
                 SoundEffect soundEffect = new SoundEffect("Sound/fireRing.wav", stopSoundEffects);
                 soundEffect.play();
@@ -73,27 +73,27 @@ public class FireRing implements ActionListener {
                 ex.printStackTrace();
             }
 
-            for (int i = (flameCount - 1) * 8; i < width - xOffset; i += 8) {
-                fireBlocks.add(new FireBlock(i, (flameCount - 1) * 8));
-                fireBlocks.add(new FireBlock(i, height - yOffset - (flameCount - 1) * 8));
+            for (int i = (flameCount - 1) * 24; i < width - xOffset; i += 24) {
+                fireBlocks.add(new FireBlock(i, (flameCount - 1) * 24));
+                fireBlocks.add(new FireBlock(i, height - yOffset - (flameCount - 1) * 24));
             }
-            for (int i = 0; i < height - yOffset; i += 8) {
-                fireBlocks.add(new FireBlock((flameCount - 1) * 8, i));
-                fireBlocks.add(new FireBlock(width - xOffset - (flameCount - 1) * 8, i));
+            for (int i = 0; i < height - yOffset; i += 24) {
+                fireBlocks.add(new FireBlock((flameCount - 1) * 24, i));
+                fireBlocks.add(new FireBlock(width - xOffset - (flameCount - 1) * 24, i));
             }
             if (flameCount >= 4) {
                 flameCount++;
-                for (int i = (flameCount - 1) * 8; i < width - xOffset; i += 8) {
-                    fireBlocks.add(new FireBlock(i, (flameCount - 1) * 8));
-                    fireBlocks.add(new FireBlock(i, height - yOffset - (flameCount - 1) * 8));
+                for (int i = (flameCount - 1) * 24; i < width - xOffset; i += 24) {
+                    fireBlocks.add(new FireBlock(i, (flameCount - 1) * 24));
+                    fireBlocks.add(new FireBlock(i, height - yOffset - (flameCount - 1) * 24));
                 }
-                for (int i = 0; i < height - yOffset; i += 8) {
-                    fireBlocks.add(new FireBlock((flameCount - 1) * 8, i));
-                    fireBlocks.add(new FireBlock(width - xOffset - (flameCount - 1) * 8, i));
+                for (int i = 0; i < height - yOffset; i += 24) {
+                    fireBlocks.add(new FireBlock((flameCount - 1) * 24, i));
+                    fireBlocks.add(new FireBlock(width - xOffset - (flameCount - 1) * 24, i));
                 }
             }
         }
-        if (flameCount == 8) {
+        if (flameCount == 7) {
             xCenterOfNoDieZone = (width - xOffset) / 2;
             yCenterOfNoDieZone = (height - yOffset) / 2;
 
@@ -103,8 +103,8 @@ public class FireRing implements ActionListener {
             int randomNum = rand.nextInt((max - min) + 1) + min;
 
             availablePositions(randomNum);
-            removeFireRectangle(xCenterOfNoDieZone - 45, xCenterOfNoDieZone + 45, yCenterOfNoDieZone - 45,
-                    yCenterOfNoDieZone + 45);
+            removeFireRectangle(xCenterOfNoDieZone - 135, xCenterOfNoDieZone + 135, yCenterOfNoDieZone - 135,
+                    yCenterOfNoDieZone + 135);
             startTimer();
         }
     }
@@ -113,8 +113,8 @@ public class FireRing implements ActionListener {
     public void startTimer() {
         goalTimer = new Timer(850, (ActionListener) this);
         goalTimer.start();
-        removeFireRectangle(xCenterOfNoDieZone - 45, xCenterOfNoDieZone + 45, yCenterOfNoDieZone - 45,
-                yCenterOfNoDieZone + 45);
+        removeFireRectangle(xCenterOfNoDieZone - 135, xCenterOfNoDieZone + 135, yCenterOfNoDieZone - 135,
+                yCenterOfNoDieZone + 135);
     }
 
     /* ## ActionPerformed: [Called by StartTimer - every Tick] ## */
@@ -123,7 +123,7 @@ public class FireRing implements ActionListener {
         goalPosition(xGoal, yGoal);
         iteration++;
         if (iteration == 100) {
-            noDieZoneRadius = 54;
+            noDieZoneRadius = 186;
             r = noDieZoneRadius;
         }
     }
@@ -132,41 +132,41 @@ public class FireRing implements ActionListener {
     public void goalPosition(int x, int y) {
         fireBlocks.clear();
         addFireRectangle(0, (width - xOffset), 0, (height - yOffset));
-        if (x > xCenterOfNoDieZone && Math.abs(x - xCenterOfNoDieZone) >= 8) {
-            xCenterOfNoDieZone += 8;
-            if (y > yCenterOfNoDieZone && Math.abs(y - yCenterOfNoDieZone) >= 8) {
-                yCenterOfNoDieZone += 8;
+        if (x > xCenterOfNoDieZone && Math.abs(x - xCenterOfNoDieZone) >= 24) {
+            xCenterOfNoDieZone += 24;
+            if (y > yCenterOfNoDieZone && Math.abs(y - yCenterOfNoDieZone) >= 24) {
+                yCenterOfNoDieZone += 24;
                 removeFireRectangle(xCenterOfNoDieZone - r, xCenterOfNoDieZone + r, yCenterOfNoDieZone - r,
                         yCenterOfNoDieZone + r);
-            } else if (y < yCenterOfNoDieZone && Math.abs(y - yCenterOfNoDieZone) >= 8) {
-                yCenterOfNoDieZone -= 8;
+            } else if (y < yCenterOfNoDieZone && Math.abs(y - yCenterOfNoDieZone) >= 24) {
+                yCenterOfNoDieZone -= 24;
                 removeFireRectangle(xCenterOfNoDieZone - r, xCenterOfNoDieZone + r, yCenterOfNoDieZone - r,
                         yCenterOfNoDieZone + r);
-            } else if (Math.abs(y - yCenterOfNoDieZone) < 8) {
-                removeFireRectangle(xCenterOfNoDieZone - r, xCenterOfNoDieZone + r, yCenterOfNoDieZone - r,
-                        yCenterOfNoDieZone + r);
-            }
-        } else if (x < xCenterOfNoDieZone && Math.abs(x - xCenterOfNoDieZone) >= 8) {
-            xCenterOfNoDieZone -= 8;
-            if (y > yCenterOfNoDieZone && Math.abs(y - yCenterOfNoDieZone) >= 8) {
-                yCenterOfNoDieZone += 8;
-                removeFireRectangle(xCenterOfNoDieZone - r, xCenterOfNoDieZone + r, yCenterOfNoDieZone - r,
-                        yCenterOfNoDieZone + r);
-            } else if (y < yCenterOfNoDieZone && Math.abs(y - yCenterOfNoDieZone) >= 8) {
-                yCenterOfNoDieZone -= 8;
-                removeFireRectangle(xCenterOfNoDieZone - r, xCenterOfNoDieZone + r, yCenterOfNoDieZone - r,
-                        yCenterOfNoDieZone + r);
-            } else if (Math.abs(y - yCenterOfNoDieZone) < 8) {
+            } else if (Math.abs(y - yCenterOfNoDieZone) < 24) {
                 removeFireRectangle(xCenterOfNoDieZone - r, xCenterOfNoDieZone + r, yCenterOfNoDieZone - r,
                         yCenterOfNoDieZone + r);
             }
-        } else if (Math.abs(x - xCenterOfNoDieZone) < 8) {
+        } else if (x < xCenterOfNoDieZone && Math.abs(x - xCenterOfNoDieZone) >= 24) {
+            xCenterOfNoDieZone -= 24;
+            if (y > yCenterOfNoDieZone && Math.abs(y - yCenterOfNoDieZone) >= 24) {
+                yCenterOfNoDieZone += 24;
+                removeFireRectangle(xCenterOfNoDieZone - r, xCenterOfNoDieZone + r, yCenterOfNoDieZone - r,
+                        yCenterOfNoDieZone + r);
+            } else if (y < yCenterOfNoDieZone && Math.abs(y - yCenterOfNoDieZone) >= 24) {
+                yCenterOfNoDieZone -= 24;
+                removeFireRectangle(xCenterOfNoDieZone - r, xCenterOfNoDieZone + r, yCenterOfNoDieZone - r,
+                        yCenterOfNoDieZone + r);
+            } else if (Math.abs(y - yCenterOfNoDieZone) < 24) {
+                removeFireRectangle(xCenterOfNoDieZone - r, xCenterOfNoDieZone + r, yCenterOfNoDieZone - r,
+                        yCenterOfNoDieZone + r);
+            }
+        } else if (Math.abs(x - xCenterOfNoDieZone) < 24) {
             if (y > yCenterOfNoDieZone) {
-                yCenterOfNoDieZone += 8;
+                yCenterOfNoDieZone += 24;
                 removeFireRectangle(xCenterOfNoDieZone - r, xCenterOfNoDieZone + r, yCenterOfNoDieZone - r,
                         yCenterOfNoDieZone + r);
             } else if (y < yCenterOfNoDieZone) {
-                yCenterOfNoDieZone -= 8;
+                yCenterOfNoDieZone -= 24;
                 removeFireRectangle(xCenterOfNoDieZone - r, xCenterOfNoDieZone + r, yCenterOfNoDieZone - r,
                         yCenterOfNoDieZone + r);
             }
@@ -175,7 +175,7 @@ public class FireRing implements ActionListener {
                     yCenterOfNoDieZone + r);
         }
 
-        if (Math.abs(xCenterOfNoDieZone - x) < 10 && Math.abs(yCenterOfNoDieZone - y) < 10) {
+        if (Math.abs(xCenterOfNoDieZone - x) < 30 && Math.abs(yCenterOfNoDieZone - y) < 30) {
             goalTimer.stop();
             removeFireRectangle(xCenterOfNoDieZone - r, xCenterOfNoDieZone + r, yCenterOfNoDieZone - r,
                     yCenterOfNoDieZone + r);
@@ -196,7 +196,7 @@ public class FireRing implements ActionListener {
         // 7 8 9
         switch (posIndex) {
             case 1:
-                xGoal = (width - xOffset) / 4 - 8;
+                xGoal = (width - xOffset) / 4 - 24;
                 yGoal = (height - yOffset) / 4;
                 break;
             case 2:
@@ -204,11 +204,11 @@ public class FireRing implements ActionListener {
                 yGoal = (height - yOffset) / 4;
                 break;
             case 3:
-                xGoal = 3 * (width - xOffset) / 4 + 16;
+                xGoal = 3 * (width - xOffset) / 4 + 48;
                 yGoal = (height - yOffset) / 4;
                 break;
             case 4:
-                xGoal = (width - xOffset) / 4 - 8;
+                xGoal = (width - xOffset) / 4 - 24;
                 yGoal = (height - yOffset) / 2;
                 break;
             case 5:
@@ -216,20 +216,20 @@ public class FireRing implements ActionListener {
                 yGoal = (height - yOffset) / 2;
                 break;
             case 6:
-                xGoal = 3 * (width - xOffset) / 4 + 16;
+                xGoal = 3 * (width - xOffset) / 4 + 48;
                 yGoal = (height - yOffset) / 2;
                 break;
             case 7:
-                xGoal = (width - xOffset) / 4 - 8;
-                yGoal = 3 * (height - yOffset) / 4 + 8;
+                xGoal = (width - xOffset) / 4 - 24;
+                yGoal = 3 * (height - yOffset) / 4 + 24;
                 break;
             case 8:
                 xGoal = (width - xOffset) / 2;
-                yGoal = 3 * (height - yOffset) / 4 + 8;
+                yGoal = 3 * (height - yOffset) / 4 + 24;
                 break;
             case 9:
-                xGoal = 3 * (width - xOffset) / 4 + 16;
-                yGoal = 3 * (height - yOffset) / 4 + 8;
+                xGoal = 3 * (width - xOffset) / 4 + 48;
+                yGoal = 3 * (height - yOffset) / 4 + 24;
                 break;
         }
     }

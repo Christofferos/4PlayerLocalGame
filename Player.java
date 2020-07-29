@@ -21,11 +21,11 @@ public abstract class Player extends Sprite {
 
     public Timer reloadTimer;
     public boolean reload;
-    public int reloadFreq = 250;
+    public int reloadFreq = 250; //250
 
     public boolean pickUpOrDrop;
     public int inventoryFrequency = 450;
-    public int inventoryObstacleSize = 8;
+    public int inventoryObstacleSize = 24;
     public int inventory;
     public int inventoryMaxCap = 3;
 
@@ -144,13 +144,13 @@ public abstract class Player extends Sprite {
         if (reload == false && !disablePlayerShooting) {
             reload();
             if (direction == Direction.UP) {
-                bullets.add(new Bullet(xpos, ypos - height / 2));
+                bullets.add(new Bullet(xpos + width / 2 - 3, ypos - height / 2));
             } else if (direction == Direction.DOWN) {
-                bullets.add(new Bullet(xpos, ypos + height / 2));
+                bullets.add(new Bullet(xpos + width / 2 - 3, ypos + height / 2));
             } else if (direction == Direction.LEFT) {
-                bullets.add(new Bullet(xpos - width / 2, ypos));
+                bullets.add(new Bullet(xpos - width / 2, ypos + height / 2 - 3));
             } else if (direction == Direction.RIGHT) {
-                bullets.add(new Bullet(xpos + width / 2, ypos));
+                bullets.add(new Bullet(xpos + width / 2, ypos + height / 2 - 3));
             }
 
             // Shooting sound effect

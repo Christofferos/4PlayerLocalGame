@@ -10,8 +10,8 @@ public class App extends JFrame {
     public App(int nrOfPlayers) {
      int height = 945;
      int width = 825;
-     int windowHeight = 975;
-     int windowWidth = 825;
+     int windowHeight = 975; // 975
+     int windowWidth = 825; // 825
 
         battletronics = new Battletronics(width, height, nrOfPlayers);
         add(battletronics);

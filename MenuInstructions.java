@@ -218,7 +218,7 @@ public class MenuInstructions {
             f = new Font("Nunito", Font.PLAIN, 18);
             g2d.setFont(f);
             Image i1 = new ImageIcon("Images/health.png").getImage();
-            g2d.drawImage(i1, width/3 + 10, height/5 + 130, null);
+            g2d.drawImage(i1, width/3 + 10, height/5 + 125, null);
             g2d.drawString(": health", width/3 + 25, height/5 + 145);
 
             Image i2 = new ImageIcon("Images/mine.png").getImage();
@@ -227,7 +227,7 @@ public class MenuInstructions {
 
             Image i3 = new ImageIcon("Images/minigun.png").getImage();
             g2d.drawImage(i3, width/3, height/5 + 190, null);
-            g2d.drawString(": machineGun", width/3 + 35, height/5 + 205);
+            g2d.drawString(": machineGun", width/3 + 45, height/5 + 205);
 
             // Ny rad
             Image i4 = new ImageIcon("Images/strengthBoost.png").getImage();

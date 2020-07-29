@@ -196,6 +196,48 @@ public class CollisionDetection implements Serializable {
         return false;
     }
 
+    /* TypeOfObstacle: [Check how many inventory points is required to pick up movable obstacle] */
+    public int typeOfObstacle(int player) {
+        Player playerObj = getPlayer(player);
+        Player.Direction dir = playerObj.direction;
+        int x = playerObj.getXpos();
+        int y = playerObj.getYpos();
+
+        for (int i = 0; i < obstacles.size(); i++) {
+            Rectangle obstacleArea = obstacles.get(i).getBoundary();
+            boolean intersectFound = false;
+
+            if (dir == Player.Direction.UP) {
+                if (obstacleArea.intersects(new Rectangle(x, y-3, playerObj.width, playerObj.height))) {
+                    intersectFound = true;
+                }
+            } else if (dir == Player.Direction.DOWN) {
+                if (obstacleArea.intersects(new Rectangle(x, y+3, playerObj.width, playerObj.height))) {
+                    intersectFound = true;
+                }
+            } else if (dir == Player.Direction.LEFT) {
+                if (obstacleArea.intersects(new Rectangle(x-3, y, playerObj.width, playerObj.height))) {
+                    intersectFound = true;
+                }
+            } else if (dir == Player.Direction.RIGHT) {
+                if (obstacleArea.intersects(new Rectangle(x+3, y, playerObj.width, playerObj.height))) {
+                    intersectFound = true;
+                }
+            }
+
+            if (intersectFound) {
+                if (obstacles.get(i).getWidth() == 24) {
+                    return 1;
+                } else if (obstacles.get(i).getWidth() == 30) {
+                    return 2;
+                } else if (obstacles.get(i).getWidth() == 36) {
+                    return 3;
+                }
+            }
+        }
+        return 1;
+    }
+
     /* SpaceToDropObstacle: [Check if player can drop movable obstacle] */
     public boolean spaceToDropObstacle(int player) {
         Rectangle space = new Rectangle(0, 0, 0, 0);
@@ -267,40 +309,40 @@ public class CollisionDetection implements Serializable {
 
         switch (dir) {
             case UP:
-                space.setBounds(x - offset - obstacleSize % 24, y - obstacleSize, obstacleSize, obstacleSize);
+                space.setBounds(x - obstacleSize % 24, y - obstacleSize, obstacleSize, obstacleSize);
                 if (!object.intersects(space))
-                    xy = new CoordinateXY(x - offset - obstacleSize % 24, y - obstacleSize);
-                space.setBounds(x - offset + obstacleSize % 24, y - obstacleSize, obstacleSize, obstacleSize);
+                    xy = new CoordinateXY(x - obstacleSize % 24, y - obstacleSize);
+                space.setBounds(x + obstacleSize % 24, y - obstacleSize, obstacleSize, obstacleSize);
                 if (!object.intersects(space))
-                    xy = new CoordinateXY(x - offset + obstacleSize % 24, y - obstacleSize);
+                    xy = new CoordinateXY(x - 2*offset + obstacleSize % 24, y - obstacleSize);
                 break;
             case DOWN:
-                space.setBounds(x - offset - obstacleSize % 24, y + obstacleSize - offset - fixPos, obstacleSize,
+                space.setBounds(x - obstacleSize % 24, y + obstacleSize - offset - fixPos, obstacleSize,
                         obstacleSize);
                 if (!object.intersects(space))
-                    xy = new CoordinateXY(x - offset - obstacleSize % 24, y + obstacleSize - offset - fixPos);
-                space.setBounds(x - offset + obstacleSize % 24, y + obstacleSize - offset - fixPos, obstacleSize,
+                    xy = new CoordinateXY(x - obstacleSize % 24, y + obstacleSize - offset - fixPos);
+                space.setBounds(x + obstacleSize % 24, y + obstacleSize - offset - fixPos, obstacleSize,
                         obstacleSize);
                 if (!object.intersects(space))
-                    xy = new CoordinateXY(x - offset + obstacleSize % 24, y + obstacleSize - offset - fixPos);
+                    xy = new CoordinateXY(x - 2*offset + obstacleSize % 24, y + obstacleSize - offset - fixPos);
                 break;
             case LEFT:
-                space.setBounds(x - obstacleSize, y - offset - obstacleSize % 24, obstacleSize, obstacleSize);
+                space.setBounds(x - obstacleSize, y - obstacleSize % 24, obstacleSize, obstacleSize);
                 if (!object.intersects(space))
-                    xy = new CoordinateXY(x - obstacleSize, y - offset - obstacleSize % 24);
-                space.setBounds(x - obstacleSize, y - offset + obstacleSize % 24, obstacleSize, obstacleSize);
+                    xy = new CoordinateXY(x - obstacleSize, y - obstacleSize % 24);
+                space.setBounds(x - obstacleSize, y + obstacleSize % 24, obstacleSize, obstacleSize);
                 if (!object.intersects(space))
-                    xy = new CoordinateXY(x - obstacleSize, y - offset + obstacleSize % 24);
+                    xy = new CoordinateXY(x - obstacleSize, y - 2*offset + obstacleSize % 24);
                 break;
             case RIGHT:
-                space.setBounds(x + obstacleSize - offset - fixPos, y - offset - obstacleSize % 24, obstacleSize,
+                space.setBounds(x + obstacleSize - offset - fixPos, y - obstacleSize % 24, obstacleSize,
                         obstacleSize);
                 if (!object.intersects(space))
-                    xy = new CoordinateXY(x + obstacleSize - offset - fixPos, y - offset - obstacleSize % 24);
-                space.setBounds(x + obstacleSize - offset - fixPos, y - offset + obstacleSize % 24, obstacleSize,
+                    xy = new CoordinateXY(x + obstacleSize - offset - fixPos, y - obstacleSize % 24);
+                space.setBounds(x + obstacleSize - offset - fixPos, y + obstacleSize % 24, obstacleSize,
                         obstacleSize);
                 if (!object.intersects(space))
-                    xy = new CoordinateXY(x + obstacleSize - offset - fixPos, y - offset + obstacleSize % 24);
+                    xy = new CoordinateXY(x + obstacleSize - offset - fixPos, y - 2*offset + obstacleSize % 24);
                 break;
         }
 
@@ -535,9 +577,12 @@ public class CollisionDetection implements Serializable {
                         if (playerObj.inventoryObstacleSize != 36)
                             playerObj.inventoryObstacleSize += 6;
                     }
-                    if (playerObj.inventory != playerObj.inventoryMaxCap - 2) {
-                        playerObj.inventory++;
+                    else if (playerObj.inventoryFrequency < 150) {
+                        playerObj.inventoryFrequency = 150;
                     }
+                    /* if (playerObj.inventory != playerObj.inventoryMaxCap - 2) {
+                        playerObj.inventory++;
+                    } */
                 } else if (powerUps.get(i).getType() == 4) {
                     new PowerUpMachineGun(playerObj, stopSoundEffects);
                 } else if (powerUps.get(i).getType() == 5) {

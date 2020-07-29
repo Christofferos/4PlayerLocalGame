@@ -30,17 +30,19 @@ public class PlayerInventory {
     public void playerInventoryAction(int player) {
         switch (player) {
             case 1:
-                if (p1InventoryAction == false) {
-                    if (player1.pickUpOrDrop && player1.inventory != player1.inventoryMaxCap
-                            && collisionDetection.collision(1, false)) {
+                if (p1InventoryAction == false && player1.pickUpOrDrop) {
+                    int inventoryWeight = collisionDetection.typeOfObstacle(1);
+
+                    if (player1.inventory + inventoryWeight <= player1.inventoryMaxCap && collisionDetection.collision(1, false)) {
                         if (collisionDetection.collision(1, true)) {
-                            player1.inventory++;
+                            player1.inventory += inventoryWeight;
                             p1InventoryAction = true;
                             initializeInvetoryTimer(1);
                         }
-                    } else if (player1.pickUpOrDrop && player1.inventory != 0) {
+                    } else if (player1.inventory != 0) {
                         if (collisionDetection.spaceToDropObstacle(1)) {
-                            player1.inventory--;
+                            if (player1.inventory - (1+(player1.inventoryObstacleSize%24)/6) < 0) player1.inventory--;
+                            else player1.inventory -= (1+(player1.inventoryObstacleSize%24)/6);
                             p1InventoryAction = true;
                             initializeInvetoryTimer(1);
                         }
@@ -48,17 +50,19 @@ public class PlayerInventory {
                 }
                 break;
             case 2:
-                if (p2InventoryAction == false) {
-                    if (player2.pickUpOrDrop && player2.inventory != player2.inventoryMaxCap
-                            && collisionDetection.collision(2, false)) {
+                if (p2InventoryAction == false && player2.pickUpOrDrop) {
+                    int inventoryWeight = collisionDetection.typeOfObstacle(2);
+
+                    if (player2.inventory + inventoryWeight <= player2.inventoryMaxCap && collisionDetection.collision(2, false)) {
                         if (collisionDetection.collision(2, true)) {
-                            player2.inventory++;
+                            player2.inventory += inventoryWeight;
                             p2InventoryAction = true;
                             initializeInvetoryTimer(2);
                         }
-                    } else if (player2.pickUpOrDrop && player2.inventory != 0) {
+                    } else if (player2.inventory != 0) {
                         if (collisionDetection.spaceToDropObstacle(2)) {
-                            player2.inventory--;
+                            if (player2.inventory - (1+(player2.inventoryObstacleSize%24)/6) < 0) player2.inventory--;
+                            else player2.inventory -= (1+(player2.inventoryObstacleSize%24)/6);
                             p2InventoryAction = true;
                             initializeInvetoryTimer(2);
                         }
@@ -66,17 +70,19 @@ public class PlayerInventory {
                 }
                 break;
             case 3:
-                if (p3InventoryAction == false) {
-                    if (player3.pickUpOrDrop && player3.inventory != player3.inventoryMaxCap
-                            && collisionDetection.collision(3, false)) {
+                if (p3InventoryAction == false && player3.pickUpOrDrop) {
+                    int inventoryWeight = collisionDetection.typeOfObstacle(3);
+
+                    if (player3.inventory + inventoryWeight <= player3.inventoryMaxCap && collisionDetection.collision(3, false)) {
                         if (collisionDetection.collision(3, true)) {
-                            player3.inventory++;
+                            player3.inventory += inventoryWeight;
                             p3InventoryAction = true;
                             initializeInvetoryTimer(3);
                         }
-                    } else if (player3.pickUpOrDrop && player3.inventory != 0) {
+                    } else if (player3.inventory != 0) {
                         if (collisionDetection.spaceToDropObstacle(3)) {
-                            player3.inventory--;
+                            if (player3.inventory - (1+(player3.inventoryObstacleSize%24)/6) < 0) player3.inventory--;
+                            else player3.inventory -= (1+(player3.inventoryObstacleSize%24)/6);
                             p3InventoryAction = true;
                             initializeInvetoryTimer(3);
                         }
@@ -84,17 +90,19 @@ public class PlayerInventory {
                 }
                 break;
             case 4:
-                if (p4InventoryAction == false) {
-                    if (player4.pickUpOrDrop && player4.inventory != player4.inventoryMaxCap
-                            && collisionDetection.collision(4, false)) {
+                if (p4InventoryAction == false && player4.pickUpOrDrop) {
+                    int inventoryWeight = collisionDetection.typeOfObstacle(4);
+
+                    if (player4.inventory + inventoryWeight <= player4.inventoryMaxCap && collisionDetection.collision(4, false)) {
                         if (collisionDetection.collision(4, true)) {
-                            player4.inventory++;
+                            player4.inventory += inventoryWeight;
                             p4InventoryAction = true;
                             initializeInvetoryTimer(4);
                         }
-                    } else if (player4.pickUpOrDrop && player4.inventory != 0) {
+                    } else if (player4.inventory != 0) {
                         if (collisionDetection.spaceToDropObstacle(4)) {
-                            player4.inventory--;
+                            if (player4.inventory - (1+(player4.inventoryObstacleSize%24)/6) < 0) player4.inventory--;
+                            else player4.inventory -= (1+(player4.inventoryObstacleSize%24)/6);
                             p4InventoryAction = true;
                             initializeInvetoryTimer(4);
                         }

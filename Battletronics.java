@@ -424,14 +424,14 @@ public class Battletronics extends JPanel implements ActionListener {
         // WRITE PLAYER STATS
         g.setFont(new Font("Nunito", Font.BOLD, 30)); // Optional
         g.setColor(Color.RED); // Optional
-        g.drawString("HP: " + player1.getLives() + " / " + player1.maxLives, this.width/3, this.height + 40);
+        g.drawString("HP: " + player1.getLives() + " / " + player1.maxLives, this.width/4, this.height + 40);
 
         g.setColor(Color.GREEN); // Optional
         g.drawString("HP: " + player2.getLives() + " / " + player2.maxLives, this.width/2, this.height + 40);
 
         g.setColor(Color.MAGENTA); // Optional
         if (nrOfPlayers >= 3)
-            g.drawString("HP: " + player3.getLives() + " / " + player3.maxLives, this.width/3, this.height + 100);
+            g.drawString("HP: " + player3.getLives() + " / " + player3.maxLives, this.width/4, this.height + 100);
 
         g.setColor(Color.ORANGE); // Optional
         if (nrOfPlayers == 4)

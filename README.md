@@ -1,3 +1,6 @@
+### Released on Steam
+Link to the game on Steam: https://store.steampowered.com/app/1385690/Battletronics/
+
 ### Requirements
 
 - Java JDK downloaded on computer.

@@ -1,6 +1,10 @@
 ### Released on Steam
 Link to the game on Steam: https://store.steampowered.com/app/1385690/Battletronics/
 
+* The game has been seen by: 1.7 million people
+* The game's demo page has been visited by: 40 thousand people
+* The game has been bought by: 600 people
+
 ### Requirements
 
 - Java JDK downloaded on computer.
